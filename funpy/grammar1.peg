@@ -1,0 +1,30 @@
+
+program = funcdef+ EOF
+
+NAME = r'[_a-zA-Z][_a-zA-Z0-9]*'
+funcdef = 'def' NAME parameters ('->' expr)? ':' suite
+parameters = '(' typedargslist? ')'
+typedargslist = tfpdef ('=' expr)? (',' tfpdef ('=' expr)?)* 
+tfpdef = NAME ( ':' expr )
+
+expr = or_test ('if' or_test 'else' expr)? / lambdef
+
+or_test = and_test ( 'or' and_test )*
+
+and_test = not_test ( 'and' not_test )* 
+not_test =  'not'  not_test / comparison 
+comparison = expr0 ( comp_op expr0 )*
+
+expr0 = xor_expr ( '|' xor_expr )*
+xor_expr = and_expr ( '^' and_expr )*
+and_expr =  shift_expr ( '&' shift_expr ) * 
+
+shift_expr = arith_expr (('<<' / '>>') arith_expr )*
+arith_expr = term (('+' / '-') term)*
+term = factor (('*' / '@' / '/' / '%' / '//' )  factor)*
+
+factor = ('+' / '-', '~' ) factor / power 
+power  = atom_expr ( '**' factor )
+atom_expr =  
+
+comp_op = '<' / '>' / '==' / '>=' / '<=' / '<>' / '!=' / 'in' / 'not' 'in' / 'is' / 'is' 'not'

@@ -1,0 +1,86 @@
+
+program = expr+ EOF 
+
+expr = array_expr / func_expr / oper_expr / '(' expr_list ')'
+
+expr_list = expr? (break expr?)*
+
+break = ';' 
+
+array_expr = array_atom / function array_expr 
+      / array_atom function array_expr 
+      / mutation 
+      / array_naming 
+      
+      
+array_atom = name  
+   / decimal_number  / string 
+//   / indexing 
+//  / array_atom '.' array_atom 
+   / '⍺' / '⍵'
+   
+array_naming = name_struct '←' array_expr
+name_struct = name // /  '(' name_struct + ')' 
+
+function = func_atom  // / func_derived 
+
+mutation = name subscript '←' array_expr
+
+subscript = '[' array_expr? (',' array_expr?)* ']'
+
+
+func_atom = name / prim_func 
+       //  / defined_func
+            / '(' func_expr ')'
+            
+func_expr =  function / two_train / three_train / func_naming
+
+func_naming = name '←' func_expr
+
+// func_derived = left_operand mop_expr 
+
+// mop = monadic operator 
+
+oper_expr = mop_expr / dop_atom / oper_naming / '(' oper_expr ')'
+
+oper_naming = name '←' oper_expr
+
+mop_expr = mop_atom / dop_atom right_operand
+
+mop_atom = name / prim_mop
+       //  / defined_mop 
+
+dop_atom = name / prim_dop 
+        // / defined_dop 
+        
+left_operand = array_atom / func_atom 
+    // produces recursion! /  func_derived
+
+right_operand = array_atom / func_atom 
+
+two_train = array_atom function 
+            / function function 
+
+three_train = array_atom function function 
+            / function array_atom function 
+            / function function function 
+            
+// prim_func = '+' | '-' | '×' | '÷' | '*' | '⍟' | '⌊' | '⌈' | '|' | '!' | '○' | '<' | '≤' | '=' | '>' | '≥' | '≠' | '∧' | '∨' | '⍲' | '⍱' | '~' | '?' | '⍴' | '⍳' | '∊' | '↑' | '↓' | '⍪' | '⍋' | '⍒' | '⌽' | '⍉' | '⊖' | '∪' | '⊃' | '⊂' | '∩' | '⍎' | '⍕' | '⌷' | '⊣' | '⊢' | '≡' | '≢' | '¤' | '$' | Slash
+prim_func = prim_func_char / slash
+prim_func_char = r"[+-×÷*⍟⌊⌈!○<≤=>≥≠∧∨⍲⍱~?⍴⍳∊↑↓⍪⍋⍒⌽⍉⊖⌷∪⊃⊂∩⍎⍕⊣⊢≡≢¤]"
+prim_mop_char =  r"[⍨¨]" 
+prim_mop = prim_mop_char / slash
+
+prim_dop =  r"[⍤⍠∘⍣⍢.]"
+
+slash = r"[/\\⌿⍀]"   
+            
+name = simple_name
+
+simple_name = r"[A-Za-z][A-Za-z0-9]*"  
+
+decimal_number = r"[0-9]+(.[0-9]*)?" 
+// TODO: fix 
+
+string  = r"'[^']*'"
+ 
