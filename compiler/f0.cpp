@@ -21,7 +21,10 @@ int main() {
 
 
     cout << "Hello\n";
-      
+
+    string a_str;
+    cin >> a_str;  
     return 17;
 
+    
 }
