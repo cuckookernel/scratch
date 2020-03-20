@@ -30,7 +30,7 @@ def render_html( scale: str ) -> str:
     x_countries = request.args.get("xc", "")
 
     if scale == "linear":
-        other_view = f'<a href="/corona_viz_log.html?xt={x_tools}&xc={x_countries}">logarítmica</a>'
+        other_view = f'<a href="/corona_viz_log.html?xt={x_tools}&xc={x_countries}">lineal</a>'
     else:
         other_view = f'<a href="/corona_viz.html?xt={x_tools}&xc={x_countries}">logarítmica</a>'
 
