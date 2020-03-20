@@ -22,7 +22,7 @@ Date = dt.date
 COVID_DATA_BASE = os.getenv('COVID_DATA_BASE', "/home/teo/git/COVID-19")
 
 DATA_PATH = Path(f"{COVID_DATA_BASE}/csse_covid_19_data/csse_covid_19_time_series")
-OUTPUT_DIR = Path("/home/teo/_data")
+OUTPUT_DIR = Path( os.getenv('COVID_DATA_BASE', "/home/teo/_data") )
 
 COUNTRIES = [ "Colombia", "Mexico", "Brazil", "Venezuela",
               "Italy", "Spain", "US",  "Germany"]
