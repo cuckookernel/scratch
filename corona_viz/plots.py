@@ -96,7 +96,7 @@ def make_plot(data: DF, klass: str, scale: str = "linear"):
     """Make a bokeh plot of a certain type (confirmed/recovered/deaths/active)
     scale can be "linear" or "log"
      for a bunch of countries"""
-    tools = "crosshair,pan,box_zoom,reset,hover,previewsave"
+    tools = "crosshair,box_zoom,reset,hover,previewsave"  # pan
 
     y_axis_type = "log" if scale == "log" else "linear"
 
