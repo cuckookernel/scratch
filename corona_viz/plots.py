@@ -15,12 +15,12 @@ from bokeh.plotting import figure
 from bokeh.models import HoverTool, ColumnDataSource
 from bokeh.embed import json_item
 
-
 DF = pd.DataFrame
 Date = dt.date
 # %%
 
 COVID_DATA_BASE = os.getenv('COVID_DATA_BASE', "/home/teo/git/COVID-19")
+
 DATA_PATH = Path(f"{COVID_DATA_BASE}/csse_covid_19_data/csse_covid_19_time_series")
 OUTPUT_DIR = Path("/home/teo/_data")
 
