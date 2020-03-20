@@ -5,10 +5,12 @@ from jinja2 import Template
 import corona_viz.plots as plt
 from corona_viz.plots import get_plot, TRANSL_INV
 from bokeh.resources import CDN
+from redis import Redis
 
 TMPL = Template("")  # html template loaded in create_app
 
 route_bp = Blueprint('route_blueprint', __name__)
+red = Redis("localhost")
 
 
 @route_bp.route('/corona_viz.html')
@@ -25,6 +27,12 @@ def main_log():
 
 def render_html( scale: str ) -> str:
     """Render any of the versions"""
+    # ip = request.ip.address
+    ip = str(request.remote_addr)
+    red.incr( f"/ip/{ip}" )
+    red.hset( "/user-agent", ip, str(request.headers.get('User-Agent')) )
+    red.hset( "/headers", ip, str(request.headers))
+
     reload_tmpl()  # TODO: take out
     x_tools = request.args.get("xt", "")
     x_countries = request.args.get("xc", "")
