@@ -15,6 +15,7 @@ __pycache__/
 *.zip
 Cvs*
 .tmp*/
+.idea/
 node_modules/
 
 

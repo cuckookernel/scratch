@@ -19,8 +19,8 @@ DF = pd.DataFrame
 Date = dt.date
 # %%
 
-BASE_DATA_DIR = "/home/teo/git/COVID-19"
-DATA_PATH = Path(f"{BASE_DATA_DIR}/csse_covid_19_data/csse_covid_19_time_series")
+COVID_DATA_BASE = os.getenv('COVID_DATA_BASE', "/home/teo/git/COVID-19")
+DATA_PATH = Path(f"{COVID_DATA_BASE}/csse_covid_19_data/csse_covid_19_time_series")
 OUTPUT_DIR = Path("/home/teo/_data")
 
 COUNTRIES = [ "Colombia", "Mexico", "Brazil", "Venezuela",
