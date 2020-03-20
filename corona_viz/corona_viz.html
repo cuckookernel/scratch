@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Visualización de crecimiento del Corona Virus - La Haus</title>
+    {{resources}}
+    <style>
+    html {
+        line-height: 1.15;
+             -webkit-text-size-adjust: 100%;
+    }
+        .font-family-poppins {
+
+            font-family: Poppins,Helvetica Neue,Arial,Helvetica,Verdana,sans-serif;
+            font-weight: 400;
+        }
+
+    h1 {
+        line-height: 1.6;
+        padding-bottom: 2.5rem;
+        margin-bottom: 0;
+        // max-width: 500px;
+        font-size: 28px;
+
+        color: #3c4858;
+    }
+
+    .font-weight-6 {
+        font-weight: 600;
+    }
+
+    .color-slate {
+        color: #3c4858;
+    }
+
+    h2 {
+        font-size: 16px;
+    }
+
+    </style>
+</head>
+
+<body class="lh font-family-poppins">
+  <h1 class="font-weight-6 text-center color-slate line-height-8 pt-0 mt-0 mx-auto">
+      <a class="lh-navbar-vue__logo" aria-label="Logo La Haus" href="https://www.lahaus.com"
+         data-hs-event-25961148="1">
+          <img src="https://lahaus.imgix.net/static/lh-landing/logo-home.svg?auto=compress,format"
+               class="" alt="La Haus Colombia, propiedades en venta en Medellín y Bogotá"></a>
+      Visualización de crecimiento de casos del Corona Virus</h1>
+  <p>Construida por el equipo DCS (Soluciones Centradas en Datos) de
+      <a href="https://www.lahaus.com">La Haus</a> con datos tomados de
+      <a href="https://github.com/CSSEGISandData/COVID-19">JHU CSSE</a>.
+  </p>
+
+  <p>Dé clic en el nombre de cada país para mostrar/ocultar la línea.</p>
+
+  <p>
+      Ir a vista en escala {{other_view}}.
+
+  <p>
+  <p>&nbsp;</p>
+
+  <div>
+      <h2>Casos Confirmados</h2>
+      <div id="confirmed"></div>
+  </div>
+
+  <div>
+      <h2>Recuperados</h2>
+      <div id="recovered"></div>
+  </div>
+
+  <div>
+      <h2>Muertes</h2>
+      <div id="deaths"></div>
+  </div>
+
+  <div>
+      <h2>Casos Activos</h2>
+      <p>Activos = Confirmados &dash; Recuperados &dash; Muertes</p>
+      <div id="active"></div>
+  </div>
+
+  <script>
+    const scale = "{{scale}}";
+  </script>
+
+  <script>
+  fetch('/cvv_plot.json?k=confirmed&s=' + scale)
+    .then(function(response) { return response.json(); })
+    .then(function(item) { return Bokeh.embed.embed_item(item, "confirmed"); })
+  </script>
+
+  <script>
+  fetch('/cvv_plot.json?k=recovered&s=' + scale)
+    .then(function(response) { return response.json(); })
+    .then(function(item) { return Bokeh.embed.embed_item(item, "recovered"); })
+  </script>
+
+  <script>
+    fetch('/cvv_plot.json?k=deaths&s=' + scale)
+    .then(function(response) { return response.json(); })
+    .then(function(item) { return Bokeh.embed.embed_item(item, "deaths"); })
+  </script>
+
+    <script>
+    fetch('/cvv_plot.json?k=active&s=' + scale)
+    .then(function(response) { return response.json(); })
+    .then(function(item) { return Bokeh.embed.embed_item(item, "active"); })
+  </script>
+</body>
+</html>
