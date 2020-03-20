@@ -1,5 +1,6 @@
 """Generate nice interactive visualization of coronavirus time series"""
 # %%
+from typing import List
 from pathlib import Path
 import pandas as pd
 import re
@@ -34,10 +35,13 @@ TRANSL = {"Mexico": "México",
           "US": "EE.UU.",
           "Brazil": "Brasil",
           "Germany": "Alemania",
+          "France": "Francia",
           "confirmed": "confirmados",
           "recovered": "recuperados",
           "deaths": "muertes",
           "active": "activos" }
+
+TRANSL_INV = { v: k for k, v in TRANSL.items() }
 
 DATA_CACHE = {}  # date -> DF
 # %%
@@ -61,10 +65,12 @@ def interactive_testing():
     # %%
 
 
-def get_plot( klass: str, scale: str = "linear", date: Date = None ) -> str:
+def get_plot( klass: str, scale: str = "linear", date: Date = None,
+              x_tools: List[str] = None, x_countries: List[str] = None ) -> str:
+
     """Return plot as json"""
     data = get_data( date )
-    plot = make_plot(data, klass, scale)
+    plot = make_plot(data, klass, scale, x_tools=x_tools, x_countries=x_countries)
 
     ret = json.dumps(json_item(plot, "klass"))
 
@@ -82,21 +88,30 @@ def get_data(date: Date) -> DF:
         fp = OUTPUT_DIR / f"df_{date}.parquet"
         if os.path.exists( fp ):
             data = pd.read_parquet(fp)
+            data['date'] = pd.to_datetime(data['date'])
         else:
             data = load_data()
+            data_out = data.copy()
 
-        data['date'] = pd.to_datetime( data['date'] )
-        data['pais'] = data['country'].apply( lambda s: TRANSL.get(s, s) )
+            data_out['date'] = data_out['date'].astype(str)
+            data_out.to_parquet(fp)
+
         DATA_CACHE[date] = data
 
     return DATA_CACHE[date]
 
 
-def make_plot(data: DF, klass: str, scale: str = "linear"):
+def make_plot(data: DF, klass: str, scale: str = "linear",
+              x_tools: List[str] = None, x_countries: List[str] = None ):
     """Make a bokeh plot of a certain type (confirmed/recovered/deaths/active)
     scale can be "linear" or "log"
      for a bunch of countries"""
-    tools = "crosshair,reset,hover,previewsave"  # pan,box_zoom
+    x_tools = [] if x_tools is None else x_tools
+    tools = x_tools + "crosshair reset hover previewsave".split()  # pan,box_zoom
+
+    x_countries = [] if x_countries is None else x_countries
+    countries = x_countries + [ c for c in COUNTRIES if c not in x_countries ]
+    countries = countries[:10]
 
     y_axis_type = "log" if scale == "log" else "linear"
 
@@ -107,7 +122,7 @@ def make_plot(data: DF, klass: str, scale: str = "linear"):
     p.yaxis.axis_label = ( "Número de Casos"
                            + " (escala logarítmica)" if y_axis_type == "log" else "" )
 
-    for country, color in zip(COUNTRIES, Category10[10]):
+    for country, color in zip(countries, Category10[10]):
         df = data[data['country'] == country].copy()
 
         source = ColumnDataSource( data=dict( date=df['date'],
@@ -118,7 +133,7 @@ def make_plot(data: DF, klass: str, scale: str = "linear"):
                source=source,
                line_width=4, color=color, alpha=0.8,
                legend_label=TRANSL.get(country, country),
-               visible=country in ACTIVE_COUNTRIES)
+               visible=country in (ACTIVE_COUNTRIES.union(x_countries)))
         # p.circle(df['date'], df[f'n_{klass}'], color=color, legend_label=country)
 
     p.legend.location = "top_left"
@@ -156,7 +171,8 @@ def load_data() -> DF:
                         - data['n_deaths'].fillna(0) )
 
     data = (data.groupby(['country', 'date']).sum().reset_index())
-    data['date'] = data['date'].astype( str )
+    data['pais'] = data['country'].apply(lambda s: TRANSL.get(s, s))
+
     # %%
     return data
 

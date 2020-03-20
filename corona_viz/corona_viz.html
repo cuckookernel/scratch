@@ -77,34 +77,34 @@
 
   <div>
       <h2>Casos Activos</h2>
-      <p>Activos = Confirmados &dash; Recuperados &dash; Muertes</p>
+      <p>Activos = Confirmados &minus; Recuperados &minus; Muertes</p>
       <div id="active"></div>
   </div>
 
   <script>
-    const scale = "{{scale}}";
+    const args = "&s={{scale}}&xc={{x_countries}}&xt={{x_tools}}";
   </script>
 
   <script>
-  fetch('/cvv_plot.json?k=confirmed&s=' + scale)
+  fetch('/cvv_plot.json?k=confirmed' + args)
     .then(function(response) { return response.json(); })
     .then(function(item) { return Bokeh.embed.embed_item(item, "confirmed"); })
   </script>
 
   <script>
-  fetch('/cvv_plot.json?k=recovered&s=' + scale)
+  fetch('/cvv_plot.json?k=recovered' + args)
     .then(function(response) { return response.json(); })
     .then(function(item) { return Bokeh.embed.embed_item(item, "recovered"); })
   </script>
 
   <script>
-    fetch('/cvv_plot.json?k=deaths&s=' + scale)
+    fetch('/cvv_plot.json?k=deaths' + args)
     .then(function(response) { return response.json(); })
     .then(function(item) { return Bokeh.embed.embed_item(item, "deaths"); })
   </script>
 
     <script>
-    fetch('/cvv_plot.json?k=active&s=' + scale)
+    fetch('/cvv_plot.json?k=active' + args)
     .then(function(response) { return response.json(); })
     .then(function(item) { return Bokeh.embed.embed_item(item, "active"); })
   </script>
