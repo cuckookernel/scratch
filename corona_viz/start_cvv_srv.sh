@@ -5,4 +5,4 @@
 cd /home/ubuntu/scratch || exit
 export PYTHONPATH=./
 export COVID_DATA_BASE=/home/ubuntu/COVID-19
-gunicorn --workers=2 'corona_viz.app:create_app()'
+gunicorn --workers=2 --bind 0.0.0.0:8000 --access-logfile - 'corona_viz.app:create_app()'
