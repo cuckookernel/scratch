@@ -24,7 +24,7 @@ DATA_PATH = Path(f"{COVID_DATA_BASE}/csse_covid_19_data/csse_covid_19_time_serie
 OUTPUT_DIR = Path("/home/teo/_data")
 
 COUNTRIES = [ "Colombia", "Mexico", "Brazil", "Venezuela",
-              "Italy", "Spain", "China", "US",  "Germany"]
+              "Italy", "Spain", "US",  "Germany"]
 
 ACTIVE_COUNTRIES = { "Colombia", "Mexico", "Spain" }
 
