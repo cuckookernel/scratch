@@ -66,13 +66,20 @@ def get_plot( klass: str, scale: str = "linear", date: Date = None,
 def get_data(date: Date) -> DF:
     """Get DF for the given date"""
     if date is None:
+        # %%
         date = dt.date.today()
-
+        # %%
     if date in DATA_CACHE:
         print(f"retrieving data from memory cache: {date}")
     else:
+        # %%
         fp = OUTPUT_DIR / f"df_{date}.parquet"
+        # %%
         if os.path.exists( fp ):
+            # %%
+            tstamp = dt.datetime.fromtimestamp(os.stat(fp).st_ctime)
+            print(f"retrieving data from disk: {fp} ({tstamp})")
+            # %%
             data = pd.read_parquet(fp)
             data['date'] = pd.to_datetime(data['date'])
         else:
@@ -194,10 +201,9 @@ def load_data() -> DF:
 
     # %%
     data1 = (data.groupby(['country', 'date']).sum().reset_index())
-    data1['pais'] = data1['country'].apply(lambda s: TRANSL.get(s, s))
     # %%
     data2 = gen_projections( data1 )
-
+    data2['pais'] = data2['country'].apply(lambda s: TRANSL.get(s, s))
     # %%
     return data2
 
