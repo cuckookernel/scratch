@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# need to activate bokeh2 first
-# conda activate bokeh2
+. "/home/ubuntu/miniconda3/etc/profile.d/conda.sh"
+conda activate bokeh2
 cd /home/ubuntu/scratch || exit
 export PYTHONPATH=./
 export COVID_DATA_BASE=/home/ubuntu/COVID-19
