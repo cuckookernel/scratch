@@ -44,8 +44,11 @@
 </head>
 
 <body class="lh font-family-poppins">
+
+
   <p>
-  <a class="lh-navbar-vue__logo" aria-label="Logo La Haus" href="https://www.lahaus.com"
+  <a class="lh-navbar-vue__logo" aria-label="Logo La Haus"
+     href="https://www.lahaus.com?utm_source=corona_viz&utm_campaign=corona_viz"
      data-hs-event-25961148="1">
       <img src="https://lahaus.imgix.net/static/lh-landing/logo-home.svg?auto=compress,format"
            class="" alt="La Haus Colombia, propiedades en venta en Medellín y Bogotá"></a>
@@ -56,15 +59,15 @@
   <p>
   <ul>
       <li> Construida por el equipo DCS (Soluciones Centradas en Datos) de
-           <a href="https://www.lahaus.com">La Haus</a> con datos tomados de
+           <a href="https://www.lahaus.com?utm_source=corona_viz&utm_campaign=corona_viz">
+               La Haus</a> con datos tomados de
           <a href="https://github.com/CSSEGISandData/COVID-19">JHU CSSE</a>. </li>
       <li>Dé clic en el nombre de cada país para mostrar / ocultar la línea.</li>
-
       <li>Las líneas punteadas son solo <em>estimados</em> estadísiticos.
-          ¡No tenemos una bola de cristal! <a href="#footnote"><sup>*</sup></a>
+          ¡No tenemos una bola de cristal! <a href="#footnote"><sup>1</sup></a>
       </li>
   </ul>
-  </p>
+
 
   <p>
       Ir a:
@@ -72,7 +75,7 @@
       <a href="#deaths_wrapper">Muertes</a> |
       <a href="#active_wrapper">Activos</a> |
       {{other_view}}.
-  <p>
+  </p>
 
   <p>&nbsp;</p>
 
@@ -85,18 +88,28 @@
       <h2>Recuperados</h2>
       <div id="recovered"></div>
   </div>
+
   <p>
       Ir a:
       <a href="#confirmed_wrapper">Confirmados</a> |
       <a href="#deaths_wrapper">Muertes</a> |
       <a href="#active_wrapper">Activos</a> |
       {{other_view}}.
-  <p>
+  </p>
 
   <div id="deaths_wrapper">
       <h2>Muertes</h2>
       <div id="deaths"></div>
   </div>
+
+  <p>
+      Ir a:
+      <a href="#confirmed_wrapper">Confirmados</a> |
+      <a href="#recovered_wrapper">Recuperados</a> |
+      <a href="#deaths_wrapper">Muertes</a> |
+      {{other_view}}.
+  </p>
+
 
   <div id="active_wrapper">
       <h2>Casos Activos</h2>
@@ -104,13 +117,19 @@
       <div id="active"></div>
   </div>
 
+  <p>
+      Ir a:
+      <a href="#confirmed_wrapper">Confirmados</a> |
+      <a href="#recovered_wrapper">Recuperados</a> |
+      <a href="#active_wrapper">Activos</a> |
+      {{other_view}}.
+  </p>
 
-  <p id="footnote" style="font-size:8pt;">
-      Los estimados estadísticos están basados en un simple modelo
+  <p id="footnote" style="font-size:10pt;">
+      <sup>1</sup> Nuestros estimados estadísticos están basados en un simple modelo
       de crecimiento exponencial. Este fácilmente puede subestimar o sobrestimar, ya que
-      no tienen en cuenta el efecto retardante de medidas como
-      cuarentenas o el cambio en el comportamiento de las personas a medida que se
-      concientizan de la epidemia y cómo prevenir el contagio.
+      no tiene en cuenta el efecto retardante de medidas como
+      cuarentenas o el cambio en el comportamiento de las personas.
   </p>
 
   <script>
@@ -141,7 +160,12 @@
     .then(function(item) { return Bokeh.embed.embed_item(item, "active"); })
   </script>
 
-
-
+  <div >
+    <a href="https://www.lahaus.com?utm_source=corona_viz&utm_campaign=corona_viz">
+        <img style="clip-path: inset(0px 2100px 0px 0px); object-position:-650px 0px;"
+                src="https://lahaus.imgix.net/static/lh-landing/footer/city-illustration-col.png"
+    alt="a nice city in Colombia"/>
+    </a>
+  </div>
 </body>
 </html>
