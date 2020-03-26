@@ -35,6 +35,12 @@ def corona_viz_log():
     return render_html_world('log')
 
 
+@route_bp.route('/corona_viz_lin.html')
+def corona_viz_log():
+    """main route page"""
+    return render_html_world('linear')
+
+
 @route_bp.route('/corona_viz_col.html')
 def corona_viz_col():
     """main route page"""
@@ -54,7 +60,7 @@ def render_html_world( scale: str ) -> str:
         other_view = f'<a href="/corona_viz_log.html?xt={x_tools}&xc={x_countries}">' \
                      f'Vista en escala logarítmica</a>'
     else:
-        other_view = f'<a href="/corona_viz.html?xt={x_tools}&xc={x_countries}">' \
+        other_view = f'<a href="/corona_viz_lin.html?xt={x_tools}&xc={x_countries}">' \
                      f'Vista en escala lineal</a>'
 
     return TMPLS['world'].render(resources=CDN.render(), scale=scale,
