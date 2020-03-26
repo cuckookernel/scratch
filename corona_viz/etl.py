@@ -20,7 +20,7 @@ def load_data_world() -> DF:
     """Load confirmed, deaths and recovered and combine in single dataframe"""
     # %%
     conf = load_data_typ( "confirmed", date_fmt='%m/%d/%y' )
-    recov = load_data_typ("recovered", date_fmt='%m/%d/%Y')
+    recov = load_data_typ("recovered", date_fmt='%m/%d/%y')
     death = load_data_typ("deaths", date_fmt='%m/%d/%y')
     # %%
     data = ( conf
