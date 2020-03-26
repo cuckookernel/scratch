@@ -16,7 +16,7 @@ DataCacheRec = NamedTuple('DataCacheRec', [('mtime', int), ('data', DF), ('fp', 
 
 COVID_DATA_BASE = os.getenv('COVID_DATA_BASE', "/home/teo/git/COVID-19")
 RAW_DATA_PATH = Path(f"{COVID_DATA_BASE}/csse_covid_19_data/csse_covid_19_time_series")
-PARQUET_PATH = Path( os.getenv('COVID_DATA_BASE', "/home/teo/_data/covid") )
+PARQUET_PATH = Path( os.getenv('COVID_PARQUETS_DIR', "/home/teo/_data/covid") )
 
 TRANSL = {"Mexico": "México",
           "Italy": "Italia",
