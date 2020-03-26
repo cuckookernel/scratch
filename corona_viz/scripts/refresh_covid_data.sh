@@ -11,5 +11,6 @@ conda activate bokeh2
 cd /home/ubuntu/scratch || exit
 export PYTHONPATH=./
 export COVID_DATA_BASE=/home/ubuntu/COVID-19
+export COVID_PARQUETS_DIR=/home/ubuntu/_data/covid
 
 python corona_viz/gen_parquet.py >>  "$LOG_FILE" 2>&1
