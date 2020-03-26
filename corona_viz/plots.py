@@ -75,6 +75,7 @@ def get_data(date: Optional[Date] = None) -> DF:
     return DATA_CACHE[date].data
     # %%
 
+
 def most_recent_parquet() -> Path:
     fnames = glob.glob( str(PARQUET_PATH / 'df_*.parquet') )
     print( f'{len(fnames)} parquet data files found')

@@ -1,6 +1,7 @@
 """Implements routes for visualization app"""
 from flask import Flask, Blueprint, Response, request
 
+import datetime as dt
 from jinja2 import Template
 import corona_viz.common as common
 from corona_viz.plots import get_plot, TRANSL_INV
@@ -12,6 +13,10 @@ TMPL = Template("")  # html template loaded in create_app
 route_bp = Blueprint('route_blueprint', __name__)
 red = Redis("localhost")
 
+# TODO: línea de Mundo entero
+# TODO: mostrar fecha de última actualización de datos
+# TODO: mostrar tasa de crecimiento
+# TODO: Fit con término cuadrático
 
 @route_bp.route('/corona_viz.html')
 def main_linear():
@@ -29,7 +34,8 @@ def render_html( scale: str ) -> str:
     """Render any of the versions"""
     # ip = request.ip.address
     ip = str(request.remote_addr)
-    red.incr( f"/ip/{ip}" )
+    red.hincrby( f"/count_by_ip", ip )
+    red.hincrby( f"/count_by_date", str(dt.date.today()) )
     red.hset( "/user-agent", ip, str(request.headers.get('User-Agent')) )
     red.hset( "/headers", ip, str(request.headers))
 
@@ -79,3 +85,11 @@ def reload_tmpl():
     with open("corona_viz/corona_viz.html") as f_in:
         global TMPL
         TMPL = Template(f_in.read())
+
+
+def translate_ip_counts():
+    # %%
+    red = Redis("localhost")
+
+    red.mget( '/ip')
+    # %%
