@@ -1,15 +1,22 @@
+"""Routines for getting data from the outside world"""
+
+from typing import Dict
 import re
+import json
 import datetime as dt
+
 import pandas as pd
 import numpy as np
-
+import requests
+import bs4
 from scipy.stats import linregress
 
-from corona_viz.common import COVID_DATA_BASE, TRANSL, RAW_DATA_PATH
+from corona_viz.common import TRANSL, RAW_DATA_PATH, PARQUET_PATH
 
 DF = pd.DataFrame
+# %%
 
-def load_data() -> DF:
+def load_data_world() -> DF:
     """Load confirmed, deaths and recovered and combine in single dataframe"""
     # %%
     conf = load_data_typ( "confirmed", date_fmt='%m/%d/%y' )
@@ -86,7 +93,7 @@ def load_data_typ( typ, date_fmt: str ):
 
 
 def max_raw_data_mtime():
-    # %%
+    """Max modification time for data files world level"""
     return max( (RAW_DATA_PATH / f"time_series_covid19_{typ}_global.csv")
                 .stat().st_mtime
                 for typ in ['confirmed', 'deaths', 'recovered'])
@@ -115,17 +122,77 @@ def calc_projection(past: DF, ctry: str):
     return proj_df.drop(['x'], axis=1)
     # %%
 
-def get_data_col():
-    # %%
-    import requests
+
+def get_and_save_data_col():
+    """Get Colombia data"""
     # %%
     rp = requests.get("https://e.infogram.com/01266038-4580-4cf0-baab-a532bd968d0c"
                       "?parent_url=https%3A%2F%2Fwww.ins.gov.co%2FNoticias%2FPaginas%2FCoronavirus.aspx&src=embed#")
+
+    print( f"data_col: infogram reply: status: {rp.status_code} - {len(rp.text)} chars")
     # %%
-    print( rp.headers, rp.status_code)
+    doc = bs4.BeautifulSoup(rp.text, features='html.parser')  # , parser='html.parser')
+    els = doc.findAll("script")
+    print( f"data_col: {len(els)} script elems")
     # %%
-    with open(COVID_DATA_BASE + "/col_data.html", "w") as f_out:
-        f_out.write( rp.text )
+    data = None
+    for el in els:
+        if el.text.startswith("window.infographicData="):
+            data_str = el.text[ len("window.infographicData="):-1]
+            data = json.loads( data_str )
+            break
+
+    if data is None:
+        print("No window.infoGraphicData script element found" )
+        raise RuntimeError()
+    # %%
+    try:
+        tbl = data['elements']['content']['content']['entities'][
+                   '41b1ef61-e7cf-42f4-ae4a-1f15477c22f5']['props']['chartData']['data'][0]
+    except KeyError as err:
+        print( "Failed getting data from json: "
+               "data['elements']['content']['content']['entities'].keys() =",
+               data['elements']['content']['content']['entities'].keys() )
+        print( f"data_col: Will dump data to {PARQUET_PATH / 'data.json'}")
+        dump_all_json( data )
+
+        raise err
+
+    df = pd.DataFrame( tbl[1:], columns=tbl[0])
+
+    df.rename( columns={'ID de caso': 'id',
+                        'Fecha de diagnóstico': 'confirmed_date',
+                        'Ciudad de ubicación': 'city',
+                        'Departamento': 'state',
+                        'Atención': 'care',
+                        'Edad': 'age',
+                        'Sexo': 'sex',
+                        'Tipo*': 'typ',
+                        'País de procedencia': 'origin_ctry'}, inplace=True)
+    df = df[ df['id'] != '' ]
+    df['confirmed_date'] = pd.to_datetime( df['confirmed_date'], format="%d/%m/%Y" )
+    df['confirmed_date'] = df['confirmed_date'].dt.date
+    df['care'] = df['care'].str.lower()
+    df['in_hospital'] = df['care'] == 'hospital'
+    df['recovered'] = df['care'] == 'recuperado'
+    df['death'] = df['care'] == 'fallecido'
+    df['active'] = (~df['recovered']) & (~df['death'])
+
+    max_date = df['confirmed_date'].max()
+    fp = PARQUET_PATH / f'colombia/df_col_{max_date}.parquet'
+    print( f"data_col: Writing {df.shape} to: {fp}")
+    df.to_parquet( fp )
+
+    # %%
+
+
+def dump_all_json( data: Dict ):
+    """Dump data json object to file"""
+    fp_out = PARQUET_PATH / "colombia/data.json"
+    print(fp_out)
+    # %
+    with open(fp_out, "w") as f_out:
+        json.dump( data, indent=4, fp=f_out )
 
 
 def interactive_testing():

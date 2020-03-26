@@ -1,8 +1,6 @@
 """Generate nice interactive visualization of coronavirus time series"""
 # %%
-from typing import List, Optional, NamedTuple, Dict
-from pathlib import Path
-import glob
+from typing import List, Dict
 import pandas as pd
 import re
 import numpy as np
@@ -16,7 +14,8 @@ from bokeh.models.formatters import DatetimeTickFormatter, NumeralTickFormatter
 from bokeh.models import HoverTool, ColumnDataSource
 from bokeh.embed import json_item
 
-from corona_viz.common import PARQUET_PATH, TRANSL, tstamp_to_dt
+import corona_viz.common as com
+from corona_viz.common import TRANSL, DataCacheRec, PARQUET_PATH
 
 DF = pd.DataFrame
 Date = dt.date
@@ -29,19 +28,19 @@ ACTIVE_COUNTRIES = { "Colombia", "Mexico", "Spain" }
 
 TRANSL_INV = { v: k for k, v in TRANSL.items() }
 
-DataCacheRec = NamedTuple('DataCacheRec', [('mtime', int), ('data', DF), ('fp', Path)])
 
 DATA_CACHE: Dict[dt.date, DataCacheRec] = {}  # date -> DF
 # %%
 # TODO: use multi_line for estimate
 
 
-def get_plot( klass: str, scale: str = "linear", date: Date = None,
-              x_tools: List[str] = None, x_countries: List[str] = None ) -> str:
+def get_plot( klass: str, scale: str = "linear", date: Date = None, **kwargs) -> str:
 
     """Return plot as json"""
-    data = get_data( date )
-    plot = make_plot(data, klass, scale, x_tools=x_tools, x_countries=x_countries)
+    data = com.get_data( cache=DATA_CACHE,
+                         date=date,
+                         glob_str=str(PARQUET_PATH / "world/df_*.parquet") )
+    plot = make_plot(data, klass, scale, **kwargs)
 
     ret = json.dumps(json_item(plot, "klass"))
 
@@ -49,58 +48,16 @@ def get_plot( klass: str, scale: str = "linear", date: Date = None,
     # %%
 
 
-def get_data(date: Optional[Date] = None) -> DF:
-    """Get DF for the given date or the most recent one if not provided"""
-    if date is not None:
-        fp = PARQUET_PATH / f"df_{date}.parquet"
-        if not fp.exists():
-            raise RuntimeError(f'No data for {date}')
-    else:
-        fp = most_recent_parquet()
-
-    # % At this point fp exists
-    if date in DATA_CACHE and fp.stat().st_mtime < DATA_CACHE[date].mtime:
-        print(f"retrieving data from memory cache: {date}")
-    else:
-        # %
-        mtime = fp.stat().st_mtime
-        tstamp = tstamp_to_dt(mtime)
-        print(f"retrieving data from disk: {fp} ({tstamp})")
-        # %
-        data = pd.read_parquet(fp)
-        data['date'] = pd.to_datetime(data['date'])
-
-        DATA_CACHE[date] = DataCacheRec(mtime=mtime, data=data, fp=fp)
-
-    return DATA_CACHE[date].data
-    # %%
-
-
-def most_recent_parquet() -> Path:
-    fnames = glob.glob( str(PARQUET_PATH / 'df_*.parquet') )
-    print( f'{len(fnames)} parquet data files found')
-
-    if len(fnames) > 0:
-        def mtime_path( fname: str ):
-            path = PARQUET_PATH / fname
-            mtime = path.stat().st_mtime
-            return mtime, path
-
-        f_mtime = sorted( [mtime_path(fname) for fname in fnames] )
-        fp = f_mtime[-1][1]
-        return fp
-    else:
-        raise RuntimeError('Need to run gen_parquet.py first...')
-    # %%
-
 def make_plot(data: DF, klass: str, scale: str = "linear",
-              x_tools: List[str] = None, x_countries: List[str] = None ):
+              x_tools: List[str] = None, countries: List[str] = None,
+              x_countries: List[str] = None ):
     """Make a bokeh plot of a certain type (confirmed/recovered/deaths/active)
     scale can be "linear" or "log"
      for a bunch of countries"""
 
-    x_countries = [] if x_countries is None else x_countries
-    countries = x_countries + [ c for c in COUNTRIES if c not in x_countries ]
+    x_countries = x_countries or []
+    countries = countries or COUNTRIES
+    countries = x_countries + [ c for c in countries if c not in x_countries ]
     countries = countries[:10]
 
     p = init_plot( scale, x_tools )
@@ -198,9 +155,11 @@ def old_version():
 
 
 def interactive_testing():
+    """Interactive testing"""
     # %%
+    # noinspection PyUnresolvedReferences
     runfile( 'corona_viz/plots.py')
-    data = get_data()
+    data = com.get_data( cache=DATA_CACHE, glob_str="df_*.parquet", date_col="date")
     # typ = "confirmed"
     plot = make_plot(data, klass="confirmed", scale="log")
     show(plot)

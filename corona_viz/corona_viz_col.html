@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Reporte Coronavirus Colombia - La Haus</title>
+    {{resources}}
+    <style>
+    html {
+        line-height: 1.15;
+             -webkit-text-size-adjust: 100%;
+    }
+    body {
+        width: 800px;
+    }
+    .font-family-poppins {
+
+        font-family: Poppins,Helvetica Neue,Arial,Helvetica,Verdana,sans-serif;
+        font-weight: 400;
+    }
+
+    h1 {
+        line-height: 1.6;
+        padding-bottom: 2.5rem;
+        margin-bottom: 0;
+        // max-width: 500px;
+        font-size: 28px;
+
+        color: #3c4858;
+    }
+
+
+
+    .font-weight-6 {
+        font-weight: 600;
+    }
+
+    .color-slate {
+        color: #3c4858;
+    }
+
+    h2 {
+        padding-top: 1em;
+        font-size: 16px;
+        color: #3c4858;
+    }
+
+    table {
+        height: 800px;
+        border: 1px solid gray;
+        border-collapse: collapse;
+        overflow:scroll;
+    }
+
+    td {
+        padding: 10px;
+    }
+
+    th {
+        padding: 10px;
+        color: #3c4858;
+    }
+
+    #totals {
+        margin-left:auto;
+        margin-right:auto;
+    }
+
+    .totals_tbl {
+        height: 50px;
+        color: #3c4858;
+        font-weight: 600;
+        font-size: 24px;
+        text-align: center;
+    }
+
+    </style>
+</head>
+
+<body class="lh font-family-poppins">
+
+  <p>
+    <a class="lh-navbar-vue__logo" aria-label="Logo La Haus"
+         href="https://www.lahaus.com?utm_source=corona_viz&utm_campaign=corona_viz"
+        data-hs-event-25961148="1">
+        <img src="https://lahaus.imgix.net/static/lh-landing/logo-home.svg?auto=compress,format"
+               class="" alt="La Haus Colombia, propiedades en venta en Medellín y Bogotá"></a>
+      &nbsp; Colombia &nbsp; | &nbsp; <a href="/corona_viz_log.html">Comparación Países</a>
+  </p>
+
+  <h1 class="font-weight-6 text-center color-slate line-height-8 pt-0 mt-0 mx-auto">
+      Reporte general Coronavirus en Colombia</h1>
+
+  <ul>
+      <li> Construido por el equipo DCS (Soluciones Centradas en Datos) de
+           <a href="https://www.lahaus.com?utm_source=corona_viz&utm_campaign=corona_viz">
+               La Haus</a> con datos tomados de
+          <a href="https://www.ins.gov.co/Noticias/Paginas/Coronavirus.aspx">www.ins.gov.co</a>.
+      </li>
+      <li>Las líneas punteadas son solo <em>estimados</em> estadísiticos.
+          ¡No tenemos una bola de cristal! <a href="#footnote"><sup>1</sup></a>
+      </li>
+  </ul>
+
+  <div id="data_pieces">
+      <!-- <div id="confirmed">{{confirmed}} </div>
+      <div id="deaths">{{deaths}} </div>
+      <div id="recovered">{{recovered}} </div> -> -->
+
+      <div id="totals">
+          <h2>Totales Generales</h2>
+
+          <table border="1" class="totals_tbl">
+              <tbody>
+              <tr>
+                  <td id="total"> Total <br /> {{confirmed}}
+                  </td>
+                  <td id="recovered"> Recuperados <br /> {{recovered}}
+                  </td>
+                  <td id="deaths"> Muertes <br /> {{deaths}}
+                  </td>
+                  <td id="active"> Activos <br /> {{active}}
+                  </td>
+              </tr>
+              </tbody>
+          </table>
+      </div>
+
+      <div id="plot_wrapper">
+          <h2>Evolución en el tiempo</h2>
+        <div id="confirmed_plot"></div>
+      </div>
+
+      <div id="by_state"> <h2>Por Departamento</h2> {{by_state}} </div>
+      <div id="by_city"> <h2>Por Municipio</h2>  {{by_city}} </div>
+      <div id="by_age_sex"> <h2>Confirmados por Edad y Sexo</h2>  {{by_sex_age}} </div>
+  </div>
+
+  <script>
+      const args = "&s={{scale}}&xc={{x_countries}}&xt={{x_tools}}&c=Colombia";
+
+      fetch('/cvv_plot.json?k=confirmed' + args)
+        .then(function(response) { return response.json(); })
+        .then(function(item) { return Bokeh.embed.embed_item(item, "confirmed_plot"); })
+  </script>
+
+
+  <div >
+    <a href="https://www.lahaus.com?utm_source=corona_viz&utm_campaign=corona_viz">
+        <img style="clip-path: inset(0px 2100px 0px 0px); object-position:-650px 0px;"
+                src="https://lahaus.imgix.net/static/lh-landing/footer/city-illustration-col.png"
+    alt="a nice city in Colombia"/>
+    </a>
+  </div>
+
+  <p id="footnote" style="font-size:10pt;">
+      <sup>1</sup> Nuestros estimados estadísticos están basados en un simple modelo
+      de crecimiento exponencial. Este fácilmente puede subestimar o sobrestimar, ya que
+      no tiene en cuenta el efecto retardante de medidas como
+      cuarentenas o el cambio en el comportamiento de las personas.
+  </p>
+
+</body>
+</html>
