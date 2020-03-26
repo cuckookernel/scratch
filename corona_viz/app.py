@@ -2,7 +2,7 @@
 from flask import Flask, Blueprint, Response, request
 
 from jinja2 import Template
-import corona_viz.common import common
+import corona_viz.common as common
 from corona_viz.plots import get_plot, TRANSL_INV
 from bokeh.resources import CDN
 from redis import Redis
