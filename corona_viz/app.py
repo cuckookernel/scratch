@@ -36,7 +36,7 @@ def corona_viz_log():
 
 
 @route_bp.route('/corona_viz_lin.html')
-def corona_viz_log():
+def corona_viz_lin():
     """main route page"""
     return render_html_world('linear')
 
