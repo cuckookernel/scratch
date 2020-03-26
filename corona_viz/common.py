@@ -48,11 +48,12 @@ def get_data(cache: Dict[Date, DataCacheRec],
         if not fp.exists():
             raise RuntimeError(f'No data for {date}')
     else:
+        date = dt.date.today()
         fp = most_recent_parquet( glob_str )
 
     # % At this point fp exists
     if date in cache and fp.stat().st_mtime <= cache[date].mtime:
-        print(f"retrieving data from memory cache: {date}")
+        print(f"retrieving data from memory cache:\n \tdate={date}q {cache[date].fp}")
     else:
         # %
         mtime = fp.stat().st_mtime
