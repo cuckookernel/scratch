@@ -44,12 +44,19 @@
         color: #3c4858;
     }
 
-    table {
-        height: 800px;
+    /*  inspired in second answer from
+    https://stackoverflow.com/questions/14834198/table-scroll-with-html-and-css */
+
+    table.dataframe {
+        margin-top:  20px; display: inline-block; overflow: auto;
+
+        height: 400px;
         border: 1px solid gray;
         border-collapse: collapse;
-        overflow:scroll;
+        overflow-y:scroll;
     }
+
+    th div { margin-top: -20px; position: absolute; }
 
     td {
         padding: 10px;
@@ -66,6 +73,7 @@
     }
 
     .totals_tbl {
+        border-collapse: collapse;
         height: 50px;
         color: #3c4858;
         font-weight: 600;
