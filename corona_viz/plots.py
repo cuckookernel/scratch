@@ -34,7 +34,6 @@ DataCacheRec = NamedTuple('DataCacheRec', [('mtime', int), ('data', DF), ('fp', 
 DATA_CACHE: Dict[dt.date, DataCacheRec] = {}  # date -> DF
 # %%
 # TODO: use multi_line for estimate
-# TODO: add referer to link
 
 
 def get_plot( klass: str, scale: str = "linear", date: Date = None,
