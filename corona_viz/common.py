@@ -51,13 +51,13 @@ def get_data(cache: Dict[Date, DataCacheRec],
         fp = most_recent_parquet( glob_str )
 
     # % At this point fp exists
-    if date in cache and fp.stat().st_mtime < cache[date].mtime:
+    if date in cache and fp.stat().st_mtime <= cache[date].mtime:
         print(f"retrieving data from memory cache: {date}")
     else:
         # %
         mtime = fp.stat().st_mtime
         tstamp = tstamp_to_dt(mtime)
-        print(f"date in cache {date in cache} retrieving data from disk: f {fp} ({tstamp})")
+        print(f"date in cache {date in cache} retrieving data from disk:\nf {fp} ({tstamp})")
         if date in cache:
             print(f"cache {tstamp_to_dt(cache[date].mtime)}")
         # %
