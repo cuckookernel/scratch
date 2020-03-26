@@ -2,7 +2,7 @@
 from flask import Flask, Blueprint, Response, request
 
 from jinja2 import Template
-import corona_viz.plots as plt
+import corona_viz.common import common
 from corona_viz.plots import get_plot, TRANSL_INV
 from bokeh.resources import CDN
 from redis import Redis
@@ -70,7 +70,7 @@ def create_app():
     app = Flask(__name__)
     app.register_blueprint(route_bp)
     reload_tmpl()
-    print(f"COVID_DATA_BASE={plt.COVID_DATA_BASE}")
+    print(f"COVID_DATA_BASE={common.COVID_DATA_BASE}")
     print("create_app done.")
     return app
 
