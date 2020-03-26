@@ -1,6 +1,6 @@
 #!/bin/bash
 
-LOG_FILE=/home/ubuntu/scratch/corona_viz/refresh.log
+LOG_FILE=/home/ubuntu/scratch/covid_refresh.log
 
 cd /home/ubuntu/COVID-19 || exit 1
 NOW=$(date '+%Y-%m-%d %H:%M UTC')
