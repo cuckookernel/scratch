@@ -1,6 +1,6 @@
 """Routines for getting data from the outside world"""
 
-from typing import Dict
+from typing import Dict, List, Any
 import re
 import json
 import datetime as dt
@@ -123,43 +123,27 @@ def calc_projection(past: DF, ctry: str):
     # %%
 
 
+from pprint import pprint
+
+"https://www.lahaus.com/p/san-martin-apartamentos/medellin"
+    # %%
+
 def get_and_save_data_col():
     """Get Colombia data"""
     # %%
-    rp = requests.get("https://e.infogram.com/01266038-4580-4cf0-baab-a532bd968d0c"
-                      "?parent_url=https%3A%2F%2Fwww.ins.gov.co%2FNoticias%2FPaginas%2FCoronavirus.aspx&src=embed#")
+    # rp = requests.get("https://e.infogram.com/01266038-4580-4cf0-baab-a532bd968d0c",
+    #                   headers={'Cache-Control': 'max-age=100000', 'Accept': 'text/csv'})
+    # print( rp.headers )
 
-    print( f"data_col: infogram reply: status: {rp.status_code} - {len(rp.text)} chars")
+    #  rp = requests.get( "https://coronaviruscolombia.gov.co/Covid19/index.html" )
+    rp = requests.get( "https://e.infogram.com/api/live/flex/0e44ab71-9a20-43ab-89b3-0e73c594668f/832a1373-0724-4182-a188-b958f9bf0906?" )
+    print(f"data_col: infogram reply: status: {rp.status_code} - {len(rp.text)} chars")
+
+    json_tbl = json.loads( rp.text )["data"][0]
+    # json_tbl = extract_json_tbl(rp.text)
+
+    df = pd.DataFrame( json_tbl[1:], columns=json_tbl[0])
     # %%
-    doc = bs4.BeautifulSoup(rp.text, features='html.parser')  # , parser='html.parser')
-    els = doc.findAll("script")
-    print( f"data_col: {len(els)} script elems")
-    # %%
-    data = None
-    for el in els:
-        if el.text.startswith("window.infographicData="):
-            data_str = el.text[ len("window.infographicData="):-1]
-            data = json.loads( data_str )
-            break
-
-    if data is None:
-        print("No window.infoGraphicData script element found" )
-        raise RuntimeError()
-    # %%
-    try:
-        tbl = data['elements']['content']['content']['entities'][
-                   '41b1ef61-e7cf-42f4-ae4a-1f15477c22f5']['props']['chartData']['data'][0]
-    except KeyError as err:
-        print( "Failed getting data from json: "
-               "data['elements']['content']['content']['entities'].keys() =",
-               data['elements']['content']['content']['entities'].keys() )
-        print( f"data_col: Will dump data to {PARQUET_PATH / 'data.json'}")
-        dump_all_json( data )
-
-        raise err
-
-    df = pd.DataFrame( tbl[1:], columns=tbl[0])
-
     df.rename( columns={'ID de caso': 'id',
                         'Fecha de diagnóstico': 'confirmed_date',
                         'Ciudad de ubicación': 'city',
@@ -183,6 +167,37 @@ def get_and_save_data_col():
     print( f"data_col: Writing {df.shape} to: {fp}")
     df.to_parquet( fp )
 
+    # %%
+
+def extract_json_tbl( resp_text: str ):
+    doc = bs4.BeautifulSoup(resp_text, features='html.parser')  # , parser='html.parser')
+    els = doc.findAll("script")
+    print( f"data_col: {len(els)} script elems")
+    # %
+    data = None
+    for el in els:
+        if el.text.startswith("window.infographicData="):
+            data_str = el.text[ len("window.infographicData="):-1]
+            data = json.loads( data_str )
+            break
+
+    if data is None:
+        print("No window.infoGraphicData script element found" )
+        raise RuntimeError()
+    # %
+    try:
+        tbl = data['elements']['content']['content']['entities'][
+                   '41b1ef61-e7cf-42f4-ae4a-1f15477c22f5']['props']['chartData']['data'][0]
+    except KeyError as err:
+        print( "Failed getting data from json: "
+               "data['elements']['content']['content']['entities'].keys() =",
+               data['elements']['content']['content']['entities'].keys() )
+        print( f"data_col: Will dump data to {PARQUET_PATH / 'data.json'}")
+        dump_all_json( data )
+
+        raise err
+
+    return tbl
     # %%
 
 
