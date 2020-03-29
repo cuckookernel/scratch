@@ -85,7 +85,7 @@ def init_plot(scale: str, x_tools: List[str]):
 
     y_axis_type = "log" if scale == "log" else "linear"
 
-    p = figure(plot_width=800, plot_height=600, x_axis_type="datetime",
+    p = figure(plot_width=696, plot_height=600, x_axis_type="datetime",
                y_axis_type=y_axis_type, tools=tools)
     # p.title.text = f'Corona virus by country - {klass.upper()} cases'
     p.xaxis.axis_label = "Fecha"
@@ -104,7 +104,7 @@ def draw_country_line( p: Figure, data: DF,
     n = df[f'n_{klass}']
     n_or_est = n.where( n.notnull(), np.round(df['n_confirmed_est']) )
 
-    source = ColumnDataSource( data=dict( date=df['date'],
+    source = ColumnDataSource( data=dict( date=df[  'date'],
                                           date_str=df['date'].astype(str).str[:10],
                                           pais=df['pais'],
                                           n=n,
@@ -137,6 +137,46 @@ def set_hover_tool(p: Figure, klass: str):
         ("Fecha", "@date_str"),
         (f"Total {TRANSL[klass]}", "@n_or_est @est_label"),
     ])
+
+
+def get_plot_cntry( scale: str = "linear", date: Date = None, **kwargs) -> str:
+    """Return plot as json"""
+    data = com.get_data( cache=DATA_CACHE,
+                         date=date,
+                         glob_str=str(PARQUET_PATH / "world/df_*.parquet") )
+    plot = make_plot_cntry(data, scale)
+
+    ret = json.dumps(json_item(plot, "klass"))
+
+    return ret
+    # %%
+
+
+def make_plot_cntry(data: DF, scale: str = "linear", country="Colombia"):
+    """Make a bokeh plot of a certain type (confirmed/recovered/deaths/active)
+    scale can be "linear" or "log"
+     for a bunch of countries"""
+
+    klasses = ["active", "confirmed", "death", "recovered"]
+
+    p = init_plot( scale, x_tools )
+
+    for klass, color in zip(klasses, Category10[10]):
+        # visible = country in (ACTIVE_COUNTRIES.union(x_countries))
+        draw_country_line(p, data, klass, country, color, visible=True )
+
+    set_hover_tool(p, klass)
+
+    p.legend.location = "top_left"
+    p.legend.click_policy = "hide"
+    p.yaxis.formatter = NumeralTickFormatter(format='0,0')
+    p.xaxis.formatter = DatetimeTickFormatter(days=["%b %d"])
+
+    # output_file(OUTPUT_DIR / f"{klass}.html", title=f"Cases by country - {klass}")
+    return p
+    # %%
+
+
 
 
 def old_version():

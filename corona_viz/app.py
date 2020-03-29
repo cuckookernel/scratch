@@ -47,6 +47,22 @@ def corona_viz_col():
     return render_html_col()
 
 
+@route_bp.route('/r/<string:fname>.<string:ext>')
+def resource(fname: str, ext: str):
+    """Fetch a static resource such as css or js"""
+    by_ext = {'css': ( 'corona_viz/styles/{fname}.css',
+                       'text/css'),
+              'js':  ( 'corona_viz/js/{fname}.js',
+                       'application/javascript')}
+
+    tmpl, content_type = by_ext[ext]
+
+    with open( tmpl.format(fname=fname) ) as f_in:
+        ret = f_in.read()
+
+    return Response(ret, content_type=content_type )
+
+
 def render_html_world( scale: str ) -> str:
     """Render any of the versions"""
     # ip = request.ip.address
@@ -124,10 +140,10 @@ def reload_tmpls():
     """Reload tmpl from html file"""
     global TMPLS
 
-    with open("corona_viz/corona_viz.html") as f_in:
+    with open("corona_viz/html/corona_viz.html") as f_in:
         TMPLS['world'] = Template(f_in.read())
 
-    with open("corona_viz/corona_viz_col.html") as f_in:
+    with open("corona_viz/html/corona_viz_col.html") as f_in:
         TMPLS['col'] = Template(f_in.read())
 
 

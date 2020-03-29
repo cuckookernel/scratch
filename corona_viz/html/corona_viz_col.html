@@ -4,84 +4,8 @@
     <meta charset="UTF-8">
     <title>Reporte Coronavirus Colombia - La Haus</title>
     {{resources}}
-    <style>
-    html {
-        line-height: 1.15;
-             -webkit-text-size-adjust: 100%;
-    }
-    body {
-        width: 800px;
-    }
-    .font-family-poppins {
-
-        font-family: Poppins,Helvetica Neue,Arial,Helvetica,Verdana,sans-serif;
-        font-weight: 400;
-    }
-
-    h1 {
-        line-height: 1.6;
-        padding-bottom: 2.5rem;
-        margin-bottom: 0;
-        // max-width: 500px;
-        font-size: 28px;
-
-        color: #3c4858;
-    }
-
-
-
-    .font-weight-6 {
-        font-weight: 600;
-    }
-
-    .color-slate {
-        color: #3c4858;
-    }
-
-    h2 {
-        padding-top: 1em;
-        font-size: 16px;
-        color: #3c4858;
-    }
-
-    /*  inspired in second answer from
-    https://stackoverflow.com/questions/14834198/table-scroll-with-html-and-css */
-
-    table.dataframe {
-        margin-top:  20px; display: inline-block; overflow: auto;
-
-        height: 400px;
-        border: 1px solid gray;
-        border-collapse: collapse;
-        overflow-y:scroll;
-    }
-
-    th div { margin-top: -20px; position: absolute; }
-
-    td {
-        padding: 10px;
-    }
-
-    th {
-        padding: 10px;
-        color: #3c4858;
-    }
-
-    #totals {
-        margin-left:auto;
-        margin-right:auto;
-    }
-
-    .totals_tbl {
-        border-collapse: collapse;
-        height: 50px;
-        color: #3c4858;
-        font-weight: 600;
-        font-size: 24px;
-        text-align: center;
-    }
-
-    </style>
+    <link rel="stylesheet" type="text/css" href="/r/style.css">
+    <script src="/r/tabs.js"></script>
 </head>
 
 <body class="lh font-family-poppins">
@@ -109,38 +33,47 @@
       </li>
   </ul>
 
+  <div id="tab-selectors">
+      <button class="tablink" onclick="openTab('totals')">Resumen</button>
+      <button class="tablink active" onclick="openTab('by_state')">Por Departamento</button>
+      <button class="tablink" onclick="openTab('by_city')">Por Municipio</button>
+      <button class="tablink" onclick="openTab('by_age_sex')">Por Edad y Sexo</button>
+  </div>
+
   <div id="data_pieces">
       <!-- <div id="confirmed">{{confirmed}} </div>
       <div id="deaths">{{deaths}} </div>
       <div id="recovered">{{recovered}} </div> -> -->
 
-      <div id="totals">
+      <div id="totals" class="tab" style="display: none;">
           <h2>Totales Generales</h2>
 
-          <table border="1" class="totals_tbl">
+          <table border="1" class="totals_tbl" style="width: 100%;">
               <tbody>
               <tr>
-                  <td id="total"> Total <br /> {{confirmed}}
+                  <td id="total"> <span class="color-prim"> {{confirmed}} </span> <br />confirmados
                   </td>
-                  <td id="recovered"> Recuperados <br /> {{recovered}}
+                  <td id="recovered"> <span class="color-prim">{{recovered}}</span>  <br />recuperados
                   </td>
-                  <td id="deaths"> Muertes <br /> {{deaths}}
+                  <td id="deaths"> <span class="color-prim"> {{deaths}} </span> <br />muertes
                   </td>
-                  <td id="active"> Activos <br /> {{active}}
+                  <td id="active"> <span class="color-prim">{{active}}</span> <br />activos
                   </td>
               </tr>
               </tbody>
           </table>
-      </div>
 
-      <div id="plot_wrapper">
-          <h2>Evolución en el tiempo</h2>
-        <div id="confirmed_plot"></div>
-      </div>
 
-      <div id="by_state"> <h2>Por Departamento</h2> {{by_state}} </div>
-      <div id="by_city"> <h2>Por Municipio</h2>  {{by_city}} </div>
-      <div id="by_age_sex"> <h2>Confirmados por Edad y Sexo</h2>  {{by_sex_age}} </div>
+          <div id="plot_wrapper">
+            <h2>Evolución en el tiempo</h2>
+            <div id="confirmed_plot"></div>
+          </div>
+        </div>
+
+
+      <div id="by_state" class="tab" style="display: block;"> <h2>Por Departamento</h2> {{by_state}} </div>
+      <div id="by_city"  class="tab"> <h2>Por Municipio</h2>  {{by_city}} </div>
+      <div id="by_age_sex" class="tab"> <h2>Confirmados por Edad y Sexo</h2>  {{by_sex_age}} </div>
   </div>
 
   <script>
@@ -155,7 +88,7 @@
   <div >
     <a href="https://www.lahaus.com?utm_source=corona_viz&utm_campaign=corona_viz">
         <img style="clip-path: inset(0px 2100px 0px 0px); object-position:-650px 0px;"
-                src="https://lahaus.imgix.net/static/lh-landing/footer/city-illustration-col.png"
+             src="https://lahaus.imgix.net/static/lh-landing/footer/city-illustration-col.png"
     alt="a nice city in Colombia"/>
     </a>
   </div>

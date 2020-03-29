@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <title>Visualización de crecimiento del Coronavirus - La Haus</title>
     {{resources}}
-    <style>
+    <link rel="stylesheet" type="text/css" href="/r/style.css">
+    <script src="/r/tabs.js"></script>
+    <!-- <style>
     html {
         line-height: 1.15;
              -webkit-text-size-adjust: 100%;
@@ -40,7 +42,7 @@
         font-size: 16px;
     }
 
-    </style>
+    </style> -->
 </head>
 
 <body class="lh font-family-poppins">
@@ -70,7 +72,13 @@
       </li>
   </ul>
 
-
+  <div id="tab-selectors">
+    <button class="tablink active" onclick="openTab('confirmed_wrapper')">Confirmados</button>
+    <button class="tablink" onclick="openTab('recovered_wrapper')">Recuperados</button>
+    <button class="tablink" onclick="openTab('deaths_wrapper')">Muertos</button>
+    <button class="tablink" onclick="openTab('active_wrapper')">Activos</button>
+ </div>
+ <!--
   <p>
       Ir a:
       <a href="#recovered_wrapper">Recuperados</a> |
@@ -78,42 +86,36 @@
       <a href="#active_wrapper">Activos</a> |
       {{other_view}}.
   </p>
+<p>&nbsp;</p>
 
-  <p>&nbsp;</p>
+-->
 
-  <div id="confirmed_wrapper">
-      <h2>Casos Confirmados</h2>
+  <div id="confirmed_wrapper" class="tab" style="display: block;">
+      <!-- <h2>Casos Confirmados</h2> -->
       <div id="confirmed"></div>
   </div>
 
-  <div id="recovered_wrapper">
-      <h2>Recuperados</h2>
+  <div id="recovered_wrapper" class="tab">
+      <!-- <h2>Recuperados</h2> -->
       <div id="recovered"></div>
   </div>
 
-  <p>
-      Ir a:
-      <a href="#confirmed_wrapper">Confirmados</a> |
-      <a href="#deaths_wrapper">Muertes</a> |
-      <a href="#active_wrapper">Activos</a> |
-      {{other_view}}.
-  </p>
-
-  <div id="deaths_wrapper">
+  <div id="deaths_wrapper" class="tab">
       <h2>Muertes</h2>
       <div id="deaths"></div>
   </div>
 
+  <!--
   <p>
       Ir a:
       <a href="#confirmed_wrapper">Confirmados</a> |
       <a href="#recovered_wrapper">Recuperados</a> |
       <a href="#deaths_wrapper">Muertes</a> |
       {{other_view}}.
-  </p>
+  </p>-->
 
 
-  <div id="active_wrapper">
+  <div id="active_wrapper" class="tab">
       <h2>Casos Activos</h2>
       <p>Activos = Confirmados &minus; Recuperados &minus; Muertes</p>
       <div id="active"></div>
