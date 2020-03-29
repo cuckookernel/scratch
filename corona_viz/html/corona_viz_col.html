@@ -34,8 +34,8 @@
   </ul>
 
   <div id="tab-selectors">
-      <button class="tablink" onclick="openTab('totals')">Resumen</button>
-      <button class="tablink active" onclick="openTab('by_state')">Por Departamento</button>
+      <button class="tablink active" onclick="openTab('totals')">Resumen</button>
+      <button class="tablink" onclick="openTab('by_state')">Por Departamento</button>
       <button class="tablink" onclick="openTab('by_city')">Por Municipio</button>
       <button class="tablink" onclick="openTab('by_age_sex')">Por Edad y Sexo</button>
   </div>
@@ -45,7 +45,7 @@
       <div id="deaths">{{deaths}} </div>
       <div id="recovered">{{recovered}} </div> -> -->
 
-      <div id="totals" class="tab" style="display: none;">
+      <div id="totals" class="tab" style="display: block;">
           <h2>Totales Generales</h2>
 
           <table border="1" class="totals_tbl" style="width: 100%;">
@@ -71,7 +71,7 @@
         </div>
 
 
-      <div id="by_state" class="tab" style="display: block;"> <h2>Por Departamento</h2> {{by_state}} </div>
+      <div id="by_state" class="tab"> <h2>Por Departamento</h2> {{by_state}} </div>
       <div id="by_city"  class="tab"> <h2>Por Municipio</h2>  {{by_city}} </div>
       <div id="by_age_sex" class="tab"> <h2>Confirmados por Edad y Sexo</h2>  {{by_sex_age}} </div>
   </div>
