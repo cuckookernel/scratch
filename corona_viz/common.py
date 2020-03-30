@@ -1,6 +1,6 @@
 """Shared routines and constants"""
 
-from typing import Optional, NamedTuple, Dict
+from typing import Optional, NamedTuple, Dict, Tuple
 import datetime as dt
 import os
 import glob
@@ -18,7 +18,8 @@ COVID_DATA_BASE = os.getenv('COVID_DATA_BASE', "/home/teo/git/COVID-19")
 RAW_DATA_PATH = Path(f"{COVID_DATA_BASE}/csse_covid_19_data/csse_covid_19_time_series")
 PARQUET_PATH = Path( os.getenv('COVID_PARQUETS_DIR', "/home/teo/_data/covid") )
 
-TRANSL = {"Mexico": "México",
+TRANSL = {"World": "Mundo",
+          "Mexico": "México",
           "Italy": "Italia",
           "Spain": "España",
           "US": "EE.UU.",
@@ -28,7 +29,7 @@ TRANSL = {"Mexico": "México",
           "confirmed": "confirmados",
           "recovered": "recuperados",
           "deaths": "muertes",
-          "active": "activos" }
+          "active": "activos"}
 
 
 def tstamp_to_dt( tstamp: float ) -> DateTime:
@@ -39,7 +40,7 @@ def tstamp_to_dt( tstamp: float ) -> DateTime:
 def get_data(cache: Dict[Date, DataCacheRec],
              glob_str: str,
              date: Optional[Date] = None,
-             date_col: str = 'date') -> DF:
+             date_col: str = 'date') -> DataCacheRec:
 
     """Get DF for the given date or the most recent one if not provided"""
     if date is not None:
@@ -66,7 +67,7 @@ def get_data(cache: Dict[Date, DataCacheRec],
         data[date_col] = pd.to_datetime(data[date_col])
         cache[date] = DataCacheRec(mtime=mtime, data=data, fp=fp)
 
-    return cache[date].data
+    return cache[date]
     # %%
 
 

@@ -7,7 +7,7 @@ from bokeh.resources import CDN
 from jinja2 import Template
 import corona_viz.common as common
 import corona_viz.colombia as col
-from corona_viz.plots import get_plot, TRANSL_INV
+from corona_viz.plots import get_plot, get_plot_cntry, TRANSL_INV
 
 # html templates loaded in create_app
 TMPLS = { "world": Template(""),
@@ -16,11 +16,12 @@ TMPLS = { "world": Template(""),
 route_bp = Blueprint('route_blueprint', __name__)
 red = Redis("localhost")
 
-# TODO: línea de Mundo entero
 # TODO: mostrar fecha de última actualización de datos
 # TODO: mostrar tasa de crecimiento
 # TODO: Fit con término cuadrático
-
+# TODO: Mapa colombia, deptos / municipios
+# TODO: Por rango edad/sexo barritas
+# TODO: Página mundo
 
 @route_bp.route('/corona_viz.html')
 def corona_viz():
@@ -115,6 +116,21 @@ def cvv_plot():
     plot_json = get_plot( klass=klass, scale=scale, x_tools=x_tools,
                           countries=countries, x_countries=x_countries)
     return Response(plot_json, mimetype="application/json")
+
+
+@route_bp.route('/cntry_plot.json')
+def cntry_plot():
+    """main route"""
+
+    scale = request.args.get("s")
+    x_tools = request.args.get("xt")
+    x_tools = x_tools.split(",") if x_tools else None
+
+    country = request.args.get("c")
+
+    plot_json = get_plot_cntry( scale=scale, country=country, x_tools=x_tools)
+    return Response(plot_json, mimetype="application/json")
+
 
 
 def record_visit():

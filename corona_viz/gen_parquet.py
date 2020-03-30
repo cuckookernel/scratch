@@ -1,5 +1,7 @@
+from pathlib import Path
 from importlib import reload
 import corona_viz.etl as etl
+
 from corona_viz.common import PARQUET_PATH, tstamp_to_dt
 # %%
 
@@ -17,13 +19,16 @@ def gen_parquet_world():
     print( f'gen_parquet_world: last_date = {last_date}')
     # %%
     fp = PARQUET_PATH / f'world/df_{last_date}.parquet'
+    code_mtime = Path('corona_viz/etl.py').stat().st_mtime
 
-    if not fp.exists() or max_mtime > fp.stat().st_mtime:
+    if ( not fp.exists() or max_mtime > fp.stat().st_mtime
+         or code_mtime > fp.stat().st_mtime ):
         data.to_parquet(fp)
         print(f'Generated {fp} : {tstamp_to_dt(fp.stat().st_mtime)}')
     else:
         print(f'Not regenerating parquet as {fp} is from {tstamp_to_dt(fp.stat().st_mtime)}')
     # %%
+
 
 def main():
     # %%

@@ -1,6 +1,6 @@
 """Routines for getting data from the outside world"""
 
-from typing import Dict, List, Any
+from typing import Dict
 import re
 import json
 import datetime as dt
@@ -9,7 +9,8 @@ import pandas as pd
 import numpy as np
 import requests
 import bs4
-from scipy.stats import linregress
+# from scipy.stats import linregress
+from sklearn.linear_model import LinearRegression
 
 from corona_viz.common import TRANSL, RAW_DATA_PATH, PARQUET_PATH
 
@@ -33,8 +34,12 @@ def load_data_world() -> DF:
                         - data['n_deaths'].fillna(0) )
 
     # %%
-    data1 = (data.groupby(['country', 'date']).sum().reset_index())
-    # %%
+    data0 = data.groupby(['country', 'date']).sum().reset_index()
+    data_world = data.groupby('date').sum().reset_index()
+    data_world['country'] = 'World'
+
+    data1 = pd.concat([data0, data_world])
+
     data2 = gen_projections( data1 )
     data2['pais'] = data2['country'].apply(lambda s: TRANSL.get(s, s))
     # %%
@@ -108,25 +113,25 @@ def calc_projection(past: DF, ctry: str):
     max_date = df['date'].max()
     # %
     df['x'] = (df['date'] - max_date).dt.total_seconds() / (24.0 * 60.0 * 60.0)
+    df['x2'] = df['x'] * df['x'] / 50
 
     df = df[ df['x'] >= -7.0 ]
     # %
-    slope, intercept, r_value, p_value, _ = linregress( df['x'], df['log_n_confirmed'] )
+    lr = LinearRegression()
+    reg_cols = ['x']  # ['x', 'x2']
+    lr.fit( X=df[reg_cols], y=df['log_n_confirmed'] )
+    # slope, intercept, r_value, p_value, _ =
     # print( ctry, slope, intercept )
     # %
     proj_df = pd.DataFrame( {"country": ctry, "x": range(0, 10)})
     proj_df['date'] = max_date + proj_df['x'].apply( lambda x: dt.timedelta(x) )
-    log_est = intercept + slope * proj_df['x']
+    proj_df['x2'] = proj_df['x'] * proj_df['x'] / 50
+    log_est = lr.predict( proj_df[reg_cols] )
     proj_df['n_confirmed_est'] = np.exp( log_est )
     # %
     return proj_df.drop(['x'], axis=1)
     # %%
 
-
-from pprint import pprint
-
-"https://www.lahaus.com/p/san-martin-apartamentos/medellin"
-    # %%
 
 def get_and_save_data_col():
     """Get Colombia data"""
@@ -136,7 +141,8 @@ def get_and_save_data_col():
     # print( rp.headers )
 
     #  rp = requests.get( "https://coronaviruscolombia.gov.co/Covid19/index.html" )
-    rp = requests.get( "https://e.infogram.com/api/live/flex/0e44ab71-9a20-43ab-89b3-0e73c594668f/832a1373-0724-4182-a188-b958f9bf0906?" )
+    rp = requests.get( "https://e.infogram.com/api/live/flex/0e44ab71-9a20-43ab-89b3-0e73c594668f/"
+                       "832a1373-0724-4182-a188-b958f9bf0906?" )
     print(f"data_col: infogram reply: status: {rp.status_code} - {len(rp.text)} chars")
 
     json_tbl = json.loads( rp.text )["data"][0]
@@ -144,15 +150,19 @@ def get_and_save_data_col():
 
     df = pd.DataFrame( json_tbl[1:], columns=json_tbl[0])
     # %%
-    df.rename( columns={'ID de caso': 'id',
-                        'Fecha de diagnóstico': 'confirmed_date',
-                        'Ciudad de ubicación': 'city',
-                        'Departamento': 'state',
-                        'Atención': 'care',
-                        'Edad': 'age',
-                        'Sexo': 'sex',
-                        'Tipo*': 'typ',
-                        'País de procedencia': 'origin_ctry'}, inplace=True)
+    renames = {'ID de caso': 'id',
+               'Fecha de diagnóstico': 'confirmed_date',
+               'Ciudad de ubicación': 'city',
+               'Departamento': 'state',
+               'Atención**': 'care',
+               'Edad': 'age',
+               'Sexo': 'sex',
+               'Tipo*': 'typ',
+               'País de procedencia': 'origin_ctry'}
+    for col in renames.keys():
+        assert col in df.columns, f"{col} is missing from downloaded df: {df.columns}"
+
+    df.rename( columns=renames, inplace=True)
     df = df[ df['id'] != '' ]
     df['confirmed_date'] = pd.to_datetime( df['confirmed_date'], format="%d/%m/%Y" )
     df['confirmed_date'] = df['confirmed_date'].dt.date
@@ -170,6 +180,7 @@ def get_and_save_data_col():
     # %%
 
 def extract_json_tbl( resp_text: str ):
+    """No longer used..."""
     doc = bs4.BeautifulSoup(resp_text, features='html.parser')  # , parser='html.parser')
     els = doc.findAll("script")
     print( f"data_col: {len(els)} script elems")
@@ -222,7 +233,8 @@ def interactive_testing():
     # %%
     # conf_afg = conf[ conf.country == 'Afghanistan']
     # %%
-    data = load_data()
+    data = load_data_world()
     # %%
     # ctry = data[data.country == 'Italy']
     # %%
+    return conf, data, recov

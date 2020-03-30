@@ -37,10 +37,10 @@ DATA_CACHE: Dict[dt.date, DataCacheRec] = {}  # date -> DF
 def get_plot( klass: str, scale: str = "linear", date: Date = None, **kwargs) -> str:
 
     """Return plot as json"""
-    data = com.get_data( cache=DATA_CACHE,
-                         date=date,
-                         glob_str=str(PARQUET_PATH / "world/df_*.parquet") )
-    plot = make_plot(data, klass, scale, **kwargs)
+    data_rec = com.get_data( cache=DATA_CACHE,
+                             date=date,
+                             glob_str=str(PARQUET_PATH / "world/df_*.parquet") )
+    plot = make_plot(data_rec.data, klass, scale, **kwargs)
 
     ret = json.dumps(json_item(plot, "klass"))
 
@@ -57,14 +57,20 @@ def make_plot(data: DF, klass: str, scale: str = "linear",
 
     x_countries = x_countries or []
     countries = countries or COUNTRIES
+    print( 'c1', countries )
+    if scale == 'log' and 'World' not in countries:
+        countries = ['World'] + countries
+    print('c2', countries)
     countries = x_countries + [ c for c in countries if c not in x_countries ]
     countries = countries[:10]
 
     p = init_plot( scale, x_tools )
 
     for country, color in zip(countries, Category10[10]):
+        data_src = data_source_ctry( data, country )
         visible = country in (ACTIVE_COUNTRIES.union(x_countries))
-        draw_country_line(p, data, klass, country, color, visible )
+        legend = TRANSL.get( country, country )
+        draw_country_line(p, data_src, country, klass, color, visible, legend )
 
     set_hover_tool(p, klass)
 
@@ -95,26 +101,39 @@ def init_plot(scale: str, x_tools: List[str]):
     return p
 
 
-def draw_country_line( p: Figure, data: DF,
-                       klass: str, country: str, color: str, visible: bool):
+def data_source_ctry(  data: DF, country: str ) -> ColumnDataSource:
     """Draw line for one country and (possibly) the estimate"""
 
     df = data[data['country'] == country].copy()
     df['est_label'] = np.where( df['n_confirmed_est'].notnull(), " (estimado)", "")
-    n = df[f'n_{klass}']
+    n = df[f'n_confirmed']
     n_or_est = n.where( n.notnull(), np.round(df['n_confirmed_est']) )
 
-    source = ColumnDataSource( data=dict( date=df[  'date'],
+    source = ColumnDataSource( data=dict( date=df['date'],
                                           date_str=df['date'].astype(str).str[:10],
                                           pais=df['pais'],
-                                          n=n,
+                                          n_confirmed=df[f'n_confirmed'],
+                                          n_active=df[f'n_active'],
+                                          n_deaths=df[f'n_deaths'],
+                                          n_recovered=df[f'n_recovered'],
                                           n_or_est=n_or_est,
                                           est=df['n_confirmed_est'],
                                           est_label=df['est_label']) )
-    p.line('date', 'n',
+
+    return source
+
+
+def draw_country_line( p: Figure, source: ColumnDataSource,
+                       country: str, klass: str, color: str, visible: bool = True,
+                       legend: str = None ):
+
+    if legend is None:
+        legend = TRANSL.get(country, country),
+
+    p.line('date', f'n_{klass}',
            source=source,
            line_width=4, color=color, alpha=0.8,
-           legend_label=TRANSL.get(country, country),
+           legend_label=legend,
            visible=visible)
 
     if klass == 'confirmed':
@@ -122,9 +141,8 @@ def draw_country_line( p: Figure, data: DF,
                 source=source,
                 line_dash='dashed',
                 line_width=2, color=color, alpha=0.8,
-                legend_label=TRANSL.get(country, country),
+                legend_label=legend,
                 visible=visible )
-    # p.circle(df['date'], df[f'n_{klass}'], color=color, legend_label=country)
 
 
 def set_hover_tool(p: Figure, klass: str):
@@ -139,12 +157,12 @@ def set_hover_tool(p: Figure, klass: str):
     ])
 
 
-def get_plot_cntry( scale: str = "linear", date: Date = None, **kwargs) -> str:
+def get_plot_cntry( country: str, scale: str = "linear", date: Date = None, **kwargs) -> str:
     """Return plot as json"""
-    data = com.get_data( cache=DATA_CACHE,
-                         date=date,
-                         glob_str=str(PARQUET_PATH / "world/df_*.parquet") )
-    plot = make_plot_cntry(data, scale)
+    data_rec = com.get_data( cache=DATA_CACHE,
+                             date=date,
+                             glob_str=str(PARQUET_PATH / "world/df_*.parquet") )
+    plot = make_plot_cntry(data_rec.data, country=country, scale=scale, **kwargs )
 
     ret = json.dumps(json_item(plot, "klass"))
 
@@ -152,20 +170,48 @@ def get_plot_cntry( scale: str = "linear", date: Date = None, **kwargs) -> str:
     # %%
 
 
-def make_plot_cntry(data: DF, scale: str = "linear", country="Colombia"):
+def set_hover_tool_ctry(p: Figure):
+    """Display a little sign when moving mouse over a point in the series"""
+    hover = p.select(dict(type=HoverTool))
+    hover.tooltips = dict([
+        # ("index", "$index"),
+        # ("(xx,yy)", "(@x, @y)"),
+        ("País", "@pais"),
+        ("Fecha", "@date_str"),
+        (f"Total activos", "@n_active"),
+        (f"Total confirmados", "@n_or_est @est_label"),
+        (f"Total recuperados", "@n_recovered"),
+        (f"Total muertes", "@n_deaths"),
+    ])
+
+
+def make_plot_cntry(data: DF, scale: str = "linear", country="Colombia",
+                    x_tools: List[str] = None):
     """Make a bokeh plot of a certain type (confirmed/recovered/deaths/active)
     scale can be "linear" or "log"
      for a bunch of countries"""
 
-    klasses = ["active", "confirmed", "death", "recovered"]
+    klasses = ["active",  "deaths", "recovered", "confirmed"]
 
-    p = init_plot( scale, x_tools )
+    p = init_plot( scale, x_tools=x_tools )
 
-    for klass, color in zip(klasses, Category10[10]):
+    data_source = data_source_ctry(data, country=country)
+
+    all_colors = Category10[10]
+    klass_2_color = {
+        'active': all_colors[1],
+        'recovered': all_colors[2],
+        'deaths': all_colors[3],
+        'confirmed': all_colors[0],
+    }
+
+    for klass in klasses:
+        color = klass_2_color[klass]
         # visible = country in (ACTIVE_COUNTRIES.union(x_countries))
-        draw_country_line(p, data, klass, country, color, visible=True )
-
-    set_hover_tool(p, klass)
+        draw_country_line(p, source=data_source, country=country, klass=klass,
+                          legend=TRANSL.get(klass, klass), color=color, visible=True )
+        # set_hover_tool(p, klass)
+        set_hover_tool_ctry( p )
 
     p.legend.location = "top_left"
     p.legend.click_policy = "hide"
@@ -175,8 +221,6 @@ def make_plot_cntry(data: DF, scale: str = "linear", country="Colombia"):
     # output_file(OUTPUT_DIR / f"{klass}.html", title=f"Cases by country - {klass}")
     return p
     # %%
-
-
 
 
 def old_version():
@@ -199,7 +243,8 @@ def interactive_testing():
     # %%
     # noinspection PyUnresolvedReferences
     runfile( 'corona_viz/plots.py')
-    data = com.get_data( cache=DATA_CACHE, glob_str="df_*.parquet", date_col="date")
+    data_rec = com.get_data( cache=DATA_CACHE, glob_str="df_*.parquet", date_col="date")
+    data = data_rec.data
     # typ = "confirmed"
     plot = make_plot(data, klass="confirmed", scale="log")
     show(plot)

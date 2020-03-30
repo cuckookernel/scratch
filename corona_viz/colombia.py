@@ -14,30 +14,32 @@ DATA_CACHE: Dict[Date, DataCacheRec] = {}
 
 def get_htmls() -> Dict:
     """Load process, adapt to html"""
-    df = load_col_data()
-    data = summarize_col_data( df )
-    htmls = render_html( data )
+    data_rec = load_col_data()
+    # print( data_rec.dtype )
+    data_dic = summarize_col_data( data_rec )
+    htmls = render_html( data_dic )
 
     return htmls
 
 
-def load_col_data():
+def load_col_data() -> DataCacheRec:
     """Load data from local parquet that should have been created by independent process
     running gen_parquet.py"""
     # %%
     reload( com )
-    df = com.get_data(DATA_CACHE,
-                      glob_str=str(PARQUET_PATH / "colombia/df_col_*.parquet"),
-                      date_col='confirmed_date')
-
+    data_rec = com.get_data(DATA_CACHE,
+                            glob_str=str(PARQUET_PATH / "colombia/df_col_*.parquet"),
+                            date_col='confirmed_date')
+    df = data_rec.data
     df['death'] = df['death'].astype(int)
     # %%
-    return df
+    return data_rec
 
 
-def summarize_col_data( df: DF ) -> Dict:
+def summarize_col_data( data_rec: DataCacheRec ) -> Dict:
     """Process the case by case data frame to produce summaries"""
     # %%
+    df = data_rec.data
     df['confirmed'] = 1
 
     by_sex = df['sex'].value_counts()
@@ -82,6 +84,7 @@ def summarize_col_data( df: DF ) -> Dict:
             "by_city": by_city,
             "by_state": by_state,
             "by_sex_age": by_sex_age,
+            "last_mtime": data_rec.mtime
             }
     # %%
     return data
@@ -110,6 +113,8 @@ def render_html( data: Dict ):
         htmls[key] = ( data[key]
                        .rename( columns=col_renames )
                        .to_html(na_rep='-', index=False, float_format='%.0f') )
+
+    htmls['last_mtime'] = com.tstamp_to_dt( data['last_mtime'] ).isoformat(sep=' ')[:-10] + ' UTC'
 
     return htmls
     # %%

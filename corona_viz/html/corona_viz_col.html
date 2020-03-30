@@ -74,12 +74,15 @@
       <div id="by_state" class="tab"> <h2>Por Departamento</h2> {{by_state}} </div>
       <div id="by_city"  class="tab"> <h2>Por Municipio</h2>  {{by_city}} </div>
       <div id="by_age_sex" class="tab"> <h2>Confirmados por Edad y Sexo</h2>  {{by_sex_age}} </div>
+
+      <p> <em>Datos actualizados: {{last_mtime}} </em></p>
   </div>
 
   <script>
-      const args = "&s={{scale}}&xc={{x_countries}}&xt={{x_tools}}&c=Colombia";
+      const args = "&s={{scale}}&xc={{x_countries}}&xt={{x_tools}}";
 
-      fetch('/cvv_plot.json?k=confirmed' + args)
+      // fetch('/cvv_plot.json?k=confirmed' + args)
+      fetch('/cntry_plot.json?c=Colombia' + args)
         .then(function(response) { return response.json(); })
         .then(function(item) { return Bokeh.embed.embed_item(item, "confirmed_plot"); })
   </script>
