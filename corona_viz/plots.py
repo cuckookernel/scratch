@@ -34,18 +34,22 @@ DATA_CACHE: Dict[dt.date, DataCacheRec] = {}  # date -> DF
 # TODO: use multi_line for estimate
 
 
-def get_plot( klass: str, scale: str = "linear", date: Date = None, **kwargs) -> str:
+def get_cmp_plot( klass: str, scale: str = "linear", date: Date = None, **kwargs) -> str:
 
+    data_rec = cntries_data( date )
     """Return plot as json"""
-    data_rec = com.get_data( cache=DATA_CACHE,
-                             date=date,
-                             glob_str=str(PARQUET_PATH / "world/df_*.parquet") )
     plot = make_plot(data_rec.data, klass, scale, **kwargs)
 
     ret = json.dumps(json_item(plot, "klass"))
 
     return ret
     # %%
+
+
+def cntries_data( date: Date = None ):
+    return com.get_data(cache=DATA_CACHE,
+                        date=date,
+                        glob_str=str(PARQUET_PATH / "world/df_*.parquet"))
 
 
 def make_plot(data: DF, klass: str, scale: str = "linear",

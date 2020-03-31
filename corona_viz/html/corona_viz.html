@@ -87,10 +87,9 @@
       <a href="#deaths_wrapper">Muertes</a> |
       <a href="#active_wrapper">Activos</a> |
       {{other_view}}.
-  </p>
-<p>&nbsp;</p>
+  </p> -->
 
--->
+  <p>&nbsp;</p>
 
   <div id="confirmed_wrapper" class="tab" style="display: block;">
       <!-- <h2>Casos Confirmados</h2> -->
@@ -103,24 +102,16 @@
   </div>
 
   <div id="deaths_wrapper" class="tab">
-      <h2>Muertes</h2>
       <div id="deaths"></div>
   </div>
 
 
   <div id="active_wrapper" class="tab">
-      <h2>Casos Activos</h2>
       <p>Activos = Confirmados &minus; Recuperados &minus; Muertes</p>
       <div id="active"></div>
   </div>
 
-
-  <p id="footnote" style="font-size:10pt;">
-      <sup>1</sup> Nuestros estimados estadísticos están basados en un simple modelo
-      de crecimiento exponencial. Este fácilmente puede subestimar o sobrestimar, ya que
-      no tiene en cuenta el efecto retardante de medidas como
-      cuarentenas o el cambio en el comportamiento de las personas.
-  </p>
+  <p> <em>Datos actualizados: {{last_mtime}} </em></p>
 
   <script>
     const args = "&s={{scale}}&xc={{x_countries}}&xt={{x_tools}}";
@@ -157,5 +148,13 @@
     alt="a nice city in Colombia"/>
     </a>
   </div>
+
+  <p id="footnote" style="font-size:10pt;">
+    <sup>1</sup> Nuestros estimados estadísticos están basados en un simple modelo
+    de crecimiento logístico. Este fácilmente puede subestimar o sobrestimar, ya que
+    no tiene en cuenta el efecto retardante de medidas como
+    cuarentenas o el cambio en el comportamiento de las personas.
+  </p>
+
 </body>
 </html>

@@ -5,9 +5,9 @@ from redis import Redis
 
 from bokeh.resources import CDN
 from jinja2 import Template
-import corona_viz.common as common
+from corona_viz.common import tstamp_to_dt, COVID_DATA_BASE
 import corona_viz.colombia as col
-from corona_viz.plots import get_plot, get_plot_cntry, TRANSL_INV
+from corona_viz.plots import get_cmp_plot, get_plot_cntry, cntries_data, TRANSL_INV
 
 # html templates loaded in create_app
 TMPLS = { "world": Template(""),
@@ -16,9 +16,7 @@ TMPLS = { "world": Template(""),
 route_bp = Blueprint('route_blueprint', __name__)
 red = Redis("localhost")
 
-# TODO: mostrar fecha de última actualización de datos
 # TODO: mostrar tasa de crecimiento
-# TODO: Fit con término cuadrático
 # TODO: Mapa colombia, deptos / municipios
 # TODO: Por rango edad/sexo barritas
 # TODO: Página mundo
@@ -33,13 +31,13 @@ def corona_viz():
 @route_bp.route('/corona_viz_log.html')
 def corona_viz_log():
     """main route page"""
-    return render_html_world('log')
+    return render_html_cmp('log')
 
 
 @route_bp.route('/corona_viz_lin.html')
 def corona_viz_lin():
     """main route page"""
-    return render_html_world('linear')
+    return render_html_cmp('linear')
 
 
 @route_bp.route('/corona_viz_col.html')
@@ -64,12 +62,13 @@ def resource(fname: str, ext: str):
     return Response(ret, content_type=content_type )
 
 
-def render_html_world( scale: str ) -> str:
+def render_html_cmp( scale: str ) -> str:
     """Render any of the versions"""
     # ip = request.ip.address
     print( f'render_html_world - scale: {scale}' )
     record_visit()
-    reload_tmpls()  # TODO: take out
+    reload_tmpls()
+    last_mtime = tstamp_to_dt( cntries_data( date=None ).mtime ).isoformat(sep=' ')[:-10] + ' UTC'
     x_tools = request.args.get("xt", "")
     x_countries = request.args.get("xc", "")
 
@@ -80,16 +79,17 @@ def render_html_world( scale: str ) -> str:
         other_view = f'<a href="/corona_viz_lin.html?xt={x_tools}&xc={x_countries}">' \
                      f'Vista en escala lineal</a>'
 
-    return TMPLS['world'].render(resources=CDN.render(), scale=scale,
-                                 x_countries=x_countries, x_tools=x_tools,
-                                 other_view=other_view )
+    return TMPLS['cmp'].render(resources=CDN.render(), scale=scale,
+                               x_countries=x_countries, x_tools=x_tools,
+                               other_view=other_view,
+                               last_mtime=last_mtime)
 
 
 def render_html_col( ) -> str:
     """Render any of the versions"""
     # ip = request.ip.address
     record_visit()
-    reload_tmpls()  # TODO: take out
+    reload_tmpls()
     x_tools = request.args.get("xt", "")
     htmls = col.get_htmls()
 
@@ -113,8 +113,8 @@ def cvv_plot():
     countries = request.args.get("c")
     countries = countries.split(",") if countries else []
 
-    plot_json = get_plot( klass=klass, scale=scale, x_tools=x_tools,
-                          countries=countries, x_countries=x_countries)
+    plot_json = get_cmp_plot( klass=klass, scale=scale, x_tools=x_tools,
+                              countries=countries, x_countries=x_countries)
     return Response(plot_json, mimetype="application/json")
 
 
@@ -132,7 +132,6 @@ def cntry_plot():
     return Response(plot_json, mimetype="application/json")
 
 
-
 def record_visit():
     """Record stats in redis"""
     ip = str(request.remote_addr)
@@ -147,7 +146,7 @@ def create_app():
     app = Flask(__name__)
     app.register_blueprint(route_bp)
     reload_tmpls()
-    print(f"COVID_DATA_BASE={common.COVID_DATA_BASE}")
+    print(f"COVID_DATA_BASE={COVID_DATA_BASE}")
     print("create_app done.")
     return app
 
@@ -157,7 +156,7 @@ def reload_tmpls():
     global TMPLS
 
     with open("corona_viz/html/corona_viz.html") as f_in:
-        TMPLS['world'] = Template(f_in.read())
+        TMPLS['cmp'] = Template(f_in.read())
 
     with open("corona_viz/html/corona_viz_col.html") as f_in:
         TMPLS['col'] = Template(f_in.read())

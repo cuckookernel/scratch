@@ -54,7 +54,8 @@ def get_data(cache: Dict[Date, DataCacheRec],
 
     # % At this point fp exists
     if date in cache and fp.stat().st_mtime <= cache[date].mtime:
-        print(f"retrieving data from memory cache:\n \tdate={date}q {cache[date].fp}")
+        print(f"retrieving data from memory cache:\n \tdate={date} "
+              f" {cache[date].fp} {cache[date].mtime} - file:{fp.stat().st_mtime}")
     else:
         # %
         mtime = fp.stat().st_mtime

@@ -10,11 +10,14 @@ import numpy as np
 import requests
 import bs4
 # from scipy.stats import linregress
+from scipy.optimize import curve_fit
 from sklearn.linear_model import LinearRegression
 
 from corona_viz.common import TRANSL, RAW_DATA_PATH, PARQUET_PATH
 
 DF = pd.DataFrame
+Ser = pd.Series
+Array = np.ndarray
 # %%
 
 def load_data_world() -> DF:
@@ -28,7 +31,6 @@ def load_data_world() -> DF:
              .merge( recov, on=['province', 'country', 'date'], how='left' )
              .merge( death, on=['province', 'country', 'date'], how='left' ) )
     # %%
-
     data['n_active'] = (data['n_confirmed']
                         - data['n_recovered'].fillna(0)
                         - data['n_deaths'].fillna(0) )
@@ -40,28 +42,30 @@ def load_data_world() -> DF:
 
     data1 = pd.concat([data0, data_world])
 
-    data2 = gen_projections( data1 )
+    data2 = gen_projections( data1, future_window=15 )
     data2['pais'] = data2['country'].apply(lambda s: TRANSL.get(s, s))
     # %%
     return data2
 
-
-def gen_projections( data: DF ) -> DF:
+    # %%
+def gen_projections( data1: DF, future_window: int ) -> DF:
     """Generate projections following simple exponential model"""
     # %%
-    past = data.copy()
+    past = data1.copy()
     past['log_n_confirmed'] = np.log( past['n_confirmed'] + 1.1 )
 
-    countries = data.loc[data['n_confirmed'] > 0, 'country'].value_counts()
+    countries = data1.loc[data1['n_confirmed'] > 0, 'country'].value_counts()
 
     # ctry = "Colombia"
     # cnt = countries.loc[ctry]
-
+    time_window = 10.0
     pieces = []
     for ctry, cnt in countries.items():
-        if cnt < 8:
+        if cnt < (time_window + 1):
             continue
-        pieces.append(calc_projection( past, ctry ) )
+        # pieces.append(calc_projection( past, ctry ) )
+        pieces.append(calc_projection_logistic(past, ctry, time_window=time_window,
+                                               future_window=future_window))
 
     proy_df_all = pd.concat( pieces )
     ret = pd.concat([past, proy_df_all]).sort_values(['country', 'date'])
@@ -130,6 +134,81 @@ def calc_projection(past: DF, ctry: str):
     proj_df['n_confirmed_est'] = np.exp( log_est )
     # %
     return proj_df.drop(['x'], axis=1)
+    # %%
+
+
+def calc_projection_logistic(past: DF, ctry: str, time_window: float, future_window: int):
+    """Compute projections for a country"""
+    # %%
+    df = ( past.loc[(past['country'] == ctry) & (past['n_confirmed'] > 0),
+                    ["date", "n_confirmed", "log_n_confirmed"] ]
+           .sort_values('date').copy() )
+    max_date = df['date'].max()
+    # %
+    df['x'] = (df['date'] - max_date).dt.total_seconds() / (24.0 * 60.0 * 60.0)
+    # df['sigma'] = 0.01
+
+    df = df[ df['x'] >= -time_window ]
+    # %
+    x = df['x']
+    y = df['log_n_confirmed']
+
+    # %%
+    popt = fit_to_curve(x, y )
+
+    proj_df = extrapolate( ctry, max_date, future_window, popt )
+    # %%
+    return proj_df
+
+
+def extrapolate( ctry: str, max_date, future_window: int, popt: Array ) -> DF:
+    proj_df = pd.DataFrame( {"country": ctry, "x": range(0, future_window)})
+    proj_df['date'] = max_date + proj_df['x'].apply( lambda x_: dt.timedelta(x_) )
+    if len(popt) == 2:
+        print( f"{ctry:20s} exp" )
+        proj_df['n_confirmed_est'] = np.exp(exp_curve(proj_df['x'], popt[0], popt[1]))
+    else:
+        print( f"{ctry:20s} logistic {np.round(popt, 3)}" )
+        proj_df['n_confirmed_est'] = np.exp(logistic(proj_df['x'], popt[0], popt[1], popt[2]))
+    # %
+    return proj_df.drop(['x'], axis=1)
+    # %%
+
+
+def fit_to_curve( x: Ser, y: Ser ):
+    """Fit to a logistic curve and if it fails, to a simple exponential"""
+    # %
+    y1 = y.shift( 1, fill_value=y.iloc[0] )
+    y2 = y.shift(-1, fill_value=y.iloc[-1])
+    ym = (y1 + y2) / 2.0 + 0.01
+    sigma = np.abs( ym - y )
+    sigma.iloc[-1] = 0.001
+    # %
+    try:
+        m0 = y.mean() + 5
+        k0 = y.iloc[-1] - y.iloc[-2]
+
+        popt, _ = curve_fit( logistic, x, y, p0=[m0, k0, 0.0], sigma=sigma,
+                             bounds=([0, 0, -np.inf], [np.inf, np.inf, np.inf]),
+                             max_nfev=100)
+        return popt
+    except RuntimeError as err:
+        if err.args[0].find('maximum number of function evaluations') == -1:
+            raise err
+
+    m0 = y.iloc[-1]
+    b0 = (y.iloc[-1] - y.iloc[-7]) / 6.0
+    popt, _ = curve_fit( exp_curve, x, y, p0=[m0, b0], sigma=sigma)
+    # %
+    return popt
+
+
+def logistic(x: Ser, m: float, k: float, c: float):
+    return m - np.log( 1.0 + np.exp( -k * (x - c) ) )
+
+
+def exp_curve(x: Ser, m: float, b: float ):
+    return m + b * x
     # %%
 
 
