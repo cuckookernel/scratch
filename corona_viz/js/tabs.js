@@ -16,7 +16,6 @@ function openTab(tabName) {
 
   let tablinks = by_class("tablink");
   for( tablink of tablinks ) {
-    console.log
     tablink.className = tablink.className.replace(" active", "");
   }
 

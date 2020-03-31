@@ -38,7 +38,7 @@ def get_cmp_plot( klass: str, scale: str = "linear", date: Date = None, **kwargs
 
     data_rec = cntries_data( date )
     """Return plot as json"""
-    plot = make_plot(data_rec.data, klass, scale, **kwargs)
+    plot = make_cmp_plot(data_rec.data, klass, scale, **kwargs)
 
     ret = json.dumps(json_item(plot, "klass"))
 
@@ -52,7 +52,7 @@ def cntries_data( date: Date = None ):
                         glob_str=str(PARQUET_PATH / "world/df_*.parquet"))
 
 
-def make_plot(data: DF, klass: str, scale: str = "linear",
+def make_cmp_plot(data: DF, klass: str, scale: str = "linear",
               x_tools: List[str] = None, countries: List[str] = None,
               x_countries: List[str] = None ):
     """Make a bokeh plot of a certain type (confirmed/recovered/deaths/active)
@@ -152,12 +152,17 @@ def draw_country_line( p: Figure, source: ColumnDataSource,
 def set_hover_tool(p: Figure, klass: str):
     """Display a little sign when moving mouse over a point in the series"""
     hover = p.select(dict(type=HoverTool))
+
+    total_data = f"@n_{klass}"
+    if klass == 'confirmed':
+        total_data = "@n_or_est @est_label"
+
     hover.tooltips = dict([
         # ("index", "$index"),
         # ("(xx,yy)", "(@x, @y)"),
         ( "País", "@pais"),
         ("Fecha", "@date_str"),
-        (f"Total {TRANSL[klass]}", "@n_or_est @est_label"),
+        (f"Total {TRANSL[klass]}", total_data),
     ])
 
 
