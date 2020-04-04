@@ -232,7 +232,7 @@ def get_and_save_data_col():
     renames = {'ID de caso': 'id',
                'Fecha de diagnóstico': 'confirmed_date',
                'Ciudad de ubicación': 'city',
-               'Departamento': 'state',
+               'Departamento o Distrito': 'state',
                'Atención**': 'care',
                'Edad': 'age',
                'Sexo': 'sex',
