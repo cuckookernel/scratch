@@ -8,7 +8,7 @@ from corona_viz.common import PARQUET_PATH, tstamp_to_dt
 
 def gen_parquet_world():
     """Load csv data with load_data"""
-    # %
+    # %%
     reload(etl)
 
     max_mtime = etl.max_raw_data_mtime()
@@ -33,6 +33,7 @@ def gen_parquet_world():
 def main():
     # %%
     gen_parquet_world()
+    # %%
     etl.get_and_save_data_col()
     # %%
 

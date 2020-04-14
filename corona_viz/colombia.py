@@ -69,8 +69,6 @@ def summarize_col_data( data_rec: DataCacheRec ) -> Dict:
     by_sex_age.index.name = None
     by_sex_age.columns.name = None
 
-    print(by_sex_age)
-    print(by_sex_age.columns)
     # %%
     data = {"confirmed": df['confirmed'].sum(),
             "deaths": df['death'].sum(),

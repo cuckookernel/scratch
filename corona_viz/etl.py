@@ -41,7 +41,7 @@ def load_data_world() -> DF:
     data_world['country'] = 'World'
 
     data1 = pd.concat([data0, data_world])
-
+    # %%
     data2 = gen_projections( data1, future_window=15 )
     data2['pais'] = data2['country'].apply(lambda s: TRANSL.get(s, s))
     # %%
@@ -60,10 +60,12 @@ def gen_projections( data1: DF, future_window: int ) -> DF:
     # cnt = countries.loc[ctry]
     time_window = 10.0
     pieces = []
+    # %%
     for ctry, cnt in countries.items():
         if cnt < (time_window + 1):
             continue
-        # pieces.append(calc_projection( past, ctry ) )
+
+        print( ctry )
         pieces.append(calc_projection_logistic(past, ctry, time_window=time_window,
                                                future_window=future_window))
 
@@ -76,7 +78,7 @@ def gen_projections( data1: DF, future_window: int ) -> DF:
 
 def load_data_typ( typ, date_fmt: str ):
     """Load time series data and reshape
-    typ can be one of {confirmed, deaths, recovered}"""""
+    typ can be one of {confirmed, deaths, recovered}"""
     # %%
     df = pd.read_csv( RAW_DATA_PATH / f"time_series_covid19_{typ}_global.csv" )
     date_cols = [ col for col in df.columns if re.match("[0-9]+/[0-9]+/[0-9]+", col ) ]
@@ -110,7 +112,7 @@ def max_raw_data_mtime():
 
 
 def calc_projection(past: DF, ctry: str):
-    """Compute projections for a country"""
+    """Compute projections for a country using simple exponential"""
     # %
     df = past.loc[ (past['country'] == ctry) & (past['n_confirmed'] > 0),
                    ["date", "n_confirmed", "log_n_confirmed"] ].copy()
@@ -138,7 +140,7 @@ def calc_projection(past: DF, ctry: str):
 
 
 def calc_projection_logistic(past: DF, ctry: str, time_window: float, future_window: int):
-    """Compute projections for a country"""
+    """Compute projections for a country using logistic growth model"""
     # %%
     df = ( past.loc[(past['country'] == ctry) & (past['n_confirmed'] > 0),
                     ["date", "n_confirmed", "log_n_confirmed"] ]
@@ -155,13 +157,14 @@ def calc_projection_logistic(past: DF, ctry: str, time_window: float, future_win
 
     # %%
     popt = fit_to_curve(x, y )
-
+    # %%
     proj_df = extrapolate( ctry, max_date, future_window, popt )
     # %%
     return proj_df
 
 
 def extrapolate( ctry: str, max_date, future_window: int, popt: Array ) -> DF:
+    # %%
     proj_df = pd.DataFrame( {"country": ctry, "x": range(0, future_window)})
     proj_df['date'] = max_date + proj_df['x'].apply( lambda x_: dt.timedelta(x_) )
     if len(popt) == 2:
@@ -170,7 +173,7 @@ def extrapolate( ctry: str, max_date, future_window: int, popt: Array ) -> DF:
     else:
         print( f"{ctry:20s} logistic {np.round(popt, 3)}" )
         proj_df['n_confirmed_est'] = np.exp(logistic(proj_df['x'], popt[0], popt[1], popt[2]))
-    # %
+    # %%
     return proj_df.drop(['x'], axis=1)
     # %%
 
@@ -182,28 +185,36 @@ def fit_to_curve( x: Ser, y: Ser ):
     y2 = y.shift(-1, fill_value=y.iloc[-1])
     ym = (y1 + y2) / 2.0 + 0.01
     sigma = np.abs( ym - y )
-    sigma.iloc[-1] = 0.001
+    # sigma.iloc[-1] = 0.001
     # %
     try:
+        # %
         m0 = y.mean() + 5
-        k0 = y.iloc[-1] - y.iloc[-2]
+        k0 = max( 0, y.iloc[-1] - y.iloc[-2] )
 
         popt, _ = curve_fit( logistic, x, y, p0=[m0, k0, 0.0], sigma=sigma,
                              bounds=([0, 0, -np.inf], [np.inf, np.inf, np.inf]),
                              max_nfev=100)
+        # adjust so that curve exactly matches y[-1] at x[-1]
+        popt[0] += y.iloc[-1] - logistic(x.iloc[-1], popt[0], popt[1], popt[2] )
+        # %
         return popt
     except RuntimeError as err:
         if err.args[0].find('maximum number of function evaluations') == -1:
             raise err
-
+    # %
     m0 = y.iloc[-1]
     b0 = (y.iloc[-1] - y.iloc[-7]) / 6.0
+    # adjust so that curve exactly matches y[-1] at x[-1]
     popt, _ = curve_fit( exp_curve, x, y, p0=[m0, b0], sigma=sigma)
+    popt[0] += y.iloc[-1] - exp_curve(x.iloc[-1], popt[0], popt[1])
     # %
     return popt
-
+    # %%
 
 def logistic(x: Ser, m: float, k: float, c: float):
+    """log( logistic(x; m, k, c) ) where
+     logistic( x; m, k, c) = m / ( 1 + exp (- k * (x-c) ) """
     return m - np.log( 1.0 + np.exp( -k * (x - c) ) )
 
 

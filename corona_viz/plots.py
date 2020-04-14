@@ -111,18 +111,14 @@ def data_source_ctry(  data: DF, country: str ) -> ColumnDataSource:
     df = data[data['country'] == country].copy()
     df['est_label'] = np.where( df['n_confirmed_est'].notnull(), " (estimado)", "")
     n = df[f'n_confirmed']
-    n_or_est = n.where( n.notnull(), np.round(df['n_confirmed_est']) )
+    df['n_or_est'] = n.where( n.notnull(), np.round(df['n_confirmed_est']) )
 
-    source = ColumnDataSource( data=dict( date=df['date'],
-                                          date_str=df['date'].astype(str).str[:10],
-                                          pais=df['pais'],
-                                          n_confirmed=df[f'n_confirmed'],
-                                          n_active=df[f'n_active'],
-                                          n_deaths=df[f'n_deaths'],
-                                          n_recovered=df[f'n_recovered'],
-                                          n_or_est=n_or_est,
-                                          est=df['n_confirmed_est'],
-                                          est_label=df['est_label']) )
+    df['date_str'] = df['date'].astype(str).str[:10]
+    for col in ['n_active', 'n_deaths', 'n_recovered']:
+        df[col + '_str'] = df[col].astype( str ).where( df[col].notnull(), '' )
+
+
+    source = ColumnDataSource( data=df )
 
     return source
 
@@ -141,7 +137,7 @@ def draw_country_line( p: Figure, source: ColumnDataSource,
            visible=visible)
 
     if klass == 'confirmed':
-        p.line( 'date', 'est',
+        p.line( 'date', 'n_confirmed_est',
                 source=source,
                 line_dash='dashed',
                 line_width=2, color=color, alpha=0.8,
@@ -187,10 +183,10 @@ def set_hover_tool_ctry(p: Figure):
         # ("(xx,yy)", "(@x, @y)"),
         ("País", "@pais"),
         ("Fecha", "@date_str"),
-        (f"Total activos", "@n_active"),
+        (f"Total activos", "@n_active_str"),
         (f"Total confirmados", "@n_or_est @est_label"),
-        (f"Total recuperados", "@n_recovered"),
-        (f"Total muertes", "@n_deaths"),
+        (f"Total recuperados", "@n_recovered_str"),
+        (f"Total muertes", "@n_deaths_str"),
     ])
 
 
