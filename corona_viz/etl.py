@@ -164,6 +164,7 @@ def calc_projection_logistic(past: DF, ctry: str, time_window: float, future_win
 
 
 def extrapolate( ctry: str, max_date, future_window: int, popt: Array ) -> DF:
+    """extrapolate to the near future using exponential or logistic growth model"""
     # %%
     proj_df = pd.DataFrame( {"country": ctry, "x": range(0, future_window)})
     proj_df['date'] = max_date + proj_df['x'].apply( lambda x_: dt.timedelta(x_) )
@@ -184,6 +185,7 @@ def fit_to_curve( x: Ser, y: Ser ):
     y1 = y.shift( 1, fill_value=y.iloc[0] )
     y2 = y.shift(-1, fill_value=y.iloc[-1])
     ym = (y1 + y2) / 2.0 + 0.01
+    # noinspection PyTypeChecker
     sigma = np.abs( ym - y )
     # sigma.iloc[-1] = 0.001
     # %
@@ -215,15 +217,62 @@ def fit_to_curve( x: Ser, y: Ser ):
 def logistic(x: Ser, m: float, k: float, c: float):
     """log( logistic(x; m, k, c) ) where
      logistic( x; m, k, c) = m / ( 1 + exp (- k * (x-c) ) """
+    # noinspection PyTypeChecker
     return m - np.log( 1.0 + np.exp( -k * (x - c) ) )
 
 
+# noinspection PyTypeChecker
 def exp_curve(x: Ser, m: float, b: float ):
+    """Exponential of linear function"""
     return m + b * x
     # %%
 
 
-def get_and_save_data_col():
+def get_and_save_data_col_v2():
+    """Getting data as json directly from datos abiertos .gov.co"""
+    # %%
+    rp = requests.get( "https://www.datos.gov.co/api/views/gt2j-8ykr/rows.json?accessType=DOWNLOAD")
+
+    today = dt.date.today()
+
+    with open( PARQUET_PATH / f"colombia/corona_viz_col_{today.isoformat()}.json", "wt") as f_out:
+        f_out.write( rp.text )
+
+    # %%
+    json_obj = json.loads( rp.text )
+    cols = [ rec['name'] for rec in json_obj['meta']['view']['columns'] ]
+
+    df = pd.DataFrame( json_obj['data'], columns=cols )
+    # %%
+    renames = {'ID de caso': 'id_case',
+               'Fecha de diagnóstico': 'confirmed_date',
+               'Ciudad de ubicación': 'city',
+               'Departamento o Distrito ': 'state',
+               'Atención': 'care',
+               'Edad': 'age',
+               'Sexo': 'sex',
+               'Tipo*': 'typ',
+               'País de procedencia': 'origin_ctry'}
+    for col in renames.keys():
+        assert col in df.columns, f"{col} is missing from downloaded df: {df.columns}"
+
+    df.rename(columns=renames, inplace=True)
+
+    # %%
+    def fix_date( a_str: str ) -> str:
+        """fix d/m/20 to d/m/2020"""
+        ps = a_str.split('/')
+        if ps[2] == '20':
+            ps[2] = '2020'
+
+        return "/".join(ps)
+    # %%
+    df['confirmed_date'] = df[ 'confirmed_date'].apply( fix_date )
+
+    post_proc( df )
+    # %%
+
+def get_and_save_data_col_v1():
     """Get Colombia data"""
     # %%
     # rp = requests.get("https://e.infogram.com/01266038-4580-4cf0-baab-a532bd968d0c",
@@ -233,7 +282,9 @@ def get_and_save_data_col():
     #  rp = requests.get( "https://coronaviruscolombia.gov.co/Covid19/index.html" )
     rp = requests.get( "https://e.infogram.com/api/live/flex/0e44ab71-9a20-43ab-89b3-0e73c594668f/"
                        "832a1373-0724-4182-a188-b958f9bf0906?" )
-    print(f"data_col: infogram reply: status: {rp.status_code} - {len(rp.text)} chars")
+
+    print(f"data_col: gatos gov reply: status: {rp.status_code} - {len(rp.text)} chars")
+    # %%
 
     json_tbl = json.loads( rp.text )["data"][0]
     # json_tbl = extract_json_tbl(rp.text)
@@ -253,6 +304,12 @@ def get_and_save_data_col():
         assert col in df.columns, f"{col} is missing from downloaded df: {df.columns}"
 
     df.rename( columns=renames, inplace=True)
+    # %%
+
+
+def post_proc( df: DF ):
+    """some massaging of the colombia data"""
+    # %%
     df = df[ df['id'] != '' ]
     df['confirmed_date'] = pd.to_datetime( df['confirmed_date'], format="%d/%m/%Y" )
     df['confirmed_date'] = df['confirmed_date'].dt.date

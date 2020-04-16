@@ -32,9 +32,12 @@ def gen_parquet_world():
 
 def main():
     # %%
-    gen_parquet_world()
+    try:
+        gen_parquet_world()
+    except Exception as e:
+        print( "\n\n\nFailed generating world parquet!\n\n", e)
     # %%
-    etl.get_and_save_data_col()
+    etl.get_and_save_data_col_v2()
     # %%
 
 if __name__ == '__main__':
