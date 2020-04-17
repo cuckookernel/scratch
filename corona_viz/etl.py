@@ -248,10 +248,10 @@ def get_and_save_data_col_v2():
                'Fecha de diagnóstico': 'confirmed_date',
                'Ciudad de ubicación': 'city',
                'Departamento o Distrito ': 'state',
-               'Atención': 'care',
+               'atención': 'care',
                'Edad': 'age',
                'Sexo': 'sex',
-               'Tipo*': 'typ',
+               'Tipo': 'typ',
                'País de procedencia': 'origin_ctry'}
     for col in renames.keys():
         assert col in df.columns, f"{col} is missing from downloaded df: {df.columns}"
@@ -264,6 +264,9 @@ def get_and_save_data_col_v2():
         ps = a_str.split('/')
         if ps[2] == '20':
             ps[2] = '2020'
+
+        if ps[0] == '00':
+            ps[0] = '01'
 
         return "/".join(ps)
     # %%
