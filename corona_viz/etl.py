@@ -245,7 +245,7 @@ def get_and_save_data_col_v2():
     df = pd.DataFrame( json_obj['data'], columns=cols )
     # %%
     renames = {'ID de caso': 'id_case',
-               'Fecha de diagnóstico': 'confirmed_date',
+               'Fecha diagnostico': 'confirmed_date',
                'Ciudad de ubicación': 'city',
                'Departamento o Distrito ': 'state',
                'atención': 'care',
@@ -262,6 +262,8 @@ def get_and_save_data_col_v2():
     def fix_date( a_str: str ) -> str:
         """fix d/m/20 to d/m/2020"""
         ps = a_str.split('/')
+        if len(ps) != 3:
+            raise ValueError( f"bad date: {a_str}" )
         if ps[2] == '20':
             ps[2] = '2020'
 
@@ -270,7 +272,7 @@ def get_and_save_data_col_v2():
 
         return "/".join(ps)
     # %%
-    df['confirmed_date'] = df[ 'confirmed_date'].apply( fix_date )
+    # df['confirmed_date'] = df[ 'confirmed_date'].apply( fix_date )
 
     post_proc( df )
     # %%
@@ -314,7 +316,8 @@ def post_proc( df: DF ):
     """some massaging of the colombia data"""
     # %%
     df = df[ df['id'] != '' ]
-    df['confirmed_date'] = pd.to_datetime( df['confirmed_date'], format="%d/%m/%Y" )
+    # df['confirmed_date'] = pd.to_datetime( df['confirmed_date'], format="%d/%m/%Y" )
+    df['confirmed_date'] = pd.to_datetime( df['confirmed_date'] )
     df['confirmed_date'] = df['confirmed_date'].dt.date
     df['care'] = df['care'].str.lower()
     df['in_hospital'] = df['care'] == 'hospital'
