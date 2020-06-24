@@ -31,6 +31,7 @@ def gen_parquet_world():
 
 
 def main():
+    """Gen parquet for world and for colombia"""
     # %%
     try:
         gen_parquet_world()
@@ -39,6 +40,7 @@ def main():
     # %%
     etl.get_and_save_data_col_v2()
     # %%
+
 
 if __name__ == '__main__':
     main()

@@ -20,6 +20,7 @@ Ser = pd.Series
 Array = np.ndarray
 # %%
 
+
 def load_data_world() -> DF:
     """Load confirmed, deaths and recovered and combine in single dataframe"""
     # %%
@@ -47,7 +48,7 @@ def load_data_world() -> DF:
     # %%
     return data2
 
-    # %%
+
 def gen_projections( data1: DF, future_window: int ) -> DF:
     """Generate projections following simple exponential model"""
     # %%
@@ -214,6 +215,7 @@ def fit_to_curve( x: Ser, y: Ser ):
     return popt
     # %%
 
+
 def logistic(x: Ser, m: float, k: float, c: float):
     """log( logistic(x; m, k, c) ) where
      logistic( x; m, k, c) = m / ( 1 + exp (- k * (x-c) ) """
@@ -232,7 +234,7 @@ def get_and_save_data_col_v2():
     """Getting data as json directly from datos abiertos .gov.co"""
     # %%
     rp = requests.get( "https://www.datos.gov.co/api/views/gt2j-8ykr/rows.json?accessType=DOWNLOAD")
-
+    # %%
     today = dt.date.today()
 
     with open( PARQUET_PATH / f"colombia/corona_viz_col_{today.isoformat()}.json", "wt") as f_out:
@@ -253,29 +255,17 @@ def get_and_save_data_col_v2():
                'Sexo': 'sex',
                'Tipo': 'typ',
                'País de procedencia': 'origin_ctry'}
+
     for col in renames.keys():
         assert col in df.columns, f"{col} is missing from downloaded df: {df.columns}"
 
     df.rename(columns=renames, inplace=True)
-
-    # %%
-    def fix_date( a_str: str ) -> str:
-        """fix d/m/20 to d/m/2020"""
-        ps = a_str.split('/')
-        if len(ps) != 3:
-            raise ValueError( f"bad date: {a_str}" )
-        if ps[2] == '20':
-            ps[2] = '2020'
-
-        if ps[0] == '00':
-            ps[0] = '01'
-
-        return "/".join(ps)
     # %%
     # df['confirmed_date'] = df[ 'confirmed_date'].apply( fix_date )
 
     post_proc( df )
     # %%
+
 
 def get_and_save_data_col_v1():
     """Get Colombia data"""
@@ -317,8 +307,15 @@ def post_proc( df: DF ):
     # %%
     df = df[ df['id'] != '' ]
     # df['confirmed_date'] = pd.to_datetime( df['confirmed_date'], format="%d/%m/%Y" )
-    df['confirmed_date'] = pd.to_datetime( df['confirmed_date'] )
+    df['dconfirmed_date'] = pd.to_datetime( df['confirmed_date'] )
+    # %%
+    ser = df[ 'confirmed_date' ]
+    # %%
+
     df['confirmed_date'] = df['confirmed_date'].dt.date
+    # %%
+
+    # %%
     df['care'] = df['care'].str.lower()
     df['in_hospital'] = df['care'] == 'hospital'
     df['recovered'] = df['care'] == 'recuperado'
@@ -331,6 +328,14 @@ def post_proc( df: DF ):
     df.to_parquet( fp )
 
     # %%
+
+
+def fixed_date_col( ser: Ser ):
+    """"""
+    # %%
+    ser1 = ser.where( ser.str.strip() != 'Sin dato', None )
+    # %%
+
 
 def extract_json_tbl( resp_text: str ):
     """No longer used..."""
@@ -391,3 +396,19 @@ def interactive_testing():
     # ctry = data[data.country == 'Italy']
     # %%
     return conf, data, recov
+
+
+# %%
+def fix_date( a_str: str ) -> str:
+    """legacy: fix d/m/20 to d/m/2020"""
+    ps = a_str.split('/')
+    if len(ps) != 3:
+        raise ValueError( f"bad date: {a_str}" )
+    if ps[2] == '20':
+        ps[2] = '2020'
+
+    if ps[0] == '00':
+        ps[0] = '01'
+
+    return "/".join(ps)
+# %%
