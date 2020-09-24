@@ -19,6 +19,7 @@ from selenium.webdriver.common.keys import Keys
 
 
 HOME = Path( os.getenv('HOME') )
+STOP = Path( "stop" )
 
 
 class _Config:
@@ -40,16 +41,16 @@ def main():
     CFG.raw_srps_path.mkdir(exist_ok=True, parents=True)
     # %%
     driver = start_driver( Path(os.getenv('HOME')) / 'Downloads', CFG.chrome_driver_path )
-
     login( driver )
-    # %%
+    # %% Carry out manual search now..
     # _enter_search( driver, CFG.search )
     # _human_wait(1.0)
     # _apply_location_filter( driver, CFG.location )
     # %%
     while True:
-        _human_wait(1.5)
+        _human_wait(2.5)
         _loop_over_srp( driver )
+
         next_button = wait_for_and_get(driver, '//button[@aria-label="Siguiente"]')
         next_button.click()
     # %%
@@ -84,8 +85,8 @@ def _loop_over_srp( driver):
             continue
 
         _scroll_to_elem( driver, link, -70 )
-
         link.click()
+        print( f'\n entering: {out_path.name}')
         _human_wait(2.0)
         download_one_profile( driver )
         _human_wait( 2.0 )
@@ -101,7 +102,9 @@ def download_one_profile( driver: WebDriver ):
     # %%
     _expand_about_section( driver )
     _expand_experience( driver )
+    # %%
     _expand_additional_skills( driver )
+    _human_wait(1.0)
     # %%
     html = driver.page_source
     out_path = get_out_path( driver.current_url )
@@ -113,13 +116,13 @@ def download_one_profile( driver: WebDriver ):
     # %%
 
 
-def _scroll_to_elem_click_if_exists( driver: WebDriver, xpath: str, label: str ):
+def _scroll_to_elem_click_if_exists( driver: WebDriver, xpath: str, label: str, verbose=False ):
     # %%
     elem = wait_for_and_get(driver, xpath, timeout=0.0,  on_timeout_raise=False)
     # %%
     if elem:
-        print( label, elem.location )
-        _scroll_to_elem(driver, elem, y_delta=-200)
+        print( "scroll_click_if_x: ", label, elem.location )
+        _scroll_to_elem(driver, elem, y_delta=-200, verbose=verbose)
         elem.click()
         _human_wait( 0.5 )
     # %%
@@ -152,7 +155,7 @@ def _expand_additional_skills( driver: WebDriver ):
     # %%
     xpath = ('//button[contains( @class, "pv-skills-section__additional-skills")]'
              '/span[@aria-hidden="true"]')
-    _scroll_to_elem_click_if_exists( driver, xpath, "expand skills" )
+    _scroll_to_elem_click_if_exists( driver, xpath, "expand skills", verbose=True )
     # %%
 
 
@@ -171,42 +174,73 @@ def _scroll_down_like_human( driver: WebDriver, step=70, wait=0.03 ):
     pos = 100
     prev_yoffset = 0
     while True:
-        driver.execute_script(f"window.scrollTo(0,{pos})")
+        driver.execute_script(f"window.scrollTo(0, {pos})")
         pos += step * random.lognormvariate(0, 0.1)
         _human_wait( wait )
 
         yoffset = driver.execute_script('return window.pageYOffset;')
-        if yoffset == prev_yoffset:
+        if yoffset == prev_yoffset or should_stop():
             break
+
         prev_yoffset = yoffset
+    # %%
 
 
-def _scroll_up_like_human(driver: WebDriver, step=50):
+def _scroll_up_like_human(driver: WebDriver, step=50, wait=0.03, verbose=False):
     pos = driver.execute_script('return window.pageYOffset;')
+    if verbose:
+        print(  "pos0: ", pos )
     prev_yoffset = -1
 
     while True:
         driver.execute_script(f"window.scrollTo(0,{pos})")
         pos -= step * random.lognormvariate(0, 0.1)
-        _human_wait(0.05)
+        _human_wait(wait)
 
         yoffset = driver.execute_script('return window.pageYOffset;')
-        if yoffset == prev_yoffset:
+        if yoffset == prev_yoffset or should_stop():
             break
+
         prev_yoffset = yoffset
     # %%
 
 
-def _scroll_to_elem( driver: WebDriver, elem, y_delta=-70 ):
-    elem_y = elem.location['y']
-    _scroll_to_y( driver, elem_y + y_delta )
+def _scroll_to_elem( driver: WebDriver, elem: WebElement,
+                     y_delta=-70, step=70, verbose=False, stop_if_visible=True ):
+    prev_y = -1
+    while True:
+        elem_y = elem.location['y']
+        target_y = elem.location['y'] + y_delta
+
+        cur_y = driver.execute_script('return window.pageYOffset')
+        if verbose:
+            print(f'scroll_to_elem: target_y: {target_y} elem.displayed: {elem.is_displayed()} '
+                  f'cur_y: {cur_y}')
+
+        if abs( target_y - cur_y ) < 50:
+            driver.execute_script(f"window.scrollTo(0, {target_y})")
+            prev_y = cur_y
+            break
+        elif (cur_y == prev_y) and elem.is_displayed() and elem.is_enabled():
+            break
+        else:
+            direction = +1.0 if (target_y - cur_y) >= 0 else -1.0
+            next_y = int( cur_y + direction * step * random.lognormvariate(0, 0.2) )
+            driver.execute_script(f"window.scrollTo(0, {next_y})")
+            prev_y = cur_y
+        if should_stop():
+            break
+        _human_wait(0.05)
 
 
-def _scroll_to_y(driver: WebDriver, target_y: int, step=70 ):
+def _scroll_to_y(driver: WebDriver, target_y: int, step=70, verbose=False ):
 
     # print( f'target_t = {target_y}')
     while True:
         cur_y = driver.execute_script('return window.pageYOffset')
+        if verbose:
+            print(f'scroll_to_y: cur_y: {cur_y}')
+
         if abs( target_y - cur_y ) < 50:
             driver.execute_script(f"window.scrollTo(0, {target_y})")
             break
@@ -216,9 +250,7 @@ def _scroll_to_y(driver: WebDriver, target_y: int, step=70 ):
             # print(cur_y, next_y)
             driver.execute_script(f"window.scrollTo(0, {next_y})")
 
-        if Path('stop').exists():
-            break
-
+        if should_stop(): break
         _human_wait(0.05)
 
 
@@ -236,6 +268,14 @@ def _apply_location_filter( driver: WebDriver, location: str ):
     # %%
     _human_wait( 1.0 )
     # %%
+
+
+def should_stop() -> bool:
+    if STOP.exists():
+        STOP.unlink()
+        raise RuntimeError('stop found')
+    else:
+        return False
 
 
 def start_driver( download_path: Path, executable_path: Path ) -> WebDriver:
@@ -286,7 +326,7 @@ def _enter_search( driver: WebDriver, search: str ):
 def _send_keys_like_human( elem: WebElement, keys: str):
     for key in keys:
         elem.send_keys( key )
-        _human_wait()
+        _human_wait( mu=0.03 )
     # %%
 
 
