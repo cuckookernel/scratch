@@ -35,7 +35,7 @@ COMMON_SPANISH = {'y', 'el', 'la', 'de', 'los', 'las'}
 
 
 class _Config:
-    raw_profiles_path = MY_PATH / 'linkedin_raw_profiles_v0'
+    raw_profiles_path = MY_PATH / 'linkedin_raw_profiles'
     profiles_yamls_path = MY_PATH / 'linkedin_yaml_profiles'
 
 
@@ -67,34 +67,67 @@ def main():
     # %%
     fpaths = [ CFG.raw_profiles_path / 'ricardo-alarcon-44079b105.html' ]
     # %%
-    dics = []
-    for fpath in fpaths:
+    fpaths = [ Path('/home/teo/_data/talent/linkedin_raw_profiles/israellaguan.html')]
+    # %%
+    dics = {}
+    # %%
+
+    for i, fpath in enumerate(fpaths):
+        if fpath in dics:
+            continue
+
         with fpath.open('rt') as f_in:
             html = f_in.read()
 
-        print( f'\n*** {fpath.name}:')
+        print( f'\n***{i+1}/{len(fpaths)} {fpath.name}:')
         dic = extract_one( html, fpath )
         dic['linkedin_url'] = f"https://www.linkedin.com/in/{fpath.name.split('.')[0]}"
         dic['scraped_at'] = dt.datetime.fromtimestamp( fpath.stat().st_ctime )
         # pprint(dic['work_stats'])
-        dics.append( dic )
+        dics[fpath] = dic
+
+    dics_arr = list(dics.values())
     # %%
+    del dics
+    # %%
+
     with (CFG.profiles_yamls_path / 'all_profiles.json').open('wt') as f_out:
-        json.dump( dics, f_out, cls=DateTimeEncoder, indent=4 )
+        json.dump( dics_arr, f_out, cls=DateTimeEncoder, indent=4 )
     # %%
     with (CFG.profiles_yamls_path / 'all_profiles.yaml').open('wt') as f_out:
-        yaml.safe_dump( dics, f_out )
+        yaml.safe_dump( dics_arr, f_out )
     # %%
-    df = produce_summary_table( dics )
+    df = produce_summary_table( dics_arr )
     df.to_excel( CFG.raw_profiles_path.parent / 'mined_ruby_candidates_sample.xlsx',
                  index=False)
     # %%
 
 
-def _interactive_testing():
+def _interactive_testing( dics_arr, fpaths, html: str ):
     # %%
     # noinspection PyUnresolvedReferences
     runfile('talent-miner/extractor.py')
+    # %%
+    pprint( dics_arr[4] )
+    # %%
+    fpath = [ f for f in fpaths if str(f).find('israellaguan') >= 0 ][0]
+    # %%
+    doc = BeautifulSoup( html, features='html.parser' )
+    # %%
+    _extract_accomplishments(doc)
+    # %%
+
+
+def _extract_accomplishments( doc: BeautifulSoup ) -> Dict[str, List[str]]:
+    accomps = doc.find_all('section', {'class': 'pv-accomplishments-block'})
+
+    # accomp0 = accomps[2]
+    ret = {}
+    for accomp in accomps:
+        accomp_header = accomp.find_all('h3', {'class': 'pv-accomplishments-block__title'})[0].text
+        accomp_vals = [ li_elem.text for li_elem in accomp.find_all('li') ]
+        ret[accomp_header] = accomp_vals
+    return ret
     # %%
 
 
@@ -126,12 +159,13 @@ def produce_summary_table( dics: List[Dict[str, Any]]) -> pd.DataFrame:
                         skills=skills,
                         profile_text_length=dic['profile_text_stats']['length'],
                         profile_eng_ratio=dic['profile_text_stats']['eng_ratio'] * 10.0,
+                        languages=",".join ( dic.get('accomplishments', {}).get('idiomas', []) ),
                         num_contacts=dic['num_contacts'],
                         location=dic['location'],
                         linkedin_url=dic['linkedin_url'],
                         scraped_at=dic['scraped_at'])
         except Exception as exc:
-            pprint( rec )
+            pprint( dic )
             raise exc
         recs.append(rec)
 
@@ -139,6 +173,7 @@ def produce_summary_table( dics: List[Dict[str, Any]]) -> pd.DataFrame:
     # %%
     return df
     # %%
+
 
 def extract_one( html: str, fpath: Path ):
     """Extract data from one scraped html"""
@@ -160,6 +195,7 @@ def extract_one( html: str, fpath: Path ):
     ret['skills'] = proc_skills_section( doc )
     ret['education'] = _parse_education( doc )
     ret['education_stats'] = _education_stats( ret['education'])
+    ret['accomplishments'] = _extract_accomplishments(doc)
     ret['profile_text_stats'] = profile_text_stats( doc )
     # %%
     return ret
@@ -191,7 +227,7 @@ def _is_location_abroad( location: Optional[str] ):
         return False
     else:
         ret = not re.search( 'Colombia|Medell.n|Bogot.|Barranquilla|Cali|Pereira'
-                              '|Caldas|Cucuta|Dosquebradas|Antioquia|Remot[eo]',
+                             '|Caldas|Cucuta|Dosquebradas|Antioquia|Remot[eo]',
                              location, re.IGNORECASE)
         if ret:
             print( f'abroad location: {location}')
@@ -207,18 +243,22 @@ def _is_abroad_school( school: Optional[str] ):
     return ret
 
 
-def  profile_text_stats( doc: BeautifulSoup ):
+def profile_text_stats( doc: BeautifulSoup ):
+    """some metrics on the whole profile text"""
     text = doc.find('main', {'class': 'core-rail'}).text.strip()
     words = text.split()
-    eng_ratio = sum(1 for word in words if word in COMMON_ENGLISH) / len(words) + 0.01
+    eng_ratio = sum(1 for word in words if word in COMMON_ENGLISH) * 10/ (len(words) + 0.001)
     return { 'length': len( text ),
-             'eng_ratio' : np.round( eng_ratio, 2)}
+             'eng_ratio': np.round( eng_ratio, 2)}
     # %%
 
 
-def _extract_about( doc ) -> str:
+def _extract_about( doc ) -> Optional[str]:
 
     about_section = doc.find('section', {'class': 'pv-about-section'})
+    if about_section is None:
+        return None
+
     parts = about_section.find_all("p")
     return (" ".join( part.text.replace('\n', ' ').strip() for part in parts )
             .replace( '... ver más', '') )
@@ -286,6 +326,7 @@ def proc_employment_summary(summary: Tag) -> Dict:
             xp_record['period_raw'] = value
             period = _extract_period( value )
             xp_record['period'] = period
+            # print( period )
             xp_record['duration'] = np.round( (period[1] - period[0]).total_seconds()
                                               / SECS_IN_YEAR, 2)
         elif fld_name == 'Duración del empleo':
@@ -301,21 +342,23 @@ def proc_employment_summary(summary: Tag) -> Dict:
     # pprint( xp_record )
     # %%
     return xp_record
+    # %%
 
 
 def _extract_period( period_raw: str ):
-
-    mch1 = re.match(r'(?P<mes>[a-z]+)\. de (?P<year>[0-9]+)( . actualidad)?', period_raw)
-    if mch1:
-        mes = _translate_mes( mch1.group("mes") )
-        return dt.date( int(mch1.group("year")), mes, 1 ), dt.date.today()
-
     mch2 = re.match(r'(?P<mes1>[a-z]+)\. de (?P<year1>[0-9]+) . '
                     r'(?P<mes2>[a-z]+)\. de (?P<year2>[0-9]+)', period_raw)
     if mch2:
+        # print('mch2', mch2, mch2.group("year1"), mch2.group("year2"))
         mes1, mes2 = _translate_mes(mch2.group("mes1")), _translate_mes(mch2.group("mes2"))
         return ( dt.date(int(mch2.group("year1")), int( mes1 ), 1),
                  dt.date(int(mch2.group("year2")), int( mes2 ), 1) )
+
+    mch1 = re.match(r'(?P<mes>[a-z]+)\. de (?P<year>[0-9]+)( . actualidad)?', period_raw)
+    if mch1:
+        # print('mch1')
+        mes = _translate_mes(mch1.group("mes"))
+        return dt.date(int(mch1.group("year")), mes, 1), dt.date.today()
 
     mch2b = re.match(r'(?P<mes1>[a-z]+)\. de (?P<year1>[0-9]+) . (?P<year2>[0-9]{4})', period_raw)
     if mch2b:
@@ -341,6 +384,13 @@ def _interactive_test():
     # %%
     period_raw = 'ene. de 2015 – actualidad'
     # %%
+    period_raw = 'ene. de 2015 – may. de 2015'
+    print( _extract_period( period_raw ) )
+    # %%
+    period_raw = 'ene. de 2012 – may. de 2013'
+    print(_extract_period(period_raw))
+
+    # %%
 
 
 def _translate_mes( mes: str) -> int:
@@ -349,10 +399,13 @@ def _translate_mes( mes: str) -> int:
 
 
 def _common_english_ratio( a_text: str ) -> int:
+    if a_text is None:
+        return None
+
     words = a_text.split()
     cnt_english = sum( 1 for word in words if word in COMMON_ENGLISH )
 
-    return np.round( cnt_english / (len(words) + 0.001), 2)
+    return np.round( cnt_english / (len(words) + 0.001) * 10, 2)
 
 
 def _parse_education(doc: BeautifulSoup) -> List[Dict]:
@@ -429,7 +482,7 @@ def _classify_degree( degree: str ) -> str:
     elif re.search('^(Esp\.|Especializ)', degree):
         return 'Specialization'
     elif re.search('^Phd', degree, re.IGNORECASE):
-        return 'Phd'
+        return 'PhD'
     else:
         return 'Unknown'
 

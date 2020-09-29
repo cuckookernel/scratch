@@ -49,9 +49,10 @@ def main():
     # %%
     while True:
         _human_wait(2.5)
-        _loop_over_srp( driver )
+        _loop_over_srp_results( driver )
 
-        next_button = wait_for_and_get(driver, '//button[@aria-label="Siguiente"]')
+        next_button = wait_for_and_get(driver, '//button[@aria-label="Siguiente"]',
+                                       timeout=60.0)
         next_button.click()
     # %%
 
@@ -63,7 +64,7 @@ def _interactive_testing():
     # %%
 
 
-def _loop_over_srp( driver):
+def _loop_over_srp_results( driver):
     # %%
     _scroll_down_like_human( driver )
     _scroll_up_like_human( driver )
@@ -155,7 +156,7 @@ def _expand_additional_skills( driver: WebDriver ):
     # %%
     xpath = ('//button[contains( @class, "pv-skills-section__additional-skills")]'
              '/span[@aria-hidden="true"]')
-    _scroll_to_elem_click_if_exists( driver, xpath, "expand skills", verbose=True )
+    _scroll_to_elem_click_if_exists( driver, xpath, "expand skills", verbose=False )
     # %%
 
 
