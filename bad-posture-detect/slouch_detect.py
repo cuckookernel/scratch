@@ -19,12 +19,14 @@ import pygame
 Image = np.ndarray  # A CV2-images is really just an array
 
 CAMERA_IDX = 2  # Necessary when there is more than one webcam in the system, otherwise just use 0
-SLOUCH_THRESHOLD = 0.4
+SLOUCH_THRESHOLD = 0.15
 ALERT_SOUND_FILE = os.getenv('HOME') + '/suspend-error.oga'
 FACE_DETECT_MODEL_SPEC = cv2.data.haarcascades + 'haarcascade_frontalface_default.xml'
 
 DATA_PATH = Path(os.getenv('HOME')) / '_data/bad-posture-detect'
 DATA_PATH.mkdir(parents=True, exist_ok=True)
+
+STORE_IMGS = False
 # %%
 
 
@@ -34,7 +36,7 @@ def main():
     pygame.mixer.init()
     cam = VideoCapture( CAMERA_IDX )  # get camera handle
 
-    detector = SlouchDetector( SLOUCH_THRESHOLD, do_store_imgs=True )
+    detector = SlouchDetector( SLOUCH_THRESHOLD, do_store_imgs=STORE_IMGS )
 
     try:
         while True:
@@ -49,7 +51,7 @@ def main():
             gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
             # print(type(gray), gray.shape)   # =>  <ndarray>  (480, 640)
             detector.detect( gray )
-            time.sleep(2)
+            time.sleep(1)
 
     except Exception as exc:
         cam.release()  # close the webcam
@@ -79,22 +81,55 @@ class SlouchDetector:
 
             if self.reference_y is None:
                 self.reference_y = face_y
+                print(f'{now} reference_y: {self.reference_y} thresh: {self.thresh}')
 
             ratio = -(face_y - self.reference_y) / face_height
             is_slouching = ratio < -self.thresh
 
             if is_slouching:
-                print(f'{now} {face_y} {face_height} ratio:{ratio:.4f} you are slouching!!!')
+                print(f'{now} y:{face_y} h:{face_height} ratio:{ratio:.4f} you are slouching!!!')
                 play_alert_sound()
             else:
-                print(f'{now}, {face_y}, {ratio:.4f} you are OK')
+                print(f'{now} y:{face_y}, h:{face_height} ratio:{ratio:.4f} you are OK')
 
             if self.do_store_imgs:
-                _draw_face_frame(face, gray, is_slouching)
-
+                self._draw_face_frame(face, gray, is_slouching)
 
         else:
             print(now, 'no faces detected')
+
+    def _draw_face_frame(self, face, gray: Image, is_slouching: bool):
+        """Draw rectangles around the faces"""
+        x, y, w, h = face
+
+        rgb = cv2.cvtColor(gray, cv2.COLOR_GRAY2BGR)
+        if is_slouching:
+            color = (0, 0, 255)
+        else:
+            color = (0, 255, 0)
+
+        cv2.rectangle(rgb, (x, y), (x + w, y + h), color, 2)
+
+        line_x = int(x + w + 10)
+        face_y = int(y + h / 2)
+        cv2.line(rgb, (line_x, 0), (line_x, face_y), color, 2)
+        cv2.line(rgb, (line_x - 5, face_y), (line_x + 5, face_y), color, 2)
+        cv2.putText(rgb, f"face_y = {face_y:.1f}", (line_x + 15, int((y + h / 2) / 2)),
+                    cv2.FONT_HERSHEY_PLAIN, 1.4, color)
+
+        face_height = face[3]
+        face_y2 = (face[1] + face_height * 0.5)
+        ratio = -(face_y2 - self.reference_y) / face_height
+        is_slouching2 = ratio < -self.thresh
+
+        diff = face_y2 - self.reference_y
+        labels = [ f"face_y = {face_y2:.0f} ref_y:{self.reference_y:.1f} diff:{diff}",
+                   f"f_height={face_height:d} ratio={ratio:.4f} is_slouching2={is_slouching2}"]
+        cv2.putText(rgb, labels[0], (10, gray.shape[0] - 22), cv2.FONT_HERSHEY_PLAIN, 1.4, color)
+        cv2.putText(rgb, labels[1], (10, gray.shape[0] - 5 ), cv2.FONT_HERSHEY_PLAIN, 1.4, color)
+
+        now_str = dt.datetime.now().strftime("%H-%M-%S")
+        cv2.imwrite(str(DATA_PATH / f'img_{now_str}_{int(is_slouching)}.jpg'), rgb)
 
 
 def _interactive_testing():
@@ -140,30 +175,6 @@ def _draw_face_frames( faces, img ):
     """Draw rectangles around the faces"""
     for (x, y, w, h) in faces:
         cv2.rectangle(img, (x, y), (x + w, y + h), (255, 255, 0), 2)
-    # %%
-
-
-def _draw_face_frame( face, gray, is_slouching ):
-    """Draw rectangles around the faces"""
-    x, y, w, h = face
-
-    rgb = cv2.cvtColor(gray, cv2.COLOR_GRAY2BGR)
-    if is_slouching:
-        color = (0, 0, 255)
-    else:
-        color = (0, 255, 0)
-
-    cv2.rectangle(rgb, (x, y), (x + w, y + h), color, 2)
-
-    line_x = int(x + w + 10)
-    face_y = int( y + h/2)
-    cv2.line( rgb, ( line_x, 0), ( line_x, face_y), color, 2 )
-    cv2.line(rgb, (line_x - 5, face_y ), (line_x + 5, face_y), color, 2)
-    cv2.putText( rgb, f"face_y = {face_y:d}", (line_x + 15, int( (y + h/2) / 2) ),
-                 cv2.FONT_HERSHEY_PLAIN, 1.4, color )
-
-    now_str = dt.datetime.now().strftime("%H-%M-%S")
-    cv2.imwrite( str( DATA_PATH / f'img_{now_str}_{int(is_slouching)}.jpg' ), rgb )
     # %%
 
 
