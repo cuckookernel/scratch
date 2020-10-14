@@ -266,6 +266,33 @@ def get_and_save_data_col_v2():
     post_proc( df )
     # %%
 
+def get_from_local_csv():
+    # %%
+    df = pd.read_csv('/home/teo/Downloads/Casos_positivos_de_COVID-19_en_Colombia.csv',
+                     low_memory=False)
+    # %%
+    renames = {'ID de caso': 'id_case',
+               'Fecha diagnostico': 'confirmed_date',
+               'Fecha recuperado': 'recovery_date',
+               'Fecha de muerte': 'death_date',
+               'Ciudad de ubicación': 'city',
+               'Departamento o Distrito ': 'state',
+               'Estado': 'status',
+               'atención': 'care',
+               'Edad': 'age',
+               'Sexo': 'sex',
+               'Tipo': 'typ',
+               'País de procedencia': 'origin_ctry'}
+    # %%
+    df1 = df.rename( columns=renames )
+    # %%
+    df1.death_date.value_counts().sort_index()
+    # %%
+    df1[df1.city == 'Medellín'].confirmed_date.value_counts().sort_index().tail(10)
+    # %%
+    df1[df1.state == 'Antioquia'].confirmed_date.value_counts().sort_index().tail(10)
+    # %%
+
 
 def get_and_save_data_col_v1():
     """Get Colombia data"""
@@ -412,3 +439,8 @@ def fix_date( a_str: str ) -> str:
 
     return "/".join(ps)
 # %%
+
+def _interactive_testing():
+    # %%
+    runfile('corona_viz/etl.py')
+    # %%

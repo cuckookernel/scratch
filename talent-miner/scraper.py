@@ -23,11 +23,12 @@ STOP = Path( "stop" )
 
 
 class _Config:
-    raw_profiles_path = HOME / '_data/talent/linkedin_raw_profiles'
-    raw_srps_path = HOME / '_data/talent/linkedin_raw_srps'
+    raw_profiles_path = HOME / '_data/talent/li_raw_profiles_data_eng'
+    raw_srps_path = HOME / '_data/talent/li_raw_srps_data_eng'
+    contact_info_path = HOME / '_data/talent/li_data_eng_contact_info'
 
     chrome_driver_path = HOME / 'bin/chromedriver'
-    search = 'ruby on rails'
+    search = 'data engineer python SQL'
     location = 'Colombia'
 
 
@@ -39,6 +40,7 @@ def main():
     # %%
     CFG.raw_profiles_path.mkdir(exist_ok=True, parents=True)
     CFG.raw_srps_path.mkdir(exist_ok=True, parents=True)
+    CFG.contact_info_path.mkdir(exist_ok=True, parents=True)
     # %%
     driver = start_driver( Path(os.getenv('HOME')) / 'Downloads', CFG.chrome_driver_path )
     login( driver )
@@ -92,6 +94,10 @@ def _loop_over_srp_results( driver):
         download_one_profile( driver )
         _human_wait( 2.0 )
         _scroll_down_like_human(driver)
+
+        if Path("stop").exists():
+            print("stop marker found.")
+            break
     # %%
 
 
@@ -101,6 +107,7 @@ def download_one_profile( driver: WebDriver ):
     _scroll_down_like_human( driver )
     _scroll_up_like_human( driver )
     # %%
+    _expand_contact_info( driver )
     _expand_about_section( driver )
     _expand_experience( driver )
     # %%
@@ -113,7 +120,31 @@ def download_one_profile( driver: WebDriver ):
     with out_path.open('wt') as f_out:
         print(html, file=f_out)
 
-    driver.back()  # back to srp
+    # back to srp:
+    driver.back()
+    _human_wait(0.5)
+    # %%
+
+
+def _expand_contact_info( driver ):
+    # %%
+    xpath1 = '//a[@data-control-name="contact_see_more"]/span'
+    exists = _scroll_to_elem_click_if_exists( driver, xpath1, "expand contact info")
+    # %%
+    if not exists:
+        return
+    # %%
+    xpath2 = '//section[contains(@class, "ci-email") ]//div/a'
+    email_anchor = wait_for_and_get(driver, xpath2, on_timeout_raise=False, timeout=5)
+    # %%
+    if email_anchor:
+        email = email_anchor.get_attribute('href')
+
+        li_handle = driver.current_url.split("/")[4]
+        with open( CFG.contact_info_path / f'{li_handle}.json', 'wt') as f_out:
+            json.dump( {"url": driver.current_url, "li_handle": li_handle, "email": email}, f_out )
+    # %%
+    driver.back()
     # %%
 
 
@@ -126,6 +157,9 @@ def _scroll_to_elem_click_if_exists( driver: WebDriver, xpath: str, label: str, 
         _scroll_to_elem(driver, elem, y_delta=-200, verbose=verbose)
         elem.click()
         _human_wait( 0.5 )
+        return True
+    else:
+        return False
     # %%
 
 
