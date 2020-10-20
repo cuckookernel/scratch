@@ -88,15 +88,12 @@ async def _keys_tbl_def():
 
 @app.post("/keys/save")
 async def save_key(key_obj: Key):
-    return await save_key0(key_obj)
+    log.info(f"key_obj: {key_obj}")
+    return await save_key0(key_obj.key)
 
 
 @app.get("/keys/save/{key}")
-async def save_key0(key_obj: Key):
-
-    log.info(f"key_obj: {key_obj}")
-    key: str = key_obj.key
-
+async def save_key0(key: str):
     await _validate( key )
 
     query = _save_query(key)
