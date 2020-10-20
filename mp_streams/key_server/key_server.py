@@ -74,11 +74,14 @@ async def _all_keys():
 async def _all_keys(difficulty: int = None):
     query = keys_tbl.select()
     recs = await database.fetch_all(query)
+    result = []
     for rec in recs:
         dic = dict( rec )
         if difficulty is not None and dic['difficulty'] != difficulty:
             continue
-        print( f"{dic['animal']:17s} | {dic['difficulty']:2d} | {dic['key']}" )
+        result.append( f"{dic['animal']:17s} | {dic['difficulty']:2d} | {dic['key']}" )
+
+    return "\n".join( result )
 
 
 # @app.get("/drop_keys_tbl")
