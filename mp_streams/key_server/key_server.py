@@ -70,11 +70,11 @@ async def _all_keys():
     return await database.fetch_all(query)
 
 
-@app.get("/drop_keys_tbl")
-async def _drop_keys_tbl():
-    query = "drop table if exists keys"
-    await database.execute(query)
-    return "OK"
+# @app.get("/drop_keys_tbl")
+# async def _drop_keys_tbl():
+#    query = "drop table if exists keys"
+#    await database.execute(query)
+#    return "OK"
 
 
 @app.get("/keys_tbl_def")
@@ -88,6 +88,12 @@ async def _keys_tbl_def():
 
 @app.post("/keys/save")
 async def save_key(key_obj: Key):
+    return await save_key0(key_obj)
+
+
+@app.get("/keys/save/{key}")
+async def save_key0(key_obj: Key):
+
     log.info(f"key_obj: {key_obj}")
     key: str = key_obj.key
 
@@ -121,6 +127,7 @@ async def _unused_report():
     total_budget = sum( dic['budget'] for dic in by_diff )
 
     return dict(total_budget=total_budget, by_difficulty=by_diff)
+
 
 @app.get("/keys/purge_by_diff")
 async def _purge_by_diff(min_diff: int):
