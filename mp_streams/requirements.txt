@@ -1,0 +1,5 @@
+microprediction
+fastapi
+databases
+uvicorn
+
