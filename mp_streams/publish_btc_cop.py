@@ -74,8 +74,11 @@ class PriceGetter():
             last_price = float( response.json()['ticker']['last_price'][0] )
             if self.prev_price is not None:
                 return_ = (last_price - self.prev_price) / self.prev_price
-                self.prev_price = last_price
-                return return_
+            else:
+                return_ = None
+
+            self.prev_price = last_price
+            return return_
 
         except Exception as exc:
             log.warning( f"Exception getting ticker:\n{exc}\n{response.json()}\n"
