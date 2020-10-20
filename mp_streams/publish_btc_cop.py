@@ -11,7 +11,7 @@ from microprediction.polling import MicroPoll
 import requests
 
 # log.basicConfig(filename='publish_btc_cop.log', level=log.INFO)
-log.basicConfig(stream=sys.stderr, level=log.INFO, format=)
+log.basicConfig(stream=sys.stderr, level=log.INFO)
 log.info('Publishing starts')
 
 
@@ -20,11 +20,29 @@ class _Config:
     stream_name = 'cck-btc-cop.json'
     ticker_url = 'https://www.buda.com/api/v2/markets/btc-cop/ticker'
     interval = 10  # minutes
+    key_server_url = 'https://localhost:8000/key?client_name=cck-btc-cop'
 
 
 CFG = _Config
 
 # %%
+
+
+class MicroPollV2( MicroPoll ):
+    """Version of Micropoll that fetches keys from a key server"""
+
+    def maybe_bolster_balance_by_mining(self):
+        balance = self.get_balance()
+        log.info(f'at the start, balance: {balance}')
+
+        if balance < 0:
+            response_js = requests.get(CFG.key_server_url).json()
+            key = response_js['key']
+            difficulty = response_js['difficulty']
+            print(f"Got key of difficulty {difficulty} from server")
+            self.put_balance(source_write_key=key)
+            balance = self.get_balance()
+            log.info(f'at the end, balance: {balance}')
 
 
 def main():
@@ -33,10 +51,10 @@ def main():
     write_key = _get_key( CFG.stream_name, CFG.keys_file )
     assert write_key, f"Failed getting key for `{CFG.stream_name}` from file: {CFG.keys_file}"
 
-    feed = MicroPoll( name=CFG.stream_name,
-                      write_key=write_key,
-                      func=get_price,
-                      interval=CFG.interval)
+    feed = MicroPollV2( name=CFG.stream_name,
+                        write_key=write_key,
+                        func=get_price,
+                        interval=CFG.interval)
 
     feed.run()
 
