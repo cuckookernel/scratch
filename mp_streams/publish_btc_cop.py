@@ -20,7 +20,7 @@ class _Config:
     keys_file = os.getenv('HOME') + '/stream_keys.json'
     stream_name = 'cck-btc-cop-10m-ret.json'
     ticker_url = 'https://www.buda.com/api/v2/markets/btc-cop/ticker'
-    interval = 1  # minutes
+    interval = 10  # minutes
     key_server_url = 'https://localhost:8000/key?client_name=cck-btc-cop'
 
 
