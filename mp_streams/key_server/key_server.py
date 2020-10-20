@@ -70,6 +70,17 @@ async def _all_keys():
     return await database.fetch_all(query)
 
 
+@app.get("/keys.txt")
+async def _all_keys(difficulty: int = None):
+    query = keys_tbl.select()
+    recs = await database.fetch_all(query)
+    for rec in recs:
+        dic = dict( rec )
+        if difficulty is not None and dic['difficulty'] != difficulty:
+            continue
+        print( f"{dic['animal']:17s} | {dic['difficulty']:2d} | {dic['key']}" )
+
+
 # @app.get("/drop_keys_tbl")
 # async def _drop_keys_tbl():
 #    query = "drop table if exists keys"
@@ -87,13 +98,13 @@ async def _keys_tbl_def():
 
 
 @app.post("/keys/save")
-async def save_key(key_obj: Key):
+async def _save_key(key_obj: Key):
     log.info(f"key_obj: {key_obj}")
-    return await save_key0(key_obj.key)
+    return await _save_key0(key_obj.key)
 
 
 @app.get("/keys/save/{key}")
-async def save_key0(key: str):
+async def _save_key0(key: str):
     await _validate( key )
 
     query = _save_query(key)
@@ -162,7 +173,7 @@ def _save_query(key: str) -> str:
 
 
 @app.get("/key")
-async def get_key(client_name: str, difficulty: int):
+async def _get_key(client_name: str, difficulty: int):
     query = f"select * from keys where used_by is null and difficulty=:diff"
     record = await database.fetch_one(query, values={'diff': difficulty})
     key_found = record['key']
