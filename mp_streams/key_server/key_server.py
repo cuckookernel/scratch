@@ -97,7 +97,7 @@ async def save_key0(key: str):
     await _validate( key )
 
     query = _save_query(key)
-    log.info(f'\n{query}')
+    # log.info(f'\n{query}')
     # last_record_id = await database.execute(query)
     await database.execute(query)
 
@@ -137,7 +137,7 @@ async def _validate( key: str):
         raise HTTPException( status_code=http.HTTPStatus.BAD_REQUEST, detail='Invalid key' )
 
     record = await database.fetch_one("select * from keys where key=:key", values={'key': key})
-    log.info(f'record: {record}')
+
     if record is not None:
         raise HTTPException( status_code=http.HTTPStatus.ALREADY_REPORTED,
                              detail=f'key already in db: {record}' )
