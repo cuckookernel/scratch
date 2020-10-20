@@ -40,7 +40,7 @@ class MicroPollV2( MicroPoll ):
             response_js = requests.get(CFG.key_server_url).json()
             key = response_js['key']
             difficulty = response_js['difficulty']
-            print(f"Got key of difficulty {difficulty} from server")
+            log.info(f"Got key of difficulty {difficulty} from server")
             self.put_balance(source_write_key=key)
             balance = self.get_balance()
             log.info(f'at the end, balance: {balance}')
