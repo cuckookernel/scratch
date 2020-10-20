@@ -21,7 +21,7 @@ class _Config:
     stream_name = 'cck-btc-cop-10m-ret.json'
     ticker_url = 'https://www.buda.com/api/v2/markets/btc-cop/ticker'
     interval = 10  # minutes
-    key_server_url = 'https://localhost:8000/key?client_name=cck-btc-cop'
+    key_server_url = 'http://localhost:8000/key?client_name=cck-btc-cop&difficulty=9'
 
 
 CFG = _Config
