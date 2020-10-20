@@ -10,8 +10,9 @@ import databases
 import sqlalchemy
 
 import http
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Response
 from pydantic import BaseModel
+
 
 MIN_DIFFICULTY = 9
 DEFAULT_FORMAT = '%(asctime)s.%(msecs)03d %(levelname)s %(name)s::%(funcName)s: %(message)s'
@@ -81,7 +82,7 @@ async def _all_keys(difficulty: int = None):
             continue
         result.append( f"{dic['animal']:17s} | {dic['difficulty']:2d} | {dic['key']}" )
 
-    return "\n".join( result )
+    return Response( "\n".join( result ), media_type="text/plain" )
 
 
 # @app.get("/drop_keys_tbl")
