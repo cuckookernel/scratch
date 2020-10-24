@@ -1,0 +1,15 @@
+
+type Pic {
+    s3_bucket: String!
+    s3_key: String!
+    group: Group
+}
+
+type Group {
+    name: String!
+    pics: [Pic] @relation
+}
+
+type Query {
+    allPicsInGroup(name): [Pic!]
+}

@@ -82,7 +82,11 @@ def _loop_over_srp_results( driver):
             break
 
         link = profile_links[i]
-        out_path = get_out_path( link.get_attribute('href') )
+        href = link.get_attribute('href')
+        if href.find('search/results/people') >= 0:
+            continue
+
+        out_path = get_out_path( href )
         if out_path.exists():
             print(f'{out_path.name} already there, skipping')
             continue

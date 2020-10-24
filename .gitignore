@@ -1,5 +1,6 @@
 .ipynb_checkpoints/
 __pycache__/
+*.db
 *.rdb
 *.log
 *.out
@@ -17,6 +18,7 @@ __pycache__/
 *.exe
 *.zip
 Cvs*
+venv-*/
 .tmp*/
 .idea/
 node_modules/
