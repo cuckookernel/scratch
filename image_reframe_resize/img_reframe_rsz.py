@@ -18,8 +18,8 @@ pg.init()
 
 @dataclass
 class _Config:
-    source_dir = Path("/home/teo/Dokumente/personal/Photos/Family")
-    target_dir = Path("/home/teo/Dokumente/personal/Photos/Family_resized")
+    source_dir = Path("/home/teo/Dokumente/personal/Photos/2019-California-digital-frame")
+    target_dir = Path("/home/teo/Dokumente/personal/Photos/2019-California-digital-frame-resized")
     resources_dir = Path("image_reframe_resize/resources")
     move_incs = [1, 2, 4, 8, 16, 32, 64, 128, 256]
     geom_incs = [1.01, 1.02, 1.04, 1.08, 1.16, 1.32, 1.50, 2.0, 4.0]
@@ -58,10 +58,6 @@ def _interactive_testing():
     rect = pg.Rect([0, 0, 330, 330])
 
     img_fp = list( CFG.source_dir.glob("*") )[0]
-
-    image = pg.image.load(img_fp)
-    # %%
-    image = imread( img_fp )
     # %%
 
 
@@ -205,7 +201,6 @@ class AppState:
     def _update_incs( self, idx: int ):
         self.geom_inc = CFG.geom_incs[idx]
         self.move_inc = CFG.move_incs[idx]
-        print(f'geom_inc = {self.geom_inc}, move_inc = {self.move_inc}')
 
     def _img_skip( self, inc: int ):
         self.img_idx += inc
