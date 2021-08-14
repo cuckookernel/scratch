@@ -2,12 +2,12 @@
 
                                    ⍝  Python equivalents (using numpy)
                                    ⍝  import numpy as np
-                                   ⍝
+⍝ default values for global params ⍝
 N ← 100                            ⍝  N = 1000
 TIMEOUT ← 1.0                      ⍝  TIMEOUT = 1.0
 SHOW ← 0                           ⍝  SHOW = False
 
-∇main
+∇main; ts0;ts1;primes;passes;elapsed
   parse_args                       ⍝ Call parse_args niladic (i.e. no-argument) function
 
   ts0 ← timestamp_2_secs ⎕TS
@@ -18,7 +18,7 @@ SHOW ← 0                           ⍝  SHOW = False
     passes ← passes + 1
     ts1 ← timestamp_2_secs ⎕TS
     elapsed ← ts1 - ts0
-    →End
+    ⍝ →End ⍝ uncomment to run only one pass
     →(elapsed < TIMEOUT) / Loop
 
   End:
@@ -34,7 +34,6 @@ SHOW ← 0                           ⍝  SHOW = False
 
   mark_multiples 2      ⍝  ⊣ do not echo result
   sqrt ← ⌊(N * .5)
-  ⍝ odd_numbers ← 1 + 2 × ⍳ ⌊(sqrt ÷ 2)
   odd_numbers   ← 1 + 2 × ⍳ ⌊(⌈sqrt -1) ÷ 2
   mark_multiples¨ odd_numbers
   primes ← (is_prime = 1 ) / ⍳N
@@ -47,29 +46,30 @@ SHOW ← 0                           ⍝  SHOW = False
 ∇
 
 ∇mark_multiples p; max_k; factors
-                                      ⍝  def mark_multiples(p):
-  →(is_prime[p] = 0) / End           ⍝     if PRIMES1[p]: # if p is prime
+                                     ⍝  def mark_multiples(p):
+  →(is_prime[p] = 0) / End           ⍝     if is_prime[p]: # if p is prime
      max_k ← (⌊ N÷p) - (p-1)         ⍝         max_k = np.floor(N/p) - (p-1)
      factors ← (p - 1) + ⍳ max_k     ⍝         ks = (p - 1) * np.arange(1, max_k +1)
-     is_prime[p × factors] ← 0       ⍝         PRIMES[p * ks] = 0
+     is_prime[p × factors] ← 0       ⍝         is_prime[p * ks] = 0
   End:                               ⍝  # 'End:' is just a user defined label for a point
                                      ⍝  # in the code. There is no Python equivalent
     ⍝ primes ← (is_prime = '1') / ⍳N
     ⍝ ⊃ 'p: ',⍕p,'is_prime: ', ⍕is_prime,' primes: ',⍕primes
-
 ∇
 
 
 ⍝ print and verify results
 
 ∇print_results data ;passes;elapsed;limit;num_primes;time_per_pass
-   (passes elapsed limit num_primes) ← data
-   time_per_pass ← elapsed ÷ passes
-   valid ← ('False' 'True')[ (num_primes = num_primes_under limit) + 1 ]
-   ⊃ ('Passes: ',⍕passes,'Time: ',(3⍕elapsed),' Avg:',(6⍕time_per_pass),' Limit: ',⍕limit,'Count: ',⍕num_primes,'Valid: ',⍕valid)
-   →(~SHOW)/PrintFinalLine
-     print_primes primes
-  PrintFinalLine:
+  (passes elapsed limit num_primes) ← data
+  time_per_pass ← elapsed ÷ passes
+  valid ← ('False' 'True')[ (num_primes = num_primes_under limit) + 1 ]
+
+  →(~SHOW)/PrintFinalLines
+    print_primes primes
+
+  PrintFinalLines:
+    ⊃ ('Passes: ',⍕passes,'Time: ',(3⍕elapsed),' Avg:',(6⍕time_per_pass),' Limit: ',⍕limit,'Count: ',⍕num_primes,'Valid: ',⍕valid)
     ⊃ ''
     ⊃ ('cuckookernel_apl;',⍕passes,';',(6⍕elapsed),';1;algorithm=base,faithful=yes,bits=8')
 ∇
@@ -109,7 +109,6 @@ SHOW ← 0                           ⍝  SHOW = False
   (fff ss MM HH dd) ← ts[7 6 5 4 3]   ⍝ Multiple assignment into multiple variables!
   nsecs ← (fff ÷ 1000.0) + ss + 60 × MM + 60 × HH + 24 × dd
 ∇
-
 
 ∇parse_args ;n_args;limit_arg_pos;is_show_arg;limit_arg_po
 
