@@ -11,7 +11,7 @@ RUN apt-get update \
 
 WORKDIR /app
 
-COPY generate_primes.apl run.sh ./
-RUN chmod a+x ./run.sh
+COPY generate_primes.apl primes_apl.sh ./
+RUN chmod a+x ./primes_apl.sh
 
-CMD ./run.sh
+ENTRYPOINT [ "primes_apl.sh" ]
