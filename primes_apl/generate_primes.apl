@@ -14,29 +14,29 @@ SHOW ← 0                           ⍝  SHOW = False
 
   passes ← 0
   Loop:
-    primes ← run_pass
+    run_pass
     passes ← passes + 1
     ts1 ← timestamp_2_secs ⎕TS
     elapsed ← ts1 - ts0
     ⍝ →End ⍝ uncomment to run only one pass
+
     →(elapsed < TIMEOUT) / Loop
 
   End:
   ⍝ ⊃ 'End - primes: ',⍕primes
-  num_primes ← ⍴ primes
+  ⍝ num_primes ← ⍴ primes
+  num_primes ← +/is_prime
 
   print_results (passes elapsed N num_primes)
 ∇
 ⍝ ∇ (gradient symbol) = "end of function def"
 
-∇primes ← run_pass; sqrt;odd_numbers
+∇run_pass; sqrt;odd_numbers
   create_sieve N
-
-  mark_multiples 2      ⍝  ⊣ do not echo result
+  mark_evens
   sqrt ← ⌊(N * .5)
-  odd_numbers   ← 1 + 2 × ⍳ ⌊(⌈sqrt -1) ÷ 2
+  odd_numbers ← 1 + 2 × ⍳ ⌊(⌈sqrt -1) ÷ 2
   mark_multiples¨ odd_numbers
-  primes ← (is_prime = 1 ) / ⍳N
 ∇
 
 ∇create_sieve n
@@ -45,21 +45,33 @@ SHOW ← 0                           ⍝  SHOW = False
   is_prime[1] ← 0
 ∇
 
-∇mark_multiples p; max_k; factors
+∇mark_evens; max_k;mults
+  max_k ← (⌊ N÷2) - 1
+  mults ← 2 × (1 + ⍳ max_k)
+  ⍝ ⊃ mults
+  is_prime[ mults ] ← 0
+∇
+
+∇mark_multiples p; max_k;mults
                                      ⍝  def mark_multiples(p):
   →(is_prime[p] = 0) / End           ⍝     if is_prime[p]: # if p is prime
-     max_k ← (⌊ N÷p) - (p-1)         ⍝         max_k = np.floor(N/p) - (p-1)
-     factors ← (p - 1) + ⍳ max_k     ⍝         ks = (p - 1) * np.arange(1, max_k +1)
-     is_prime[p × factors] ← 0       ⍝         is_prime[p * ks] = 0
+     ⍝ max_k ← (⌊ N÷p) - (p-1)       ⍝         max_k = np.floor(N/p) - (p-1)
+     ⍝ factors ← (p - 1) + ⍳ max_k   ⍝         ks = (p - 1) * np.arange(1, max_k +1)
+     ⍝ max_m ← ⌊ ((N÷p) - p) ÷ 2
+     max_k ← 1 + ⌊ ((N÷p) - p) ÷ 2  ⍝         max_k = np.floor(N/p) - (p-1)
+     ⍝ ⊃'N:',(⍕N),' p:',(⍕p), ' max_m: ',(⍕max_m), ' max_k:',(⍕max_k)
+     ⍝ mults ← { p2 +  twice_p × (⍵  - 1)}¨⍳ max_k
+     mults ← (p×p) + (2×p)×((⍳ max_k) - 1)
+     ⍝ mults ← gen_multiples (N p)  ⍝    ks = (p - 1) * np.arange(1, max_k +1)
+     is_prime[mults] ← 0       ⍝         is_prime[p * ks] = 0
+     ⍝ ⊃ is_prime / ⍳N
   End:                               ⍝  # 'End:' is just a user defined label for a point
                                      ⍝  # in the code. There is no Python equivalent
     ⍝ primes ← (is_prime = '1') / ⍳N
     ⍝ ⊃ 'p: ',⍕p,'is_prime: ', ⍕is_prime,' primes: ',⍕primes
 ∇
 
-
 ⍝ print and verify results
-
 ∇print_results data ;passes;elapsed;limit;num_primes;time_per_pass
   (passes elapsed limit num_primes) ← data
   time_per_pass ← elapsed ÷ passes
@@ -71,7 +83,7 @@ SHOW ← 0                           ⍝  SHOW = False
   PrintFinalLines:
     ⊃ ('Passes: ',⍕passes,'Time: ',(3⍕elapsed),' Avg:',(6⍕time_per_pass),' Limit: ',⍕limit,'Count: ',⍕num_primes,'Valid: ',⍕valid)
     ⊃ ''
-    ⊃ ('cuckookernel_apl;',⍕passes,';',(6⍕elapsed),';1;algorithm=base,faithful=yes,bits=8')
+    ⊃ ('cuckookernel_apl;',(⍕passes),';',(6⍕elapsed),';1;algorithm=base,faithful=yes,bits=8')
 ∇
 ⍝ (passes, duration, duration/passes, self._size, count, self.validate_results()))
 
@@ -92,9 +104,7 @@ SHOW ← 0                           ⍝  SHOW = False
    ⊃ ,/ { (⍕⍵),', '}¨ primes
 ∇
 
-
 ⍝ Utility functions get system clock time and parse arguments
-
 ∇nsecs ← timestamp_2_secs ts;  fff; ss; MM; HH; dd
   ⍝ Takes a timestamp of the from (yyyy mm dd HH MM SS fff)
   ⍝ e.g. as returned by system function ⎕TS

@@ -14,4 +14,4 @@ WORKDIR /app
 COPY generate_primes.apl primes_apl.sh ./
 RUN chmod a+x ./primes_apl.sh
 
-ENTRYPOINT [ "primes_apl.sh" ]
+ENTRYPOINT [ "/app/primes_apl.sh", "-l", "1000000", "-t", "5" ]
