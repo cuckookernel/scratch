@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <title>
+        A graph viz
+    </title>
+
+    <style>
+        #graph {
+          width: 900px;
+          height: 900px;
+          display: block;
+        }
+    </style>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.20.0/cytoscape.min.js">
+    </script>
+
+</head>
+
+
+<body>
+<div id="graph"></div>
+
+    <script>
+
+        var cy = cytoscape({
+
+              container: document.getElementById('graph'), // container to render in
+
+              elements: [
+                  { data: { id: 'a', color: 'red' } },
+                  { data: { id: 'b' } },
+                  { data: { id: 'c' } },
+                  { data: { id: 'ab', source: 'a', target: 'b' }},
+                  { data: { id: 'ac', source: 'a', target: 'c' }}
+              ],
+
+              style: [ // the stylesheet for the graph
+                {
+                  selector: 'node',
+                  style: {
+                    // 'background-color': '#7af',
+                      'background-color': 'data(color)',
+                    'label': 'data(id)'
+                  }
+                },
+
+                {
+                  selector: 'edge',
+                  style: {
+                    'width': 3,
+                      'label': 'data(id)',
+                    'line-color': '#ccc',
+                      'label-color': '#ddd',
+                    'target-arrow-color': '#ccc',
+                    'target-arrow-shape': 'triangle',
+                    'curve-style': 'bezier'
+                  }
+                }
+              ],
+
+              layout: {
+                name: 'grid',
+                rows: 3,
+                  columns: 4
+              }
+
+            });
+
+        cy
+
+    </script>
+
+
+</body>
+</html>

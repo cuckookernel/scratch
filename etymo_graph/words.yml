@@ -1,0 +1,106 @@
+- lang_uri: lang@grc
+  name: Ancient Greek
+- lang_uri: lang@por
+  name: Portuguese
+- lang_uri: lang@spa
+  name: Spanish
+- lang_uri: lang@eng
+  name: English
+- lang_uri: lang_it
+  name: Italian
+- word_uri: apedauta@por
+- uri_a: apedauta@por
+  rel: means
+  b:
+    text: uneducated person
+- a:
+    word_uri: παιδεύω@grc
+  rel: means
+  b:
+    text: to educate, instruct, children
+- uri_a: apedauta@por
+  rel: comes_from
+  b:
+    word_uri: apaideutos@grc
+  ref:
+    - https://www.dicionarioetimologico.com.br/apedeuta/
+- a:
+    word_uri: embora@por
+  rel: translates_to
+  b:
+    word_uri: aunque@spa
+- a:
+    word_uri: largo@spa
+  rel: comes_from
+  b:
+    word_uri: largus@lat
+  ref: http://etimologias.dechile.net/?largo
+- a:
+    word_uri: pereza@spa
+  rel: comes_from
+  b:
+    word_uri: pigritia@lat
+  ref: http://etimologias.dechile.net/?pereza
+- suffix_uri: suffix_itia@lat
+  lang: lat
+- uri_a: suffix_itia@lat
+  rel: means
+  b:
+    text: quality
+- uri_a: pigritia@lat
+  rel: contains
+  b:
+    word_uri: piger@lat
+  ref: http://etimologias.dechile.net/?pereza
+- uri_a: pigritia@lat
+  rel: contains
+  uri_b: suffix_itia@lat
+- uri_a: piger@lat
+  rel: means
+  b:
+    text: flojo, que pone resistencia al trabajo
+    lang: spa
+- uri_a: piger@lat
+  rel: means
+  b:
+    text: lazy, resisting work @ eng
+- root_uri: peig_2@pie
+  ref: [ 'http://etimologias.dechile.net/PIE/?peig-2',
+         'https://starlingdb.org/cgi-bin/response.cgi?single=1&basename=%5Cdata%5Cie%5Cpokorny&text_recno=1459&root=config']
+- uri_a: piger@lat
+  rel: comes_from
+  uri_b: peig_2@pie
+- a:
+    wordsense_uri: real_2@spa
+    pos: adj
+  rel: comes_from
+  b:
+    word_uri: regalis@lat
+  ref: http://etimologias.dechile.net/?real
+- a:
+    wordsense_uri: real_1@spa
+    pos: adj
+  rel: means
+  b:
+    text: que tiene existencia objetiva @ spa
+- uri_a: real_2@spa
+  rel: means
+  b:
+    text: Perteneciente o relativo al rey o a la realeza
+- a:
+    word_uri: letra@spa
+  rel: comes_from
+  b:
+    word_uri: littera@lat
+- preffix_uri: preffix_com-@eng
+- uri_a: preffix_com-@eng
+  rel: means
+  b:
+    text: with, together @eng
+- a:
+    word_uri: compute@eng
+  rel: contains
+  uri_b: preffix_com-@eng
+
+
+
