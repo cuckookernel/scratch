@@ -24,41 +24,47 @@ SHOW ← 0                           ⍝  SHOW = False
 
   End:
   ⍝ ⊃ 'End - primes: ',⍕primes
-  num_primes ← +/IS_PRIME
+  ⍝ num_primes ← ⍴ primes
+  num_primes ← +/ SIEVE.is_prime
 
   print_results (passes elapsed N num_primes)
 ∇
 ⍝ ∇ (gradient symbol) = "end of function def"
 
 ∇run_pass; sqrt;odd_numbers
-  init_sieve N
+  create_sieve N
   mark_evens
   sqrt ← ⌊(N * .5)
   odd_numbers ← 1 + 2 × ⍳ ⌊(⌈sqrt -1) ÷ 2
-  mark_multiples¨ odd_numbers
+  ⍝ mark_multiples 3
+  mark_multiples¨odd_numbers
 ∇
 
-∇init_sieve n
-  IS_PRIME ← n / 1
-  IS_PRIME[1] ← 0
+∇create_sieve n
+  ⍝ is_prime ← n / 13 ⎕CR '31'   ⍝ byte array version wasn't really any faster
+  SIEVE ← 38 ⎕CR CAPACITY ← 64 × n
+  SIEVE.is_prime ← n / 1
+  SIEVE.is_prime[1] ← 0
 ∇
 
 ∇mark_evens; max_k;mults
   max_k ← (⌊ N÷2) - 1
   mults ← 2 × (1 + ⍳ max_k)
   ⍝ ⊃ mults
-  IS_PRIME[ mults ] ← 0
+  SIEVE.is_prime[ mults ] ← 0
 ∇
 
 ∇mark_multiples p; max_k;mults
                                      ⍝  def mark_multiples(p):
-  →(IS_PRIME[p] = 0) / End           ⍝     if IS_PRIME[p]: # if p is prime
+  →(SIEVE.is_prime[p] = 0) / End           ⍝     if is_prime[p]: # if p is prime
      max_k ← 1 + ⌊ ((N÷p) - p) ÷ 2  ⍝         max_k = np.floor(N/p) - (p-1)
+     ⍝ ⊃'N:',(⍕N),' p:',(⍕p), ' max_m: ',(⍕max_m), ' max_k:',(⍕max_k)
      ⍝ mults ← { p2 +  twice_p × (⍵  - 1)}¨⍳ max_k
      mults ← (p×p) + (2×p)×((⍳ max_k) - 1)
-     IS_PRIME[ mults ] ← 0       ⍝         IS_PRIME[p * ks] = 0
-  End:                               ⍝  # 'End:' is just a user defined label for a point
-                                     ⍝  # in the code. There is no Python equivalent
+     SIEVE.is_prime[mults] ← 0       ⍝         is_prime[p * ks] = 0
+  End:
+  ⍝ primes ← (is_prime = '1') / ⍳N
+  ⍝ ⊃ 'p: ',⍕p,'is_prime: ', ⍕is_prime,' primes: ',⍕primes
 ∇
 
 ⍝ print and verify results
