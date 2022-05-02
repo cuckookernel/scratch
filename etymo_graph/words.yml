@@ -24,6 +24,9 @@
     word_uri: apaideutos@grc
   ref:
     - https://www.dicionarioetimologico.com.br/apedeuta/
+- uri_a: apaideutos@grc
+  rel: contains
+  uri_b: παιδεύω@grc
 - a:
     word_uri: embora@por
   rel: translates_to
@@ -87,6 +90,13 @@
   rel: means
   b:
     text: Perteneciente o relativo al rey o a la realeza
+- word_uri: real@spa
+- uri_a: real@spa
+  rel: means
+  uri_b: real_2@spa
+- uri_a: real@spa
+  rel: means
+  uri_b: real_1@spa
 - a:
     word_uri: letra@spa
   rel: comes_from

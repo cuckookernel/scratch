@@ -9,14 +9,18 @@ https://context.reverso.net/traduccion/portugues-espanol/colo
 from typing import Dict, List, Tuple, Any, Optional
 from collections import defaultdict
 from pprint import pprint, pformat
+from pathlib import Path
 from hashlib import sha256
 import base64
+import json
+import pandas as pd
 
 import yaml
 from yaml import Loader
-# %%
+from jinja2 import Environment, select_autoescape, FileSystemLoader
 
-Edge = Any
+# %%
+# %%
 
 
 def _main():
@@ -29,8 +33,14 @@ def _main():
     kb = KnowledgeBase()
     kb.populate(recs)
 
-    pprint( kb.nodes )
-    # %%
+    # pprint( kb.nodes )
+    kb._export_to_csvs()
+    kb._render_graph_to_html()
+
+        # %%
+
+
+Edge = Any
 
 
 class Node:
@@ -68,6 +78,15 @@ class Node:
         return str(self)
 
 
+class Edge:
+    """Edge directed from a source to target node"""
+    def __init__( self, source: Node, target: Node, data: Dict ):
+        self.source = source
+        self.target = target
+        self.rel = data['rel']
+        self.data = data
+
+
 class KnowledgeBase:
     """contains the full knowledge base"""
     def __init__( self ):
@@ -82,12 +101,14 @@ class KnowledgeBase:
                 _check_rel_record( rec )
 
                 node_a = self._proc_edge_end(rec, 'a')
-                node_a.add_edge_out( rec )
 
                 node_b = self._proc_edge_end(rec, 'b')
-                node_b.add_edge_in( rec )
 
-                self.edges.append( rec )
+                edge = Edge( node_a, node_b, rec )
+                node_a.add_edge_out( edge )
+                node_b.add_edge_in( edge )
+
+                self.edges.append( edge )
             else:  # Node
                 klass, uri = _get_uri_and_class( rec )
                 node = Node(uri, klass, rec)
@@ -125,6 +146,56 @@ class KnowledgeBase:
             raise RuntimeError("this can't happen")
 
         return edge_end
+
+    def _export_to_csvs( self ):
+
+        node_dicts = []
+        for uri, node in self.nodes.items():
+            dic = dict(uri=uri, klass=node.klass, label=node.text, lang=node.lang)
+            dic.update( {k: v for k, v in node.data.items()
+                         if not k.endswith('_uri')} )
+            node_dicts.append( dic )
+
+        nodes_df = pd.DataFrame( node_dicts )
+        nodes_df.to_excel( Path("nodes.xlsx"), index=False )
+
+        edge_dicts = []
+        for edge in self.edges:
+            dic = dict(source=edge.source.uri, rel=edge.rel, target=edge.target.uri)
+            dic.update( edge.data )
+            edge_dicts.append(dic)
+
+        edges_df = pd.DataFrame( edge_dicts )
+        edges_df.to_excel( Path("edges.xlsx"), index=True )
+
+    def _render_graph_to_html( self ):
+        # %%
+        env = Environment( loader=FileSystemLoader( "etymo_graph" ) )
+        # %%
+        tmpl = env.get_template( "etymo_graph0.tmpl.html" )
+
+        elements = []
+
+        viz_classes = ('Word', 'Wordsense')
+
+        for _, node in self.nodes.items():
+            if node.klass in viz_classes:
+                elements.append( {"data": {"id": node.uri, "label": node.text,
+                                           "lang": node.lang,
+                                           "fill-color": color_for_lang( node.lang )}} )
+
+        for edge in self.edges:
+            source, target = edge.source, edge.target
+            if source.klass in viz_classes and target.klass in viz_classes:
+                elements.append( {"data": {"label": edge.data['rel'],
+                                           "source": source.uri,
+                                           "target": target.uri}} )
+        html_txt = tmpl.render( elements=json.dumps( elements, indent=4 ) )
+
+        out_path = Path( "etymo_graph/out.html" )
+        print( f'writing out: {out_path}' )
+        out_path.write_text( html_txt, encoding="utf8" )
+        # %%
 
 
 def _gen_uri( data: Dict ) -> str:
@@ -176,3 +247,7 @@ def _must_contain(rec, key: str):
 
 def _must_contain_one_of(rec, keys: List[str]):
     assert len( [key in rec for key in keys] ) > 0, f"none of {keys} in rec: {rec}"
+
+
+def color_for_lang(lang: str):
+    return {"spa": "#cfcf00"}.get(lang, "#ddd")

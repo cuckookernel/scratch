@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <title>
+        Etymology graph visualization
+    </title>
+
+    <style>
+        #graph {
+          width: 900px;
+          height: 900px;
+          display: block;
+        }
+    </style>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.20.0/cytoscape.min.js">
+    </script>
+
+</head>
+
+
+<body>
+<div id="graph"></div>
+
+<script>
+
+let elements = [
+    {
+        "data": {
+            "id": "apedauta@por",
+            "label": "apedauta",
+            "lang": "por",
+            "fill-color": "#ddd"
+        }
+    },
+    {
+        "data": {
+            "id": "\u03c0\u03b1\u03b9\u03b4\u03b5\u03cd\u03c9@grc",
+            "label": "\u03c0\u03b1\u03b9\u03b4\u03b5\u03cd\u03c9",
+            "lang": "grc",
+            "fill-color": "#ddd"
+        }
+    },
+    {
+        "data": {
+            "id": "apaideutos@grc",
+            "label": "apaideutos",
+            "lang": "grc",
+            "fill-color": "#ddd"
+        }
+    },
+    {
+        "data": {
+            "id": "embora@por",
+            "label": "embora",
+            "lang": "por",
+            "fill-color": "#ddd"
+        }
+    },
+    {
+        "data": {
+            "id": "aunque@spa",
+            "label": "aunque",
+            "lang": "spa",
+            "fill-color": "#cfcf00"
+        }
+    },
+    {
+        "data": {
+            "id": "largo@spa",
+            "label": "largo",
+            "lang": "spa",
+            "fill-color": "#cfcf00"
+        }
+    },
+    {
+        "data": {
+            "id": "largus@lat",
+            "label": "largus",
+            "lang": "lat",
+            "fill-color": "#ddd"
+        }
+    },
+    {
+        "data": {
+            "id": "pereza@spa",
+            "label": "pereza",
+            "lang": "spa",
+            "fill-color": "#cfcf00"
+        }
+    },
+    {
+        "data": {
+            "id": "pigritia@lat",
+            "label": "pigritia",
+            "lang": "lat",
+            "fill-color": "#ddd"
+        }
+    },
+    {
+        "data": {
+            "id": "piger@lat",
+            "label": "piger",
+            "lang": "lat",
+            "fill-color": "#ddd"
+        }
+    },
+    {
+        "data": {
+            "id": "real_2@spa",
+            "label": "real_2",
+            "lang": "spa",
+            "fill-color": "#cfcf00"
+        }
+    },
+    {
+        "data": {
+            "id": "regalis@lat",
+            "label": "regalis",
+            "lang": "lat",
+            "fill-color": "#ddd"
+        }
+    },
+    {
+        "data": {
+            "id": "real_1@spa",
+            "label": "real_1",
+            "lang": "spa",
+            "fill-color": "#cfcf00"
+        }
+    },
+    {
+        "data": {
+            "id": "real@spa",
+            "label": "real",
+            "lang": "spa",
+            "fill-color": "#cfcf00"
+        }
+    },
+    {
+        "data": {
+            "id": "letra@spa",
+            "label": "letra",
+            "lang": "spa",
+            "fill-color": "#cfcf00"
+        }
+    },
+    {
+        "data": {
+            "id": "littera@lat",
+            "label": "littera",
+            "lang": "lat",
+            "fill-color": "#ddd"
+        }
+    },
+    {
+        "data": {
+            "id": "compute@eng",
+            "label": "compute",
+            "lang": "eng",
+            "fill-color": "#ddd"
+        }
+    },
+    {
+        "data": {
+            "label": "comes_from",
+            "source": "apedauta@por",
+            "target": "apaideutos@grc"
+        }
+    },
+    {
+        "data": {
+            "label": "contains",
+            "source": "apaideutos@grc",
+            "target": "\u03c0\u03b1\u03b9\u03b4\u03b5\u03cd\u03c9@grc"
+        }
+    },
+    {
+        "data": {
+            "label": "translates_to",
+            "source": "embora@por",
+            "target": "aunque@spa"
+        }
+    },
+    {
+        "data": {
+            "label": "comes_from",
+            "source": "largo@spa",
+            "target": "largus@lat"
+        }
+    },
+    {
+        "data": {
+            "label": "comes_from",
+            "source": "pereza@spa",
+            "target": "pigritia@lat"
+        }
+    },
+    {
+        "data": {
+            "label": "contains",
+            "source": "pigritia@lat",
+            "target": "piger@lat"
+        }
+    },
+    {
+        "data": {
+            "label": "comes_from",
+            "source": "real_2@spa",
+            "target": "regalis@lat"
+        }
+    },
+    {
+        "data": {
+            "label": "means",
+            "source": "real@spa",
+            "target": "real_2@spa"
+        }
+    },
+    {
+        "data": {
+            "label": "means",
+            "source": "real@spa",
+            "target": "real_1@spa"
+        }
+    },
+    {
+        "data": {
+            "label": "comes_from",
+            "source": "letra@spa",
+            "target": "littera@lat"
+        }
+    }
+] ;
+
+let cy = cytoscape({
+
+  container: document.getElementById('graph'), // container to render in
+
+  elements: elements,
+
+  style: [ // the stylesheet for the graph
+    {
+      selector: 'node',
+      style: {
+        // 'background-color': '#7af',
+          'background-color': 'data(bg-color)',
+          'label': 'data(label)',
+          'font-size': 12
+      }
+    },
+
+    {
+      selector: 'edge',
+      style: {
+          'width': 3,
+          'label': 'data(label)',
+          'font-size': 8,
+          'line-color': '#ccc',
+          'label-color': '#ddd',
+          'target-arrow-color': '#ccc',
+          'target-arrow-shape': 'triangle',
+          'curve-style': 'bezier'
+      }
+    }
+  ],
+
+  layout: {
+      name: 'cose',
+      gravity: -1,
+      nodeOverlap: 8,
+  }
+
+});
+
+cy
+
+</script>
+
+
+</body>
+</html>
