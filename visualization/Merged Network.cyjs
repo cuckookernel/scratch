@@ -1,0 +1,819 @@
+{
+  "format_version" : "1.0",
+  "generated_by" : "cytoscape-3.9.0",
+  "target_cytoscapejs_version" : "~2.1",
+  "data" : {
+    "shared_name" : "Merged Network",
+    "name" : "Merged Network",
+    "SUID" : 59989,
+    "__Annotations" : [ ],
+    "selected" : true
+  },
+  "elements" : {
+    "nodes" : [ {
+      "data" : {
+        "id" : "60205",
+        "Matching_Attribute" : [ "lang@grc" ],
+        "shared_name" : "lang@grc",
+        "name" : "lang@grc",
+        "SUID" : 60205,
+        "selected" : false
+      },
+      "position" : {
+        "x" : -469.8431558320017,
+        "y" : 185.81367955063328
+      },
+      "selected" : false
+    }, {
+      "data" : {
+        "id" : "60202",
+        "Matching_Attribute" : [ "lang@por" ],
+        "shared_name" : "lang@por",
+        "name" : "lang@por",
+        "SUID" : 60202,
+        "selected" : false
+      },
+      "position" : {
+        "x" : -369.8431558320017,
+        "y" : 185.81367955063328
+      },
+      "selected" : false
+    }, {
+      "data" : {
+        "id" : "60199",
+        "Matching_Attribute" : [ "lang@spa" ],
+        "shared_name" : "lang@spa",
+        "name" : "lang@spa",
+        "SUID" : 60199,
+        "selected" : false
+      },
+      "position" : {
+        "x" : -269.8431558320017,
+        "y" : 185.81367955063328
+      },
+      "selected" : false
+    }, {
+      "data" : {
+        "id" : "60196",
+        "Matching_Attribute" : [ "lang@eng" ],
+        "shared_name" : "lang@eng",
+        "name" : "lang@eng",
+        "SUID" : 60196,
+        "selected" : false
+      },
+      "position" : {
+        "x" : -169.84315583200168,
+        "y" : 185.81367955063328
+      },
+      "selected" : false
+    }, {
+      "data" : {
+        "id" : "60193",
+        "Matching_Attribute" : [ "lang_it" ],
+        "shared_name" : "lang_it",
+        "name" : "lang_it",
+        "SUID" : 60193,
+        "selected" : false
+      },
+      "position" : {
+        "x" : -69.84315583200168,
+        "y" : 185.81367955063328
+      },
+      "selected" : false
+    }, {
+      "data" : {
+        "id" : "60190",
+        "Matching_Attribute" : [ "apedauta@por" ],
+        "shared_name" : "apedauta@por",
+        "name" : "apedauta@por",
+        "SUID" : 60190,
+        "selected" : false
+      },
+      "position" : {
+        "x" : 650.719828634551,
+        "y" : -125.28739848281398
+      },
+      "selected" : false
+    }, {
+      "data" : {
+        "id" : "60187",
+        "Matching_Attribute" : [ "DicaZH030j+R" ],
+        "shared_name" : "DicaZH030j+R",
+        "name" : "DicaZH030j+R",
+        "SUID" : 60187,
+        "selected" : false
+      },
+      "position" : {
+        "x" : 738.4762258818655,
+        "y" : -191.16801371718898
+      },
+      "selected" : false
+    }, {
+      "data" : {
+        "id" : "60184",
+        "Matching_Attribute" : [ "παιδεύω@grc" ],
+        "shared_name" : "παιδεύω@grc",
+        "name" : "παιδεύω@grc",
+        "SUID" : 60184,
+        "selected" : false
+      },
+      "position" : {
+        "x" : 433.1079855254202,
+        "y" : -83.58753886367336
+      },
+      "selected" : false
+    }, {
+      "data" : {
+        "id" : "60181",
+        "Matching_Attribute" : [ "V35II10sRZpn" ],
+        "shared_name" : "V35II10sRZpn",
+        "name" : "V35II10sRZpn",
+        "SUID" : 60181,
+        "selected" : false
+      },
+      "position" : {
+        "x" : 324.702422170928,
+        "y" : -104.56257548476711
+      },
+      "selected" : false
+    }, {
+      "data" : {
+        "id" : "60178",
+        "Matching_Attribute" : [ "apaideutos@grc" ],
+        "shared_name" : "apaideutos@grc",
+        "name" : "apaideutos@grc",
+        "SUID" : 60178,
+        "selected" : false
+      },
+      "position" : {
+        "x" : 545.9091558745413,
+        "y" : -87.85468974257961
+      },
+      "selected" : false
+    }, {
+      "data" : {
+        "id" : "60175",
+        "Matching_Attribute" : [ "embora@por" ],
+        "shared_name" : "embora@por",
+        "name" : "embora@por",
+        "SUID" : 60175,
+        "selected" : false
+      },
+      "position" : {
+        "x" : 1132.1522207549124,
+        "y" : -83.44584574843898
+      },
+      "selected" : false
+    }, {
+      "data" : {
+        "id" : "60172",
+        "Matching_Attribute" : [ "aunque@spa" ],
+        "shared_name" : "aunque@spa",
+        "name" : "aunque@spa",
+        "SUID" : 60172,
+        "selected" : false
+      },
+      "position" : {
+        "x" : 1135.1696729949026,
+        "y" : -191.16801371718898
+      },
+      "selected" : false
+    }, {
+      "data" : {
+        "id" : "60169",
+        "Matching_Attribute" : [ "largo@spa" ],
+        "shared_name" : "largo@spa",
+        "name" : "largo@spa",
+        "SUID" : 60169,
+        "selected" : false
+      },
+      "position" : {
+        "x" : -675.8780603119822,
+        "y" : 293.5358475193833
+      },
+      "selected" : false
+    }, {
+      "data" : {
+        "id" : "60166",
+        "Matching_Attribute" : [ "largus@lat" ],
+        "shared_name" : "largus@lat",
+        "name" : "largus@lat",
+        "SUID" : 60166,
+        "selected" : false
+      },
+      "position" : {
+        "x" : -672.8606080719919,
+        "y" : 185.81367955063328
+      },
+      "selected" : false
+    }, {
+      "data" : {
+        "id" : "60163",
+        "Matching_Attribute" : [ "pereza@spa" ],
+        "shared_name" : "pereza@spa",
+        "name" : "pereza@spa",
+        "SUID" : 60163,
+        "selected" : false
+      },
+      "position" : {
+        "x" : -467.2715539643259,
+        "y" : -191.16801371718898
+      },
+      "selected" : false
+    }, {
+      "data" : {
+        "id" : "60160",
+        "Matching_Attribute" : [ "pigritia@lat" ],
+        "shared_name" : "pigritia@lat",
+        "name" : "pigritia@lat",
+        "SUID" : 60160,
+        "selected" : false
+      },
+      "position" : {
+        "x" : -476.38611695260715,
+        "y" : -76.74827113296047
+      },
+      "selected" : false
+    }, {
+      "data" : {
+        "id" : "60157",
+        "Matching_Attribute" : [ "suffix_itia@lat" ],
+        "shared_name" : "suffix_itia@lat",
+        "name" : "suffix_itia@lat",
+        "SUID" : 60157,
+        "selected" : false
+      },
+      "position" : {
+        "x" : -360.40113160104465,
+        "y" : -55.19022669936672
+      },
+      "selected" : false
+    }, {
+      "data" : {
+        "id" : "60154",
+        "Matching_Attribute" : [ "9vpSb4azDKiD" ],
+        "shared_name" : "9vpSb4azDKiD",
+        "name" : "9vpSb4azDKiD",
+        "SUID" : 60154,
+        "selected" : false
+      },
+      "position" : {
+        "x" : -251.34446808786106,
+        "y" : -29.647715713038593
+      },
+      "selected" : false
+    }, {
+      "data" : {
+        "id" : "60151",
+        "Matching_Attribute" : [ "piger@lat" ],
+        "shared_name" : "piger@lat",
+        "name" : "piger@lat",
+        "SUID" : 60151,
+        "selected" : true
+      },
+      "position" : {
+        "x" : -582.0297326752634,
+        "y" : -13.508647109522968
+      },
+      "selected" : true
+    }, {
+      "data" : {
+        "id" : "60148",
+        "Matching_Attribute" : [ "pNZ1unssRCdF" ],
+        "shared_name" : "pNZ1unssRCdF",
+        "name" : "pNZ1unssRCdF",
+        "SUID" : 60148,
+        "selected" : false
+      },
+      "position" : {
+        "x" : -659.2041406342478,
+        "y" : 74.1697891697739
+      },
+      "selected" : false
+    }, {
+      "data" : {
+        "id" : "60145",
+        "Matching_Attribute" : [ "trQu1O7AgqKg" ],
+        "shared_name" : "trQu1O7AgqKg",
+        "name" : "trQu1O7AgqKg",
+        "SUID" : 60145,
+        "selected" : false
+      },
+      "position" : {
+        "x" : -675.8780603119822,
+        "y" : -80.23147120620266
+      },
+      "selected" : false
+    }, {
+      "data" : {
+        "id" : "60142",
+        "Matching_Attribute" : [ "peig_2@pie" ],
+        "shared_name" : "peig_2@pie",
+        "name" : "peig_2@pie",
+        "SUID" : 60142,
+        "selected" : false
+      },
+      "position" : {
+        "x" : -529.7755975434275,
+        "y" : 85.81367955063328
+      },
+      "selected" : false
+    }, {
+      "data" : {
+        "id" : "60139",
+        "Matching_Attribute" : [ "real_2@spa" ],
+        "shared_name" : "real_2@spa",
+        "name" : "real_2@spa",
+        "SUID" : 60139,
+        "selected" : false
+      },
+      "position" : {
+        "x" : -70.08519074411106,
+        "y" : -87.89364543105617
+      },
+      "selected" : false
+    }, {
+      "data" : {
+        "id" : "60136",
+        "Matching_Attribute" : [ "regalis@lat" ],
+        "shared_name" : "regalis@lat",
+        "name" : "regalis@lat",
+        "SUID" : 60136,
+        "selected" : false
+      },
+      "position" : {
+        "x" : -151.34446808786106,
+        "y" : -10.725951339259296
+      },
+      "selected" : false
+    }, {
+      "data" : {
+        "id" : "60133",
+        "Matching_Attribute" : [ "real_1@spa" ],
+        "shared_name" : "real_1@spa",
+        "name" : "real_1@spa",
+        "SUID" : 60133,
+        "selected" : false
+      },
+      "position" : {
+        "x" : 140.5801534941702,
+        "y" : -7.890555526271015
+      },
+      "selected" : false
+    }, {
+      "data" : {
+        "id" : "60130",
+        "Matching_Attribute" : [ "4aofPyNdgN7c" ],
+        "shared_name" : "4aofPyNdgN7c",
+        "name" : "4aofPyNdgN7c",
+        "SUID" : 60130,
+        "selected" : false
+      },
+      "position" : {
+        "x" : 224.702422170928,
+        "y" : 64.48256001327977
+      },
+      "selected" : false
+    }, {
+      "data" : {
+        "id" : "60127",
+        "Matching_Attribute" : [ "4xZJ8sZiRpPT" ],
+        "shared_name" : "4xZJ8sZiRpPT",
+        "name" : "4xZJ8sZiRpPT",
+        "SUID" : 60127,
+        "selected" : false
+      },
+      "position" : {
+        "x" : -111.48753449411106,
+        "y" : -191.16801371718898
+      },
+      "selected" : false
+    }, {
+      "data" : {
+        "id" : "60124",
+        "Matching_Attribute" : [ "real@spa" ],
+        "shared_name" : "real@spa",
+        "name" : "real@spa",
+        "SUID" : 60124,
+        "selected" : false
+      },
+      "position" : {
+        "x" : 42.04274657278347,
+        "y" : -65.48968424941555
+      },
+      "selected" : false
+    }, {
+      "data" : {
+        "id" : "60121",
+        "Matching_Attribute" : [ "letra@spa" ],
+        "shared_name" : "letra@spa",
+        "name" : "letra@spa",
+        "SUID" : 60121,
+        "selected" : false
+      },
+      "position" : {
+        "x" : -572.8606080719919,
+        "y" : 293.5358475193833
+      },
+      "selected" : false
+    }, {
+      "data" : {
+        "id" : "60118",
+        "Matching_Attribute" : [ "littera@lat" ],
+        "shared_name" : "littera@lat",
+        "name" : "littera@lat",
+        "SUID" : 60118,
+        "selected" : false
+      },
+      "position" : {
+        "x" : -569.8431558320017,
+        "y" : 185.81367955063328
+      },
+      "selected" : false
+    }, {
+      "data" : {
+        "id" : "60115",
+        "Matching_Attribute" : [ "preffix_com-@eng" ],
+        "shared_name" : "preffix_com-@eng",
+        "name" : "preffix_com-@eng",
+        "SUID" : 60115,
+        "selected" : false
+      },
+      "position" : {
+        "x" : 937.6749258330374,
+        "y" : -148.9795905604507
+      },
+      "selected" : false
+    }, {
+      "data" : {
+        "id" : "60112",
+        "Matching_Attribute" : [ "uxbkscBld711" ],
+        "shared_name" : "uxbkscBld711",
+        "name" : "uxbkscBld711",
+        "SUID" : 60112,
+        "selected" : false
+      },
+      "position" : {
+        "x" : 838.4762258818655,
+        "y" : -191.16801371718898
+      },
+      "selected" : false
+    }, {
+      "data" : {
+        "id" : "60109",
+        "Matching_Attribute" : [ "compute@eng" ],
+        "shared_name" : "compute@eng",
+        "name" : "compute@eng",
+        "SUID" : 60109,
+        "selected" : false
+      },
+      "position" : {
+        "x" : 1032.1522207549124,
+        "y" : -95.34960475112453
+      },
+      "selected" : false
+    } ],
+    "edges" : [ {
+      "data" : {
+        "id" : "60268",
+        "source" : "60190",
+        "target" : "60187",
+        "shared_name" : "apedauta@por (interacts with) DicaZH030j+R",
+        "b" : "{'text': 'uneducated person'}",
+        "shared_interaction" : "interacts with",
+        "uri_a" : "apedauta@por",
+        "name" : "apedauta@por (interacts with) DicaZH030j+R",
+        "interaction" : "interacts with",
+        "rel" : "means",
+        "SUID" : 60268,
+        "selected" : false
+      },
+      "selected" : false
+    }, {
+      "data" : {
+        "id" : "60265",
+        "source" : "60190",
+        "target" : "60178",
+        "shared_name" : "apedauta@por (interacts with) apaideutos@grc",
+        "b" : "{'word_uri': 'apaideutos@grc'}",
+        "ref" : "['https://www.dicionarioetimologico.com.br/apedeuta/']",
+        "shared_interaction" : "interacts with",
+        "uri_a" : "apedauta@por",
+        "name" : "apedauta@por (interacts with) apaideutos@grc",
+        "interaction" : "interacts with",
+        "rel" : "comes_from",
+        "SUID" : 60265,
+        "selected" : false
+      },
+      "selected" : false
+    }, {
+      "data" : {
+        "id" : "60262",
+        "source" : "60184",
+        "target" : "60181",
+        "shared_name" : "παιδεύω@grc (interacts with) V35II10sRZpn",
+        "a" : "{'word_uri': 'παιδεύω@grc'}",
+        "b" : "{'text': 'to educate, instruct, children'}",
+        "shared_interaction" : "interacts with",
+        "name" : "παιδεύω@grc (interacts with) V35II10sRZpn",
+        "interaction" : "interacts with",
+        "rel" : "means",
+        "SUID" : 60262,
+        "selected" : false
+      },
+      "selected" : false
+    }, {
+      "data" : {
+        "id" : "60259",
+        "source" : "60178",
+        "target" : "60184",
+        "shared_name" : "apaideutos@grc (interacts with) παιδεύω@grc",
+        "shared_interaction" : "interacts with",
+        "uri_a" : "apaideutos@grc",
+        "name" : "apaideutos@grc (interacts with) παιδεύω@grc",
+        "interaction" : "interacts with",
+        "rel" : "contains",
+        "uri_b" : "παιδεύω@grc",
+        "SUID" : 60259,
+        "selected" : false
+      },
+      "selected" : false
+    }, {
+      "data" : {
+        "id" : "60256",
+        "source" : "60175",
+        "target" : "60172",
+        "shared_name" : "embora@por (interacts with) aunque@spa",
+        "a" : "{'word_uri': 'embora@por'}",
+        "b" : "{'word_uri': 'aunque@spa'}",
+        "shared_interaction" : "interacts with",
+        "name" : "embora@por (interacts with) aunque@spa",
+        "interaction" : "interacts with",
+        "rel" : "translates_to",
+        "SUID" : 60256,
+        "selected" : false
+      },
+      "selected" : false
+    }, {
+      "data" : {
+        "id" : "60253",
+        "source" : "60169",
+        "target" : "60166",
+        "shared_name" : "largo@spa (interacts with) largus@lat",
+        "a" : "{'word_uri': 'largo@spa'}",
+        "b" : "{'word_uri': 'largus@lat'}",
+        "ref" : "http://etimologias.dechile.net/?largo",
+        "shared_interaction" : "interacts with",
+        "name" : "largo@spa (interacts with) largus@lat",
+        "interaction" : "interacts with",
+        "rel" : "comes_from",
+        "SUID" : 60253,
+        "selected" : false
+      },
+      "selected" : false
+    }, {
+      "data" : {
+        "id" : "60250",
+        "source" : "60163",
+        "target" : "60160",
+        "shared_name" : "pereza@spa (interacts with) pigritia@lat",
+        "a" : "{'word_uri': 'pereza@spa'}",
+        "b" : "{'word_uri': 'pigritia@lat'}",
+        "ref" : "http://etimologias.dechile.net/?pereza",
+        "shared_interaction" : "interacts with",
+        "name" : "pereza@spa (interacts with) pigritia@lat",
+        "interaction" : "interacts with",
+        "rel" : "comes_from",
+        "SUID" : 60250,
+        "selected" : false
+      },
+      "selected" : false
+    }, {
+      "data" : {
+        "id" : "60247",
+        "source" : "60160",
+        "target" : "60151",
+        "shared_name" : "pigritia@lat (interacts with) piger@lat",
+        "b" : "{'word_uri': 'piger@lat'}",
+        "ref" : "http://etimologias.dechile.net/?pereza",
+        "shared_interaction" : "interacts with",
+        "uri_a" : "pigritia@lat",
+        "name" : "pigritia@lat (interacts with) piger@lat",
+        "interaction" : "interacts with",
+        "rel" : "contains",
+        "SUID" : 60247,
+        "selected" : false
+      },
+      "selected" : false
+    }, {
+      "data" : {
+        "id" : "60244",
+        "source" : "60160",
+        "target" : "60157",
+        "shared_name" : "pigritia@lat (interacts with) suffix_itia@lat",
+        "shared_interaction" : "interacts with",
+        "uri_a" : "pigritia@lat",
+        "name" : "pigritia@lat (interacts with) suffix_itia@lat",
+        "interaction" : "interacts with",
+        "rel" : "contains",
+        "uri_b" : "suffix_itia@lat",
+        "SUID" : 60244,
+        "selected" : false
+      },
+      "selected" : false
+    }, {
+      "data" : {
+        "id" : "60241",
+        "source" : "60157",
+        "target" : "60154",
+        "shared_name" : "suffix_itia@lat (interacts with) 9vpSb4azDKiD",
+        "b" : "{'text': 'quality'}",
+        "shared_interaction" : "interacts with",
+        "uri_a" : "suffix_itia@lat",
+        "name" : "suffix_itia@lat (interacts with) 9vpSb4azDKiD",
+        "interaction" : "interacts with",
+        "rel" : "means",
+        "SUID" : 60241,
+        "selected" : false
+      },
+      "selected" : false
+    }, {
+      "data" : {
+        "id" : "60238",
+        "source" : "60151",
+        "target" : "60148",
+        "shared_name" : "piger@lat (interacts with) pNZ1unssRCdF",
+        "b" : "{'text': 'flojo, que pone resistencia al trabajo', 'lang': 'spa'}",
+        "shared_interaction" : "interacts with",
+        "uri_a" : "piger@lat",
+        "name" : "piger@lat (interacts with) pNZ1unssRCdF",
+        "interaction" : "interacts with",
+        "rel" : "means",
+        "SUID" : 60238,
+        "selected" : false
+      },
+      "selected" : false
+    }, {
+      "data" : {
+        "id" : "60235",
+        "source" : "60151",
+        "target" : "60145",
+        "shared_name" : "piger@lat (interacts with) trQu1O7AgqKg",
+        "b" : "{'text': 'lazy, resisting work @ eng'}",
+        "shared_interaction" : "interacts with",
+        "uri_a" : "piger@lat",
+        "name" : "piger@lat (interacts with) trQu1O7AgqKg",
+        "interaction" : "interacts with",
+        "rel" : "means",
+        "SUID" : 60235,
+        "selected" : false
+      },
+      "selected" : false
+    }, {
+      "data" : {
+        "id" : "60232",
+        "source" : "60151",
+        "target" : "60142",
+        "shared_name" : "piger@lat (interacts with) peig_2@pie",
+        "shared_interaction" : "interacts with",
+        "uri_a" : "piger@lat",
+        "name" : "piger@lat (interacts with) peig_2@pie",
+        "interaction" : "interacts with",
+        "rel" : "comes_from",
+        "uri_b" : "peig_2@pie",
+        "SUID" : 60232,
+        "selected" : false
+      },
+      "selected" : false
+    }, {
+      "data" : {
+        "id" : "60229",
+        "source" : "60139",
+        "target" : "60136",
+        "shared_name" : "real_2@spa (interacts with) regalis@lat",
+        "a" : "{'wordsense_uri': 'real_2@spa', 'pos': 'adj'}",
+        "b" : "{'word_uri': 'regalis@lat'}",
+        "ref" : "http://etimologias.dechile.net/?real",
+        "shared_interaction" : "interacts with",
+        "name" : "real_2@spa (interacts with) regalis@lat",
+        "interaction" : "interacts with",
+        "rel" : "comes_from",
+        "SUID" : 60229,
+        "selected" : false
+      },
+      "selected" : false
+    }, {
+      "data" : {
+        "id" : "60226",
+        "source" : "60139",
+        "target" : "60127",
+        "shared_name" : "real_2@spa (interacts with) 4xZJ8sZiRpPT",
+        "b" : "{'text': 'Perteneciente o relativo al rey o a la realeza'}",
+        "shared_interaction" : "interacts with",
+        "uri_a" : "real_2@spa",
+        "name" : "real_2@spa (interacts with) 4xZJ8sZiRpPT",
+        "interaction" : "interacts with",
+        "rel" : "means",
+        "SUID" : 60226,
+        "selected" : false
+      },
+      "selected" : false
+    }, {
+      "data" : {
+        "id" : "60223",
+        "source" : "60133",
+        "target" : "60130",
+        "shared_name" : "real_1@spa (interacts with) 4aofPyNdgN7c",
+        "a" : "{'wordsense_uri': 'real_1@spa', 'pos': 'adj'}",
+        "b" : "{'text': 'que tiene existencia objetiva @ spa'}",
+        "shared_interaction" : "interacts with",
+        "name" : "real_1@spa (interacts with) 4aofPyNdgN7c",
+        "interaction" : "interacts with",
+        "rel" : "means",
+        "SUID" : 60223,
+        "selected" : false
+      },
+      "selected" : false
+    }, {
+      "data" : {
+        "id" : "60220",
+        "source" : "60124",
+        "target" : "60139",
+        "shared_name" : "real@spa (interacts with) real_2@spa",
+        "shared_interaction" : "interacts with",
+        "uri_a" : "real@spa",
+        "name" : "real@spa (interacts with) real_2@spa",
+        "interaction" : "interacts with",
+        "rel" : "means",
+        "uri_b" : "real_2@spa",
+        "SUID" : 60220,
+        "selected" : false
+      },
+      "selected" : false
+    }, {
+      "data" : {
+        "id" : "60217",
+        "source" : "60124",
+        "target" : "60133",
+        "shared_name" : "real@spa (interacts with) real_1@spa",
+        "shared_interaction" : "interacts with",
+        "uri_a" : "real@spa",
+        "name" : "real@spa (interacts with) real_1@spa",
+        "interaction" : "interacts with",
+        "rel" : "means",
+        "uri_b" : "real_1@spa",
+        "SUID" : 60217,
+        "selected" : false
+      },
+      "selected" : false
+    }, {
+      "data" : {
+        "id" : "60214",
+        "source" : "60121",
+        "target" : "60118",
+        "shared_name" : "letra@spa (interacts with) littera@lat",
+        "a" : "{'word_uri': 'letra@spa'}",
+        "b" : "{'word_uri': 'littera@lat'}",
+        "shared_interaction" : "interacts with",
+        "name" : "letra@spa (interacts with) littera@lat",
+        "interaction" : "interacts with",
+        "rel" : "comes_from",
+        "SUID" : 60214,
+        "selected" : false
+      },
+      "selected" : false
+    }, {
+      "data" : {
+        "id" : "60211",
+        "source" : "60115",
+        "target" : "60112",
+        "shared_name" : "preffix_com-@eng (interacts with) uxbkscBld711",
+        "b" : "{'text': 'with, together @eng'}",
+        "shared_interaction" : "interacts with",
+        "uri_a" : "preffix_com-@eng",
+        "name" : "preffix_com-@eng (interacts with) uxbkscBld711",
+        "interaction" : "interacts with",
+        "rel" : "means",
+        "SUID" : 60211,
+        "selected" : false
+      },
+      "selected" : false
+    }, {
+      "data" : {
+        "id" : "60208",
+        "source" : "60109",
+        "target" : "60115",
+        "shared_name" : "compute@eng (interacts with) preffix_com-@eng",
+        "a" : "{'word_uri': 'compute@eng'}",
+        "shared_interaction" : "interacts with",
+        "name" : "compute@eng (interacts with) preffix_com-@eng",
+        "interaction" : "interacts with",
+        "rel" : "contains",
+        "uri_b" : "preffix_com-@eng",
+        "SUID" : 60208,
+        "selected" : false
+      },
+      "selected" : false
+    } ]
+  }
+}

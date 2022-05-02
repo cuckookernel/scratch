@@ -1,0 +1,26 @@
+lang@grc
+lang@por
+lang@spa
+lang@eng
+lang_it
+apedauta@por	interacts with	DicaZH030j+R
+apedauta@por	interacts with	apaideutos@grc
+παιδεύω@grc	interacts with	V35II10sRZpn
+apaideutos@grc	interacts with	παιδεύω@grc
+embora@por	interacts with	aunque@spa
+largo@spa	interacts with	largus@lat
+pereza@spa	interacts with	pigritia@lat
+pigritia@lat	interacts with	piger@lat
+pigritia@lat	interacts with	suffix_itia@lat
+suffix_itia@lat	interacts with	9vpSb4azDKiD
+piger@lat	interacts with	pNZ1unssRCdF
+piger@lat	interacts with	trQu1O7AgqKg
+piger@lat	interacts with	peig_2@pie
+real_2@spa	interacts with	regalis@lat
+real_2@spa	interacts with	4xZJ8sZiRpPT
+real_1@spa	interacts with	4aofPyNdgN7c
+real@spa	interacts with	real_2@spa
+real@spa	interacts with	real_1@spa
+letra@spa	interacts with	littera@lat
+preffix_com-@eng	interacts with	uxbkscBld711
+compute@eng	interacts with	preffix_com-@eng
