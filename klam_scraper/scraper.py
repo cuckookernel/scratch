@@ -50,6 +50,8 @@ def _interactive_testing():
     # %%
     df = pd.read_sql('select * from downloaded_images', engine )
     # %%
+    df.to_csv('downloaded_images.csv', index=False)
+    # %%
 
 
 def get_product_urls( driver: WebDriver, start_url: str ) -> List[URL]:
@@ -72,7 +74,7 @@ def get_product_urls( driver: WebDriver, start_url: str ) -> List[URL]:
     return product_urls
 
 
-def download_images_from_product_page( driver: WebDriver, prod_url: URL ):
+def download_images_from_product_page( driver: WebDriver, prod_url: URL, db_session ):
     print(f"Visiting product page: {prod_url}")
     driver.get(prod_url)
 
@@ -80,11 +82,14 @@ def download_images_from_product_page( driver: WebDriver, prod_url: URL ):
     hp.wait_for_and_get(driver, thumbnail_xp)
 
     thumbnails = driver.find_elements_by_xpath(thumbnail_xp)
-    print( f"{len(thumbnails)} thumbnails found, now downloading images" )
 
     image_urls = [ thumbnail.get_attribute('src') for thumbnail in thumbnails ]
 
+    print( f"{len( thumbnails )} thumbnails found, now downloading "
+           f"{len(image_urls)} images" )
+
     for img_url in image_urls:
+        print(img_url)
         download_img_to_local( img_url, prod_url, db_session )
     # %%
 

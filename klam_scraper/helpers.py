@@ -13,7 +13,6 @@ from selenium.common.exceptions import TimeoutException
 from sqlalchemy.engine import create_engine
 from sqlalchemy import Column, Integer, String
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
 
 from typing import Callable, Any
 

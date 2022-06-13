@@ -1,0 +1,171 @@
+my_args
+{(⍵ ≡ '-l') ∨ (⍵ ≡ '--limit')}¨ my_args
+{(⍵ ≡ '-t') ∨ (⍵ ≡ '--time')}¨ my_args ⍳ 1
+my_args
+⍴ my_args
+⍴ my_args
+my_args[1]
+my_args[2]
+my_args[3]
+my_args[3]
+time_arg_pos ← ({(⍵ ≡ '-t') ∨ (⍵ ≡ '--time')}¨ my_args) ⍳ 1
+⊃ 'set time_arg_pos ',⍕time_arg_pos
+)OFF
+)OFF
+a ← 10_0000
+a ← 10_000
+a ← ⊖
+a ← ⍬
+a
+⍴ a
+∇n_primes ← numprimes_under n; valid_ns;num_primes;idx
+[1]     valid_ns   ← 10 100 1000 10000 100000 1000000 10000000 100000000
+[2]     num_primes ←  4  25  168  1229   9592   78498   664579   5761455
+[3]     idx ← valid_ns ⍳ n
+[4]     →(idx = 1 + ⍴ valid_ns)/DoNoKnow
+[5]        n_primes ← num_primes[idx]
+[6]        →Return
+[7]     DoNotKnow:
+[8]        n_primes ← ⍬
+[9]     Return:
+∇
+numprimes_under 100
+∇ n_primes ← numprimes_under n; valid_ns;num_primes;idx
+valid_ns   ← 10 100 1000 10000 100000 1000000 10000000 100000000
+num_primes ←  4  25  168  1229   9592   78498   664579   5761455
+idx ← valid_ns ⍳ n
+→(idx = 1 + ⍴ valid_ns)/DontKnow
+n_primes ← num_primes[idx]
+→Return
+DontKnow:
+n_primes ← ⍬
+Return:
+∇
+∇ n_primes ← numprimes_under n; valid_ns;num_primes;idx
+valid_ns   ← 10 100 1000 10000 100000 1000000 10000000 100000000
+num_primes ←  4  25  168  1229   9592   78498   664579   5761455
+idx ← valid_ns ⍳ n
+→(idx = 1 + ⍴ valid_ns)/DontKnow
+n_primes ← num_primes[idx]
+→Return
+DontKnow:
+n_primes ← ⍬
+Return:
+∇
+)OFF
+∇n_primes ← numprimes_under n; valid_ns;num_primes;idx
+[1]     valid_ns   ← 10 100 1000 10000 100000 1000000 10000000 100000000
+[2]     num_primes ←  4  25  168  1229   9592   78498   664579   5761455
+[3]     idx ← valid_ns ⍳ n
+[4]     →(idx = 1 + ⍴ valid_ns)/DontKnow
+[5]        n_primes ← num_primes[idx]
+[6]        →Return
+[7]     DontKnow:
+[8]        n_primes ← ⍬
+[9]     Return:
+∇
+numprimes_under 100
+numprimes_under 1000
+numprimes_under 1
+)OFF
+)OFF
+a ← 'True' 'False'
+a
+)OFF
+sieve ← 38 ⎕CR
+sieve ← 38 ⎕CR
+SIEVE ← 38 ⎕CR CAPACITY
+SIEVE ← 38 ⎕CR
+SIEVE ← 38 ⎕CR CAPACITY ← 32
+⎕CR
+⎕TS
+SIEVE.a ← 20
+A.key ← 20
+)OFF
+a.key ← 42
+A.key ← 42
+⎕CR ''
+13 ⎕CR '000000'
+b ← 13 ⎕CR '000000'
+b
+⍴b
+b[3] = '1'
+b
+b[3] ← '1'
+b
+⍴b
+26 ⎕CR b
+a ← 1 'a' 9
+a
+26 ⎕CR a
+a ← 1 'a' 9.2
+26 ⎕CR a
+a ← 12313123 'a' 9.2
+a
+26 ⎕CR a
+100 / 13 ⎕CR '0'
+100 / 13 ⎕CR '00'
+100 / 13 ⎕CR '60'
+100 / 13 ⎕CR '40'
+b ← 100 / 13 ⎕CR '40'
+⍴ b
+b ← 100 / 13 ⎕CR '33'
+b
+b ← 100 / 13 ⎕CR '31'
+b
+)OFF
+a ← 1 2 3 4
+a = 3 3
+a = 3
+a ∊ 3
+a ∊ 3 4
+)OFF
+)OFF
+p
+max_k
+N
+sqrt
+1 + 2 × ⍳⌊ sqrt ÷ 2
+1 + 2 × ⍳(⌈sqrt -1) ÷ 2
+1 + 2 × ⍳⌊(⌈sqrt -1) ÷ 2
+sqrt = 3.3
+sqrt ← 3.3
+1 + 2 × ⍳⌊(⌈sqrt -1) ÷ 2
+)OFF
+max_k
+)OFF
+create_sieve N
+mark_multiples 2      ⍝  ⊣ do not echo result
+sqrt ← ⌊(N * .5)
+⍝ odd_numbers ← 1 + 2 × ⍳ ⌊(sqrt ÷ 2)
+odd_numbers ← 1 + ⍳ ⌊(⌈sqrt -1) ÷ 2
+mark_multiples¨ odd_numbers
+primes ← (is_prime = '1') / ⍳N
+odd_numbers
+)OFF
+)OFF
+)OFF
+)OFF
+)OFF
+⎕FMT
+⎕FORMAT
+⎕FIO ''
+⎕CR ''
+⍕2.33
+2⍕2.33
+4⍕2.33
+4⍕2.33123123
+1 2 3 4/+
++/1 2 3 4
+,/1 2 3 4
+,/ ⍕¨ 1 2 3 4
+,/ ⍕¨ 1 2 3 4
+⊃{⍕⍵,', '}¨ primes
+primes ← 1 3 4 5
+⊃{⍕⍵,', '}¨ primes
+⊃{0⍕⍵,', '}¨ primes
+⊃{0⍕⍵,', '}¨ primes
+⊃{ (⍕⍵),', '}¨ primes
+,/ { (⍕⍵),', '}¨ primes
+,/ { (⍕⍵),', '}¨ primes
+)OFF
