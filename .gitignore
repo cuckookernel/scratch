@@ -1,6 +1,7 @@
 .ipynb_checkpoints/
 __pycache__/
 *.db
+*.deb
 *.rdb
 *.log
 *.out
@@ -22,5 +23,5 @@ venv-*/
 .tmp*/
 .idea/
 node_modules/
-
+.apl.history
 
