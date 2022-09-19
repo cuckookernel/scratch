@@ -3,13 +3,14 @@ open Base
 type base = int
 
 let pylike_range ?(from=0) ?(step=1) (until: int) : int Sequence.t =
-  Sequence.range ~stride:step ~start:`inclusive ~stop:`exclusive from until
+    Sequence.range ~stride:step ~start:`inclusive ~stop:`exclusive from until
 
-let range_list ?(from=0) ?(step=1) (until: int) : int list =
-  pylike_range ~from:from ~step:step until
-  |> Sequence.to_list
+  let range_list ?(from=0) ?(step=1) (until: int) : int list =
+    pylike_range ~from:from ~step:step until
+    |> Sequence.to_list
 
-let sum_int_list int_list = List.fold_left ~init:0 ~f:(+) int_list
+  let sum_int_list int_list = List.fold_left ~init:0 ~f:(+) int_list
+
 
 let to_int ~from ~digits : int =
     let rev_digits = List.rev digits in
