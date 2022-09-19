@@ -1,116 +1,127 @@
-- lang_uri: lang@grc
-  name: Ancient Greek
-- lang_uri: lang@por
-  name: Portuguese
-- lang_uri: lang@spa
-  name: Spanish
-- lang_uri: lang@eng
-  name: English
-- lang_uri: lang_it
-  name: Italian
-- word_uri: apedauta@por
-- uri_a: apedauta@por
+- uri: lang:grc@.
+  text:
+    - Ancient Greek
+- uri: lang:por@.
+  text:
+    - Portuguese @eng
+- uri: lang:spa@.
+  text:
+    - Spanish@eng
+- uri: lang:eng@.
+  text:
+    - English@eng
+- uri: lang:fro@.
+  text:
+    - Old French @eng
+- uri: lang:lat2@.
+  text:
+    - Late Latin @eng
+- uri: lang:it@.
+  text:
+    - Italian@eng
+- uri: word:apedauta@por
+- uri_a: word:apedauta@por
   rel: means
   b:
-    text: uneducated person
+    text: uneducated person@eng
 - a:
-    word_uri: παιδεύω@grc
+    uri: word:παιδεύω@grc
   rel: means
   b:
-    text: to educate, instruct, children
-- uri_a: apedauta@por
+    text: to educate, instruct, children@eng
+- uri_a: word:apedauta@por
   rel: comes_from
   b:
-    word_uri: apaideutos@grc
+    uri: word:apaideutos@grc
   ref:
     - https://www.dicionarioetimologico.com.br/apedeuta/
-- uri_a: apaideutos@grc
+- uri_a: word:apaideutos@grc
   rel: contains
-  uri_b: παιδεύω@grc
-- a:
-    word_uri: embora@por
+  uri_b: word:παιδεύω@grc
+- uri_a: word:embora@por
   rel: translates_to
-  b:
-    word_uri: aunque@spa
-- a:
-    word_uri: largo@spa
+  uri_b: word:aunque@spa
+- uri_a: word:largo@spa
   rel: comes_from
-  b:
-    word_uri: largus@lat
+  uri_b: word:largus@lat
   ref: http://etimologias.dechile.net/?largo
-- a:
-    word_uri: pereza@spa
+- uri_a: word:pereza@spa
   rel: comes_from
-  b:
-    word_uri: pigritia@lat
+  uri_b: word:pigritia@lat
   ref: http://etimologias.dechile.net/?pereza
-- suffix_uri: suffix_itia@lat
+- uri: suffix:itia@lat
   lang: lat
-- uri_a: suffix_itia@lat
+  text: itia
+- uri_a: suffix:itia@lat
   rel: means
   b:
     text: quality
-- uri_a: pigritia@lat
+- uri_a: word:pigritia@lat
   rel: contains
-  b:
-    word_uri: piger@lat
+  uri_b: word:piger@lat
   ref: http://etimologias.dechile.net/?pereza
-- uri_a: pigritia@lat
+- uri_a: word:pigritia@lat
   rel: contains
-  uri_b: suffix_itia@lat
-- uri_a: piger@lat
+  uri_b: suffix:itia@lat
+- uri_a: word:piger@lat
   rel: means
   b:
-    text: flojo, que pone resistencia al trabajo
-    lang: spa
-- uri_a: piger@lat
+    text: flojo, que pone resistencia al trabajo @spa
+- uri_a: word:piger@lat
   rel: means
   b:
-    text: lazy, resisting work @ eng
-- root_uri: peig_2@pie
+    text: lazy, resisting work @eng
+- uri: root:peig_2@pie
   ref: [ 'http://etimologias.dechile.net/PIE/?peig-2',
          'https://starlingdb.org/cgi-bin/response.cgi?single=1&basename=%5Cdata%5Cie%5Cpokorny&text_recno=1459&root=config']
-- uri_a: piger@lat
+- uri_a: word:piger@lat
   rel: comes_from
-  uri_b: peig_2@pie
-- a:
-    wordsense_uri: real_2@spa
-    pos: adj
+  uri_b: root:peig_2@pie
+- uri_a: wordsense:real_2@spa
+  pos: adj
   rel: comes_from
-  b:
-    word_uri: regalis@lat
+  uri_b: word:regalis@lat
   ref: http://etimologias.dechile.net/?real
-- a:
-    wordsense_uri: real_1@spa
-    pos: adj
+- uri: sense:real_1@.
+  text:
+    - que tiene existencia objetiva @spa
+    - actually existing, having physical existence (not imaginary); @eng
+- uri_a: wordsense:real_1@spa
+  pos: adj
+  rel: means
+  uri_b: sense:real_1@.
+- uri_a: wordsense:real_2@spa
   rel: means
   b:
-    text: que tiene existencia objetiva @ spa
-- uri_a: real_2@spa
+    text: Perteneciente o relativo al rey o a la realeza @spa
+- uri: word:real@spa
+- uri_a: word:real@spa
   rel: means
-  b:
-    text: Perteneciente o relativo al rey o a la realeza
-- word_uri: real@spa
-- uri_a: real@spa
+  uri_b: wordsense:real_2@spa
+- uri_a: word:real@spa
   rel: means
-  uri_b: real_2@spa
-- uri_a: real@spa
-  rel: means
-  uri_b: real_1@spa
-- a:
-    word_uri: letra@spa
+  uri_b: wordsense:real_1@spa
+- uri_a: word:letra@spa
   rel: comes_from
-  b:
-    word_uri: littera@lat
-- preffix_uri: preffix_com-@eng
-- uri_a: preffix_com-@eng
+  uri_b: word:littera@lat
+- uri: prefix:com-@eng
+- uri_a: prefix:com-@eng
   rel: means
   b:
     text: with, together @eng
-- a:
-    word_uri: compute@eng
+- uri_a: word:compute@eng
   rel: contains
-  uri_b: preffix_com-@eng
-
-
+  uri_b: prefix:com-@eng
+- uri_a: word:real@eng
+  rel: comes_from
+  uri_b: word:reel@fro
+  ref: https://www.etymonline.com/word/real
+- uri_a: word:reel@fro
+  rel: comes_from
+  uri_b: word:realis@lat2
+  ref: https://www.etymonline.com/word/real
+- uri_a: word:realis@lat2
+  rel: means
+  b:
+    text: actual @eng
 

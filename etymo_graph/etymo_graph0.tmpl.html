@@ -6,16 +6,39 @@
         Etymology graph visualization
     </title>
 
+    <!-- <style link="cy_style.css"> </style> -->
+
     <style>
-        #graph {
-          width: 900px;
-          height: 900px;
-          display: block;
-        }
+      #graph {
+        width: 900px;
+        height: 900px;
+        display: block;
+      }
+
+      .spa {
+        background-color: #ffa;
+      }
+
+      .fro {
+        background-color: #9f9;
+      }
+
+      .eng {
+        background-color: #7cf;
+      }
+
     </style>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.20.0/cytoscape.min.js">
-    </script>
+    <!-- <script src="https://unpkg.com/dagre@0.8.2/dist/dagre.js"></script> -->
+
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/dagre/0.8.5/dagre.min.js"></script> -->
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.20.0/cytoscape.min.js"> </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"> </script>
+    <script src="https://unpkg.com/klayjs@0.4.1/klay.js"></script>
+    <script src="https://unpkg.com/cytoscape-klay@3.1.2/cytoscape-klay.js"></script>
+    <script src="https://unpkg.com/dagre@0.7.4/dist/dagre.js"></script>
+    <script src="https://unpkg.com/cytoscape-dagre@2.2.2/cytoscape-dagre.js"></script>
 
 </head>
 
@@ -25,7 +48,19 @@
 
 <script>
 
+// import dagre from "cytoscape-dagre";
+
+
 let elements = {{elements}} ;
+
+// cytoscape.use(dagre);
+
+let dagreLayout = {
+      name: 'dagre',
+      rankDir: 'TR',
+      // gravity: 0,
+      // nodeOverlap: 8,
+  };
 
 let cy = cytoscape({
 
@@ -37,21 +72,31 @@ let cy = cytoscape({
     {
       selector: 'node',
       style: {
-        // 'background-color': '#7af',
-          'background-color': 'data(bg-color)',
+          // 'background-color': '#fff',
+          'text-valign': 'center',
+          'width': 'label',
+          'shape': 'round-rectangle',
+          'height': 30,
+          'background-opacity': 0.0,
+          'text-background-color': 'data(bg_color)', // #7af',
+          'text-background-opacity': 1.0,
+          'text-background-shape': 'round-rectangle',
+          'text-background-padding': '5px',
+          // 'compoundSize': 'auto',
+          // 'background-color': 'data(bg-color)',
           'label': 'data(label)',
-          'font-size': 12
+          'font-size': 12,
+          'class': 'data(style_class)'
       }
     },
-
     {
       selector: 'edge',
       style: {
-          'width': 3,
+          'width': 2,
           'label': 'data(label)',
           'font-size': 8,
           'line-color': '#ccc',
-          'label-color': '#ddd',
+          //  'label-color': '#ddd',
           'target-arrow-color': '#ccc',
           'target-arrow-shape': 'triangle',
           'curve-style': 'bezier'
@@ -59,13 +104,47 @@ let cy = cytoscape({
     }
   ],
 
-  layout: {
-      name: 'cose',
-      gravity: -1,
-      nodeOverlap: 8,
-  }
-
+  layout: dagreLayout
 });
+
+function node_on_tap(ev) {
+  var node = ev.target;
+  console.log('tapped ' + node.id());
+  console.log(`node.position = ${node.position()}`)
+  query_ancestors(node);
+}
+
+cy.$('node').on('tap', node_on_tap);
+
+function query_ancestors(ele) {
+  const word_uri = ele.id();
+
+  var req = new XMLHttpRequest();
+
+  req.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+          var gelems = JSON.parse(this.responseText);
+          proc_ancestors_response(ele, gelems);
+      } else {
+        console.log(`status=${this.status}, resp=${this.responseText}`)
+      }
+  };
+  const url = `/children?word_uri=${word_uri}`;
+  console.log(`url = ${url}`)
+  req.open("GET", url, true);
+  req.send();
+}
+
+function proc_ancestors_response(ele, obj) {
+
+  cy.add(obj.nodes);
+  cy.add(obj.edges);
+
+  cy.nodes().removeListener('tap');
+  cy.nodes().on('tap', node_on_tap);
+  cy.layout(dagreLayout).run()
+
+}
 
 cy
 
