@@ -1,0 +1,6 @@
+#lang reader "fpy-reader.rkt"
+from abc.bc import a
+
+def f(y:Int) = ⟦
+   k(5)
+⟧

@@ -1,0 +1,1 @@
+("8.6" ta6le ("5e24ead7c29e48fd993f7ee3b548a23eacd92f67" . "eff6f0c8e879cd5ce90549dfb2230488949a6fe4") #"/home/teo/git/_personal/scratch/funpy/fpy-lexer.rkt" #"/home/teo/git/_personal/scratch/funpy/fpy-parser.rkt" (collects #"br" #"quicklang.rkt") (collects #"errortrace" #"errortrace-key.rkt") (collects #"racket" #"runtime-config.rkt"))
