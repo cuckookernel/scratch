@@ -1,5 +1,6 @@
+"""Backend to graph visualizer"""
 from http import HTTPStatus
-from typing import Optional
+from typing import Optional, Dict
 from fastapi import FastAPI, Response
 
 from api_types import *
@@ -8,11 +9,11 @@ from kb import KnowledgeBase, make_knowledge_base, Node, render_graph_to_html
 
 app = FastAPI()
 
-CACHE = {"kb": None}
+CACHE: Dict[str, KnowledgeBase] = {"kb": None}
 
 
 @app.on_event("startup")
-async def on_startup():
+async def _on_startup():
     print("on startup: making knowledge base")
     CACHE["kb"] = make_knowledge_base()
 
@@ -38,6 +39,7 @@ async def root(uris: Optional[str]):
     else:
         return Response(f"Not found in kb: {selected0}", status_code=HTTPStatus.NOT_FOUND)
 
+
 @app.get('/children')
 async def ancestors(word_uri: str):
     kb = get_kb()
@@ -62,7 +64,7 @@ async def ancestors(word_uri: str):
         ret_edges.append(ret_edge)
 
         target_uri = edge.target.uri
-        if  target_uri not in added_node_uris:
+        if target_uri not in added_node_uris:
             node = kb.nodes[target_uri]
             data = NodeData(id=target_uri, label=node.text,
                             lang=str(node.lang),

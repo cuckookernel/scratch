@@ -28,18 +28,14 @@ Klass = str
 
 def _main():
     # %%
-    #runfile("etymo_graph/process_kb.py")
-
+    # runfile("etymo_graph/process_kb.py")
     kb = make_knowledge_base()
-
-    # pprint( kb.nodes )
     kb._export_to_csvs()
     html_text = render_graph_to_html(kb, selected=['pereza@spa'])
 
     out_path = Path( "etymo_graph/out.html" )
     print( f'writing out: {out_path}' )
     out_path.write_text( html_text, encoding="utf8" )
-
     # %%
 
 
@@ -97,6 +93,7 @@ class Edge:
         self.data = data
 
     def id(self):
+        """An id to be used by cytoscape"""
         return f"uri-{self.source.uri}--{self.rel}--{self.target.uri}"
 
 
@@ -125,7 +122,7 @@ class KnowledgeBase:
                 assert 'uri' in rec, f"rec={rec}"
                 uri = rec['uri']
                 assert uri not in self.nodes, f"Can't create node again: rec={rec}"
-                node  = make_node_from_uri(uri, rec)
+                node = make_node_from_uri(uri, rec)
                 self._add_node(node)
 
     def _add_node(self, node: Node):
@@ -180,7 +177,7 @@ class KnowledgeBase:
             node_dicts.append( dic )
 
         nodes_df = pd.DataFrame( node_dicts )
-        nodes_df.to_excel( Path("nodes.xlsx"), index=False )
+        nodes_df.to_excel(Path("data/nodes.xlsx"), index=False)
 
         edge_dicts = []
         for edge in self.edges:
@@ -189,7 +186,7 @@ class KnowledgeBase:
             edge_dicts.append(dic)
 
         edges_df = pd.DataFrame( edge_dicts )
-        edges_df.to_excel( Path("edges.xlsx"), index=True )
+        edges_df.to_excel(Path("data/edges.xlsx"), index=True)
 
 
 def klass_from_rel(rel: str) -> Optional[Klass]:
@@ -197,7 +194,8 @@ def klass_from_rel(rel: str) -> Optional[Klass]:
 
 
 def make_knowledge_base() -> KnowledgeBase:
-    with open("etymo_graph/words.yml") as f_in:
+    """Build knowledge bae from data/words.yml file"""
+    with open("etymo_graph/data/words.yml") as f_in:
         recs = yaml.load( f_in, Loader=Loader)
 
     kb = KnowledgeBase()
@@ -225,7 +223,8 @@ def make_node_from_uri( uri, data ) -> Node:
     assert len(parts0) == 2, f"bad uri: {uri}"
     klass, rest = parts0
 
-    assert klass in {'word', 'suffix', 'prefix', 'wordsense', 'lang', 'sense', 'root'}, f"Klass = {klass}"
+    assert klass in {'word', 'suffix', 'prefix', 'wordsense', 'lang', 'sense', 'root'}, \
+        f"Klass = {klass}"
 
     parts1 = rest.split("@")
     assert len(parts1) == 2, f"bad uri: {uri}"
@@ -274,13 +273,6 @@ def render_graph_to_html(kb: KnowledgeBase, selected: List[str]) -> str:
                                        "target": target.uri}} )
     html_txt = tmpl.render( elements=json.dumps( elements, indent=4 ) )
     return html_txt
-
-
-
-def color_for_lang(lang: str):
-    return {"spa": "#cfcf00",
-            "eng": ""}.get(lang, "#ddd")
-
 
 
 if __name__ == "__main__":
