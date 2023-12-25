@@ -1,0 +1,611 @@
+# depslib dependency file v1.0
+1702080696 source:/home/teo/git/_personal/scratch/learning/cpp/prog0/main.cpp
+	<iostream>
+
+1683964368 /usr/include/c++/11//iostream
+	<bits/c++config.h>
+	<ostream>
+	<istream>
+
+1683964368 /usr/include/x86_64-linux-gnu/c++/11//bits/c++config.h
+	<bits/os_defines.h>
+	<bits/cpu_defines.h>
+	<pstl/pstl_config.h>
+
+1683964368 /usr/include/x86_64-linux-gnu/c++/11//bits/os_defines.h
+	<features.h>
+
+1683964368 /usr/include/x86_64-linux-gnu/c++/11//bits/cpu_defines.h
+
+1683964368 /usr/include/c++/11//pstl/pstl_config.h
+
+1683964368 /usr/include/c++/11//ostream
+	<ios>
+	<bits/ostream_insert.h>
+	<bits/ostream.tcc>
+
+1683964368 /usr/include/c++/11//ios
+	<iosfwd>
+	<exception>
+	<bits/char_traits.h>
+	<bits/localefwd.h>
+	<bits/ios_base.h>
+	<streambuf>
+	<bits/basic_ios.h>
+
+1683964368 /usr/include/c++/11//iosfwd
+	<bits/c++config.h>
+	<bits/stringfwd.h>
+	<bits/postypes.h>
+
+1683964368 /usr/include/c++/11//bits/stringfwd.h
+	<bits/c++config.h>
+	<bits/memoryfwd.h>
+
+1683964368 /usr/include/c++/11//bits/memoryfwd.h
+	<bits/c++config.h>
+
+1683964368 /usr/include/c++/11//bits/postypes.h
+	<cwchar>
+	<stdint.h>
+
+1683964368 /usr/include/c++/11//cwchar
+	<bits/c++config.h>
+	<wchar.h>
+
+1683964368 /usr/include/c++/11//exception
+	<bits/c++config.h>
+	<bits/exception.h>
+	<bits/exception_ptr.h>
+	<bits/nested_exception.h>
+
+1683964368 /usr/include/c++/11//bits/exception.h
+	<bits/c++config.h>
+
+1683964368 /usr/include/c++/11//bits/exception_ptr.h
+	<bits/c++config.h>
+	<bits/exception_defines.h>
+	<bits/cxxabi_init_exception.h>
+	<typeinfo>
+	<new>
+	<bits/move.h>
+
+1683964368 /usr/include/c++/11//bits/exception_defines.h
+
+1683964368 /usr/include/c++/11//bits/cxxabi_init_exception.h
+	<stddef.h>
+	<bits/c++config.h>
+
+1683964368 /usr/include/c++/11//typeinfo
+	<bits/exception.h>
+	<bits/hash_bytes.h>
+
+1683964368 /usr/include/c++/11//bits/hash_bytes.h
+	<bits/c++config.h>
+
+1683964368 /usr/include/c++/11//new
+	<bits/c++config.h>
+	<bits/exception.h>
+
+1683964368 /usr/include/c++/11//bits/move.h
+	<bits/c++config.h>
+	<bits/concept_check.h>
+	<type_traits>
+
+1683964368 /usr/include/c++/11//bits/concept_check.h
+	<bits/c++config.h>
+	<bits/boost_concept_check.h>
+
+1683964368 /usr/include/c++/11//bits/boost_concept_check.h
+	<bits/c++config.h>
+	<bits/stl_iterator_base_types.h>
+
+1683964368 /usr/include/c++/11//bits/stl_iterator_base_types.h
+	<bits/c++config.h>
+	<type_traits>
+	<bits/iterator_concepts.h>
+
+1683964368 /usr/include/c++/11//type_traits
+	<bits/c++0x_warning.h>
+	<bits/c++config.h>
+
+1683964368 /usr/include/c++/11//bits/c++0x_warning.h
+
+1683964368 /usr/include/c++/11//bits/iterator_concepts.h
+	<concepts>
+	<bits/ptr_traits.h>
+	<bits/ranges_cmp.h>
+
+1683964368 /usr/include/c++/11//concepts
+	<type_traits>
+
+1683964368 /usr/include/c++/11//bits/ptr_traits.h
+	<bits/move.h>
+
+1683964368 /usr/include/c++/11//bits/ranges_cmp.h
+	<bits/move.h>
+	<concepts>
+
+1683964368 /usr/include/c++/11//bits/nested_exception.h
+	<bits/c++0x_warning.h>
+	<bits/c++config.h>
+	<bits/move.h>
+
+1683964368 /usr/include/c++/11//bits/char_traits.h
+	<bits/stl_algobase.h>
+	<bits/postypes.h>
+	<cwchar>
+	<compare>
+	<cstdint>
+
+1683964368 /usr/include/c++/11//bits/stl_algobase.h
+	<bits/c++config.h>
+	<bits/functexcept.h>
+	<bits/cpp_type_traits.h>
+	<ext/type_traits.h>
+	<ext/numeric_traits.h>
+	<bits/stl_pair.h>
+	<bits/stl_iterator_base_types.h>
+	<bits/stl_iterator_base_funcs.h>
+	<bits/stl_iterator.h>
+	<bits/concept_check.h>
+	<debug/debug.h>
+	<bits/move.h>
+	<bits/predefined_ops.h>
+	<type_traits>
+	<compare>
+	<parallel/algobase.h>
+
+1683964368 /usr/include/c++/11//bits/functexcept.h
+	<bits/c++config.h>
+	<bits/exception_defines.h>
+
+1683964368 /usr/include/c++/11//bits/cpp_type_traits.h
+	<bits/c++config.h>
+
+1683964368 /usr/include/c++/11//ext/type_traits.h
+	<bits/c++config.h>
+	<bits/cpp_type_traits.h>
+
+1683964368 /usr/include/c++/11//ext/numeric_traits.h
+	<bits/cpp_type_traits.h>
+	<ext/type_traits.h>
+
+1683964368 /usr/include/c++/11//bits/stl_pair.h
+	<bits/move.h>
+	<type_traits>
+	<compare>
+
+1683964368 /usr/include/c++/11//compare
+	<concepts>
+
+1683964368 /usr/include/c++/11//bits/stl_iterator_base_funcs.h
+	<bits/concept_check.h>
+	<debug/assertions.h>
+
+1683964368 /usr/include/c++/11//debug/assertions.h
+	<bits/c++config.h>
+
+1683964368 /usr/include/c++/11//bits/stl_iterator.h
+	<bits/cpp_type_traits.h>
+	<bits/stl_iterator_base_types.h>
+	<ext/type_traits.h>
+	<bits/move.h>
+	<bits/ptr_traits.h>
+	<type_traits>
+	<compare>
+	<new>
+	<bits/exception_defines.h>
+	<bits/iterator_concepts.h>
+	<bits/stl_construct.h>
+	<debug/stl_iterator.h>
+
+1683964368 /usr/include/c++/11//bits/stl_construct.h
+	<new>
+	<bits/move.h>
+	<bits/stl_iterator_base_types.h>
+	<bits/stl_iterator_base_funcs.h>
+
+1683964368 /usr/include/c++/11//debug/stl_iterator.h
+	<debug/helper_functions.h>
+
+1683964368 /usr/include/c++/11//debug/helper_functions.h
+	<bits/move.h>
+	<bits/stl_iterator_base_types.h>
+	<bits/cpp_type_traits.h>
+	<bits/stl_pair.h>
+
+1683964368 /usr/include/c++/11//debug/debug.h
+	<debug/assertions.h>
+	<debug/macros.h>
+	<debug/functions.h>
+
+1683964368 /usr/include/c++/11//debug/macros.h
+
+1683964368 /usr/include/c++/11//debug/functions.h
+	<bits/stl_function.h>
+	<bits/stl_iterator.h>
+	<type_traits>
+	<debug/helper_functions.h>
+	<debug/formatter.h>
+
+1683964368 /usr/include/c++/11//bits/stl_function.h
+	<bits/move.h>
+	<backward/binders.h>
+
+1683964368 /usr/include/c++/11//backward/binders.h
+
+1683964368 /usr/include/c++/11//debug/formatter.h
+	<bits/c++config.h>
+	<typeinfo>
+
+1683964368 /usr/include/c++/11//bits/predefined_ops.h
+	<bits/move.h>
+
+1683964368 /usr/include/c++/11//parallel/algobase.h
+	<bits/stl_algobase.h>
+	<parallel/base.h>
+	<parallel/algorithmfwd.h>
+	<parallel/find.h>
+	<parallel/find_selectors.h>
+
+1683964368 /usr/include/c++/11//parallel/base.h
+	<bits/c++config.h>
+	<bits/stl_function.h>
+	<omp.h>
+	<parallel/features.h>
+	<parallel/basic_iterator.h>
+	<parallel/parallel.h>
+
+1683964368 /usr/include/c++/11//parallel/features.h
+
+1683964368 /usr/include/c++/11//parallel/basic_iterator.h
+	<bits/c++config.h>
+	<bits/stl_iterator_base_types.h>
+	<bits/stl_iterator_base_funcs.h>
+	<bits/stl_iterator.h>
+
+1683964368 /usr/include/c++/11//parallel/parallel.h
+	<parallel/features.h>
+	<parallel/compiletime_settings.h>
+	<parallel/types.h>
+	<parallel/tags.h>
+	<parallel/settings.h>
+
+1683964368 /usr/include/c++/11//parallel/compiletime_settings.h
+	<cstdio>
+
+1683964368 /usr/include/c++/11//cstdio
+	<bits/c++config.h>
+	<stdio.h>
+
+1683964368 /usr/include/c++/11//parallel/types.h
+	<cstdlib>
+	<limits>
+	<tr1/cstdint>
+
+1683964368 /usr/include/c++/11//cstdlib
+	<bits/c++config.h>
+	<bits/std_abs.h>
+
+1683964368 /usr/include/c++/11//bits/std_abs.h
+	<bits/c++config.h>
+
+1683964368 /usr/include/c++/11//limits
+	<bits/c++config.h>
+
+1683964368 /usr/include/c++/11//tr1/cstdint
+	<bits/c++config.h>
+	<stdint.h>
+
+1683964368 /usr/include/c++/11//parallel/tags.h
+	<omp.h>
+	<parallel/types.h>
+
+1683964368 /usr/include/c++/11//parallel/settings.h
+	<parallel/types.h>
+
+1683964368 /usr/include/c++/11//parallel/algorithmfwd.h
+	<parallel/tags.h>
+	<parallel/settings.h>
+
+1683964368 /usr/include/c++/11//parallel/find.h
+	<bits/stl_algobase.h>
+	<parallel/features.h>
+	<parallel/parallel.h>
+	<parallel/compatibility.h>
+	<parallel/equally_split.h>
+
+1683964368 /usr/include/c++/11//parallel/compatibility.h
+	<parallel/types.h>
+	<parallel/base.h>
+	<sched.h>
+
+1683964368 /usr/include/c++/11//parallel/equally_split.h
+
+1683964368 /usr/include/c++/11//parallel/find_selectors.h
+	<parallel/tags.h>
+	<parallel/basic_iterator.h>
+	<bits/stl_pair.h>
+
+1683964368 /usr/include/c++/11//cstdint
+	<bits/c++0x_warning.h>
+	<bits/c++config.h>
+	<stdint.h>
+
+1683964368 /usr/include/c++/11//bits/localefwd.h
+	<bits/c++config.h>
+	<bits/c++locale.h>
+	<iosfwd>
+	<cctype>
+
+1683964368 /usr/include/x86_64-linux-gnu/c++/11//bits/c++locale.h
+	<clocale>
+
+1683964368 /usr/include/c++/11//clocale
+	<bits/c++config.h>
+	<locale.h>
+
+1683964368 /usr/include/c++/11//cctype
+	<bits/c++config.h>
+	<ctype.h>
+
+1683964368 /usr/include/c++/11//bits/ios_base.h
+	<ext/atomicity.h>
+	<bits/localefwd.h>
+	<bits/locale_classes.h>
+	<stdexcept>
+	<system_error>
+
+1683964368 /usr/include/c++/11//ext/atomicity.h
+	<bits/c++config.h>
+	<bits/gthr.h>
+	<bits/atomic_word.h>
+	<sys/single_threaded.h>
+
+1683964368 /usr/include/x86_64-linux-gnu/c++/11//bits/gthr.h
+	<bits/gthr-default.h>
+
+1683964368 /usr/include/x86_64-linux-gnu/c++/11//bits/gthr-default.h
+	<pthread.h>
+	<unistd.h>
+	<config.h>
+	<sched.h>
+
+1683964368 /usr/include/x86_64-linux-gnu/c++/11//bits/atomic_word.h
+
+1683964368 /usr/include/c++/11//bits/locale_classes.h
+	<bits/localefwd.h>
+	<string>
+	<ext/atomicity.h>
+	<bits/locale_classes.tcc>
+
+1683964368 /usr/include/c++/11//string
+	<bits/c++config.h>
+	<bits/stringfwd.h>
+	<bits/char_traits.h>
+	<bits/allocator.h>
+	<bits/cpp_type_traits.h>
+	<bits/localefwd.h>
+	<bits/ostream_insert.h>
+	<bits/stl_iterator_base_types.h>
+	<bits/stl_iterator_base_funcs.h>
+	<bits/stl_iterator.h>
+	<bits/stl_function.h>
+	<ext/numeric_traits.h>
+	<bits/stl_algobase.h>
+	<bits/stl_algo.h>
+	<bits/range_access.h>
+	<bits/basic_string.h>
+	<bits/basic_string.tcc>
+
+1683964368 /usr/include/c++/11//bits/allocator.h
+	<bits/c++allocator.h>
+	<bits/memoryfwd.h>
+	<type_traits>
+
+1683964368 /usr/include/x86_64-linux-gnu/c++/11//bits/c++allocator.h
+	<ext/new_allocator.h>
+
+1683964368 /usr/include/c++/11//ext/new_allocator.h
+	<bits/c++config.h>
+	<new>
+	<bits/functexcept.h>
+	<bits/move.h>
+	<type_traits>
+
+1683964368 /usr/include/c++/11//bits/ostream_insert.h
+	<iosfwd>
+	<bits/cxxabi_forced.h>
+	<bits/exception_defines.h>
+
+1683964368 /usr/include/c++/11//bits/cxxabi_forced.h
+
+1683964368 /usr/include/c++/11//bits/stl_algo.h
+	<cstdlib>
+	<bits/algorithmfwd.h>
+	<bits/stl_heap.h>
+	<bits/stl_tempbuf.h>
+	<bits/predefined_ops.h>
+	<bits/uniform_int_dist.h>
+
+1683964368 /usr/include/c++/11//bits/algorithmfwd.h
+	<bits/c++config.h>
+	<bits/stl_pair.h>
+	<bits/stl_iterator_base_types.h>
+	<initializer_list>
+	<parallel/algorithmfwd.h>
+
+1683964368 /usr/include/c++/11//initializer_list
+	<bits/c++0x_warning.h>
+	<bits/c++config.h>
+
+1683964368 /usr/include/c++/11//bits/stl_heap.h
+	<debug/debug.h>
+	<bits/move.h>
+	<bits/predefined_ops.h>
+
+1683964368 /usr/include/c++/11//bits/stl_tempbuf.h
+	<bits/stl_algobase.h>
+	<bits/stl_construct.h>
+
+1683964368 /usr/include/c++/11//bits/uniform_int_dist.h
+	<type_traits>
+	<ext/numeric_traits.h>
+	<concepts>
+	<bits/concept_check.h>
+
+1683964368 /usr/include/c++/11//bits/range_access.h
+	<initializer_list>
+	<type_traits>
+	<bits/stl_iterator.h>
+
+1683964368 /usr/include/c++/11//bits/basic_string.h
+	<ext/atomicity.h>
+	<ext/alloc_traits.h>
+	<debug/debug.h>
+	<initializer_list>
+	<string_view>
+	<ext/string_conversions.h>
+	<bits/charconv.h>
+	<bits/functional_hash.h>
+
+1683964368 /usr/include/c++/11//ext/alloc_traits.h
+	<bits/alloc_traits.h>
+	<bits/allocator.h>
+
+1683964368 /usr/include/c++/11//bits/alloc_traits.h
+	<bits/stl_construct.h>
+	<bits/memoryfwd.h>
+	<bits/allocator.h>
+	<bits/ptr_traits.h>
+	<ext/numeric_traits.h>
+
+1683964368 /usr/include/c++/11//string_view
+	<iosfwd>
+	<bits/char_traits.h>
+	<bits/functional_hash.h>
+	<bits/range_access.h>
+	<bits/ostream_insert.h>
+	<ext/numeric_traits.h>
+	<bits/ranges_base.h>
+	<bits/string_view.tcc>
+
+1683964368 /usr/include/c++/11//bits/functional_hash.h
+	<type_traits>
+	<bits/hash_bytes.h>
+
+1683964368 /usr/include/c++/11//bits/ranges_base.h
+	<bits/iterator_concepts.h>
+	<ext/numeric_traits.h>
+	<bits/max_size_type.h>
+
+1683964368 /usr/include/c++/11//bits/max_size_type.h
+	<ext/numeric_traits.h>
+	<numbers>
+
+1683964368 /usr/include/c++/11//numbers
+	<type_traits>
+
+1683964368 /usr/include/c++/11//bits/string_view.tcc
+
+1683964368 /usr/include/c++/11//ext/string_conversions.h
+	<bits/c++0x_warning.h>
+	<bits/c++config.h>
+	<ext/numeric_traits.h>
+	<bits/functexcept.h>
+	<cstdlib>
+	<cwchar>
+	<cstdio>
+	<cerrno>
+
+1683964368 /usr/include/c++/11//cerrno
+	<bits/c++config.h>
+	<errno.h>
+
+1683964368 /usr/include/c++/11//bits/charconv.h
+	<type_traits>
+
+1683964368 /usr/include/c++/11//bits/basic_string.tcc
+	<bits/cxxabi_forced.h>
+
+1683964368 /usr/include/c++/11//bits/locale_classes.tcc
+
+1683964368 /usr/include/c++/11//stdexcept
+	<exception>
+	<string>
+
+1683964368 /usr/include/c++/11//system_error
+	<bits/c++0x_warning.h>
+	<bits/c++config.h>
+	<bits/error_constants.h>
+	<iosfwd>
+	<stdexcept>
+	<compare>
+	<bits/functional_hash.h>
+
+1683964368 /usr/include/x86_64-linux-gnu/c++/11//bits/error_constants.h
+	<bits/c++config.h>
+	<cerrno>
+
+1683964368 /usr/include/c++/11//streambuf
+	<bits/c++config.h>
+	<iosfwd>
+	<bits/localefwd.h>
+	<bits/ios_base.h>
+	<bits/cpp_type_traits.h>
+	<ext/type_traits.h>
+	<bits/streambuf.tcc>
+
+1683964368 /usr/include/c++/11//bits/streambuf.tcc
+
+1683964368 /usr/include/c++/11//bits/basic_ios.h
+	<bits/localefwd.h>
+	<bits/locale_classes.h>
+	<bits/locale_facets.h>
+	<bits/streambuf_iterator.h>
+	<bits/move.h>
+	<bits/basic_ios.tcc>
+
+1683964368 /usr/include/c++/11//bits/locale_facets.h
+	<cwctype>
+	<cctype>
+	<bits/ctype_base.h>
+	<iosfwd>
+	<bits/ios_base.h>
+	<streambuf>
+	<bits/cpp_type_traits.h>
+	<ext/type_traits.h>
+	<ext/numeric_traits.h>
+	<bits/streambuf_iterator.h>
+	<bits/ctype_inline.h>
+	<bits/locale_facets.tcc>
+
+1683964368 /usr/include/c++/11//cwctype
+	<bits/c++config.h>
+	<stddef.h>
+	<wctype.h>
+
+1683964368 /usr/include/x86_64-linux-gnu/c++/11//bits/ctype_base.h
+
+1683964368 /usr/include/c++/11//bits/streambuf_iterator.h
+	<streambuf>
+	<debug/debug.h>
+
+1683964368 /usr/include/x86_64-linux-gnu/c++/11//bits/ctype_inline.h
+
+1683964368 /usr/include/c++/11//bits/locale_facets.tcc
+
+1683964368 /usr/include/c++/11//bits/basic_ios.tcc
+
+1683964368 /usr/include/c++/11//bits/ostream.tcc
+	<bits/cxxabi_forced.h>
+
+1683964368 /usr/include/c++/11//istream
+	<ios>
+	<ostream>
+	<bits/istream.tcc>
+
+1683964368 /usr/include/c++/11//bits/istream.tcc
+	<bits/cxxabi_forced.h>
+
