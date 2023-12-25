@@ -1,9 +1,9 @@
-def rgb_from_hex( hex_ ) : 
+def rgb_from_hex( hex_ ) :
     r = int( hex_[0:2], 16 )
     g = int( hex_[2:4], 16 )
     b = int( hex_[4:6], 16 )
-    return r,g,b 
-    
+    return r,g,b
+
 def rgb2hsv(r, g, b):
     r, g, b = r/255.0, g/255.0, b/255.0
     mx = max(r, g, b)
@@ -48,9 +48,9 @@ def rgb_to_hsl(r, g, b):
     return h, s, l
 
 FLOAT_ERROR = 1e-8
-    
+
 def hsl_to_rgb( h, s, l ) :
-    
+
     if not (0.0 - FLOAT_ERROR <= s <= 1.0 + FLOAT_ERROR):
         raise ValueError("Saturation must be between 0 and 1.")
     if not (0.0 - FLOAT_ERROR <= l <= 1.0 + FLOAT_ERROR):
@@ -69,14 +69,13 @@ def hsl_to_rgb( h, s, l ) :
     r = _hue2rgb(v1, v2, h + (1.0 / 3))
     g = _hue2rgb(v1, v2, h)
     b = _hue2rgb(v1, v2, h - (1.0 / 3))
-    
+
     return r,g,b
 
 def _hue2rgb(v1, v2, vH):
     """Private helper function (Do not call directly)
     :param vH: rotation around the chromatic circle (between 0..1)
     """
-
     while vH < 0: vH += 1
     while vH > 1: vH -= 1
 
@@ -103,7 +102,7 @@ let hslToRgb = function hslToRgb(h, s, l){
     if(s == 0){
         r = g = b = l; // achromatic
     }else{
-        
+
         var q = l < 0.5 ? l * (1 + s) : l + s - l * s;
         var p = 2 * l - q;
         r = hue2rgb(p, q, h + 1/3);
@@ -115,12 +114,12 @@ let hslToRgb = function hslToRgb(h, s, l){
 };
 """
 
-def read_colors() : 
-    import csv 
-    
+def read_colors() :
+    import csv
+
     filename =  'rgb.txt'
     colors = []
-    with open(filename, 'r') as csvfile:
+    with open(filename) as csvfile:
         spamreader = csv.reader(csvfile, delimiter='\t')
         for row in spamreader:
             if row[0] == '#':
@@ -143,18 +142,17 @@ def read_colors() :
                 })
             except Exception as exc:
                 print( row, "\n", exc )
-                pass
-            
-            
+
+
     return colors
 
 def get_colors_dict( colors ) :
     colors_dict = { "name" : [], "hex" : [], "r" : [], "g" : [], "b" : [], "h" : [], "s" : [], "l" : [] }
-    for color in colors : 
-        for k  in colors_dict.keys() : 
+    for color in colors :
+        for k  in colors_dict.keys() :
             colors_dict[k].append( color[k] )
-            
+
     return colors_dict
-    
+
 
 

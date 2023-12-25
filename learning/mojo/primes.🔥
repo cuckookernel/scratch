@@ -1,0 +1,102 @@
+import time
+import math
+from tensor import Tensor, TensorSpec
+
+fn str(i : Int) -> String:
+    return String(i)
+
+struct Sieve:
+    var arr: Tensor[DType.bool]
+    var sqr: Int
+
+    fn __init__(inout self, n: Int, sqr: Int):
+        let spec = TensorSpec(DType.bool, n)
+        self.sqr = sqr
+        self.arr = Tensor[DType.bool](spec)
+
+        self.arr[0] = 0
+        self.arr[1] = 0
+
+        for i in range(2, n):
+            self.arr[i] = True
+
+    @always_inline
+    fn len(self) -> Int:
+        return self.arr.shape()[0]
+
+    fn run_sieve(inout self):
+        var p = 0
+        # let q : Int64 = math.sqrt[DType.float32](self.len()).cast[DType.int64]()
+
+        while p < self.sqr:
+            # print("\np =", p)
+            p = self.next_prime(p)
+            self.mark_multiples(p)
+            # sieve.print()
+            if p < 0:
+                break
+
+    @always_inline
+    fn mark_multiples(inout self, p: Int):
+        let n = self.len()
+        var i = 2 * p if p == 2 else 3 * p
+        # for i in range(2, n // p + 1):
+        # let m = 1 if p == 2 else 2
+        let m = p if p == 2 else 2 * p
+        let max = n # // (m * + 1
+
+        while i < max:
+            self.arr[i] = False
+            i += m
+
+    @always_inline
+    fn next_prime(self, p: Int) -> Int:
+        var i = p + 1
+        # for i in range(p + 1, self.len()):
+        let n = self.len()
+        while i < n:
+            if self.arr[i]:
+                return i
+            i += 1
+        return -1
+
+    @always_inline
+    fn n_primes(self) -> Int:
+        var n = 0
+        for i in range(self.len()):
+            n += 1 if self.arr[i] else 0
+
+        return n
+
+    fn print(self):
+        var out = String("")
+
+        for i in range(self.len()):
+            out += out.join(String(i))
+            if self.arr[i]:
+                out += "* "
+            else:
+                out += "  "
+
+        print(out)
+
+
+fn main():
+    let n = 1000000
+    let sqr = 1000
+
+    var sieve = Sieve(n, sqr)
+    sieve.run_sieve()
+    print(n, sieve.n_primes())
+
+    let t0 = time.now()
+    var t1 = t0
+    var iters = 0
+
+    while (t1 - t0) < 5 * 1000_000_000:
+        var sieve = Sieve(n, sqr)
+        sieve.run_sieve()
+        t1 = time.now()
+        iters += 1
+
+    print("iters=", iters)
