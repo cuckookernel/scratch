@@ -8,16 +8,16 @@ _xp = XPath
 """
 
 import os
-from typing import List
-from pathlib import Path
 from importlib import reload
+from pathlib import Path
 from time import sleep
-import requests
+from typing import List
 
-from klam_scraper.helpers import WebDriver, DownloadedImage, make_file_path, URL, sessionmaker
-from klam_scraper import helpers as hp
-from PIL import Image
 import pandas as pd
+import requests
+from klam_scraper import helpers as hp
+from klam_scraper.helpers import URL, DownloadedImage, WebDriver, make_file_path, sessionmaker
+from PIL import Image
 
 START_URL = "https://kunastores.com/peru/category/poncho/14/"
 CHROME_DRIVER_PATH = Path(os.getenv('HOME')) / "chromedriver"
@@ -55,7 +55,7 @@ def _interactive_testing():
 
 
 def get_product_urls( driver: WebDriver, start_url: str ) -> List[URL]:
-    """get all product urls linked from a product list / grid"""
+    """Get all product urls linked from a product list / grid"""
     driver.get( start_url )
 
     for _ in range(2):

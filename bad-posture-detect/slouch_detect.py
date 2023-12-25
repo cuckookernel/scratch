@@ -5,15 +5,15 @@ Prerequisites:
   - conda install -c conda-forge opencv=4.1.0
   - pip install opencv-contrib-python  : Needed to get cv2.data submodule
 """
-import os
-import cv2
-import time
 import datetime as dt
+import os
+import time
 from pathlib import Path
 
+import cv2
 import numpy as np
-from cv2 import VideoCapture
 import pygame
+from cv2 import VideoCapture
 
 # type alias
 Image = np.ndarray  # A CV2-images is really just an array
@@ -31,7 +31,7 @@ STORE_IMGS = False
 
 
 def main():
-    """run the main loop"""
+    """Run the main loop"""
     # %%
     pygame.mixer.init()
     cam = VideoCapture( CAMERA_IDX )  # get camera handle
@@ -60,7 +60,8 @@ def main():
 
 class SlouchDetector:
     """Object used to detect a face in a grayscale image,  measure its vertical position
-    and determine whether there is slouching"""
+    and determine whether there is slouching
+    """
 
     def __init__(self, thresh: float, do_store_imgs: bool = False ):
         self.reference_y = None
@@ -70,7 +71,8 @@ class SlouchDetector:
 
     def detect(self, gray: Image):
         """Detect the main face in the image and whether it is slouching
-        as compared to first detection"""
+        as compared to first detection
+        """
         now = dt.datetime.now()
         faces = self.face_cascade.detectMultiScale(gray, 1.1, 4)
 
@@ -193,7 +195,7 @@ def _interactive_show_img( img, window_title='cam-img' ):
 
 
 def play_alert_sound():
-    """play the sound pointed to by ALERT_SOUND_FILE"""
+    """Play the sound pointed to by ALERT_SOUND_FILE"""
     # %%
     sound = pygame.mixer.Sound( ALERT_SOUND_FILE )
     sound.play()

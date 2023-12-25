@@ -1,8 +1,9 @@
-from pathlib import Path
 from importlib import reload
-import corona_viz.etl as etl
+from pathlib import Path
 
+from corona_viz import etl
 from corona_viz.common import PARQUET_PATH, tstamp_to_dt
+
 # %%
 
 

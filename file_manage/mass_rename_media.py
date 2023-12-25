@@ -1,11 +1,10 @@
+"""rename files in a diretory so that timestamp appears first and resolution is attached at the end
 """
-rename files in a diretory so that timestamp appears first and resolution is attached at the end
-"""
+
+import re
+from pathlib import Path
 
 from PIL import Image
-
-from pathlib import Path
-import re
 
 REGEX1 = r'(?P<prefix>img|pano|vid)_(?P<ts1>\d+)_(?P<ts2>\d+)(?P<rest>.*)?\.(?P<ext>jpg|mov|mp4)'
 
@@ -70,3 +69,45 @@ def _make_new_fname( fpath, mch: re.Match ) -> str:
 
 def _interactive_testing():
     path = Path("/home/teo/Dokumente/personal/Photos/2021-Celular-DCIM-Camera/")
+
+
+def mass_rename_trash():
+    # %%
+    import re
+    from pathlib import Path
+    base_path = Path('/home/teo/gdrive_rclone/.trash')
+    # %%
+    fpaths = list(base_path.glob('*'))
+    print(len(fpaths))
+    # %%
+    rx = re.compile(r'^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\+\d{4}_(.*)')
+
+    for i, fpath in enumerate(fpaths):
+        name = fpath.name
+
+        # print(parent, name)
+        if m := re.match(rx, name):
+            # print(name)
+            new_name = m.group(1)
+            # print(new_name)
+            new_path = fpath.parent / new_name
+            if not new_path.exists():
+                # print(f'would rename:\n    {fpath} => \n{new_path}')
+                fpath.rename(new_path)
+
+# %%
+def move_small_imgs(base_path: Path):
+    # %%
+    dest_path = Path('/home/teo/gdrive_rclone/fun/Funny/Memes')
+    # %$
+    fpaths = list(base_path.glob('*'))
+    print(len(fpaths))
+    # %%
+    for i, fpath in enumerate(fpaths):
+        if fpath.suffix == '.gif' and fpath.stat().st_size < 100000:
+            name = fpath.name
+            new_path = dest_path / name
+            if not new_path.exists():
+                fpath.rename(new_path)
+    # %%
+# %%

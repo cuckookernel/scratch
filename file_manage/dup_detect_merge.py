@@ -1,21 +1,19 @@
 """Index files in local db and detect duplicates"""
-from typing import List, Dict, Any, Tuple
-from pathlib import Path
-from hashlib import md5
-from collections import Counter
-from pprint import pformat
 import shutil
-
-
 import sqlite3
+from collections import Counter
+from hashlib import md5
+from pathlib import Path
+from pprint import pformat
 from sqlite3 import Connection
-import pandas as pd
-from pandas import Series, DataFrame
+from typing import List, Tuple
 
+import pandas as pd
+from pandas import DataFrame, Series
 
 # %%
 CONFIG = {
-    "min_file_size": 10240
+    "min_file_size": 10240,
 }
 # %%
 
@@ -116,7 +114,7 @@ def interactive_dups_handling(conn: Connection, vol: Series, path: Path):
             b. eliminate dups b
             s. skipa
             q. quit
-            """
+            """,
         )
         choice = input().strip()
         if choice == '1':
@@ -179,7 +177,7 @@ def compare_contents( a_path: Path, b_path: Path ):
 
 
 def merge_a_into_b( conn: Connection, vol: Series, a_path: Path, b_path: Path):
-    """merges all in a into b and deletes b"""
+    """Merges all in a into b and deletes b"""
     # %%
     eliminate_dups_a_to_b( a_path, b_path )
     move_a_to_b( conn, a_path, b_path )
@@ -232,8 +230,7 @@ def gen_new_path( name: str, dir: Path ):
 
 
 def move_a_to_b(conn: Connection, a_path: Path, b_path: Path):
-    """move files from a to b, as long as they don't exist there"""
-
+    """Move files from a to b, as long as they don't exist there"""
     for f1 in a_path.glob('*'):
         f2 = (b_path / f1.name)
         if not f2.exists():
@@ -293,7 +290,7 @@ class Updater:
         self.vol_path_len = len(vol['current_path'])
 
     def update_path( self, path: Path):
-        """recursively scan path"""
+        """Recursively scan path"""
         fpaths = list(path.rglob('*'))
         n_fpaths = len(fpaths)
         print(f"{len(fpaths)} files found under {path}")
@@ -345,15 +342,15 @@ class Updater:
     # %%
 
     def write_to_db(self):
-        """write the pending_batch to db"""
+        """Write the pending_batch to db"""
         cursor = self.conn.cursor()
         values = [(rec['volume_id'], rec['path'], rec['size_bytes'],
                    rec['modif_ts'], rec['md5sum']) for rec in self.pending_batch]
         cursor.executemany(
             """insert into files (volume_id, path, size_bytes, modif_ts, md5sum)
                values (?,?,?,?,?)
-               ON CONFLICT(volume_id, path) 
-               DO UPDATE SET 
+               ON CONFLICT(volume_id, path)
+               DO UPDATE SET
                     size_bytes=EXCLUDED.size_bytes,
                     modif_ts=EXCLUDED.modif_ts,
                     md5sum=EXCLUDED.md5sum
@@ -371,8 +368,8 @@ def _get_files_in_db( conn: Connection, vol: Series, path: Path ) -> pd.DataFram
     qry = f"""select modif_ts, path, md5sum, size_bytes,
                                          cast(volume_id as bigint) as volume_id
                                 from files
-                                where 
-                                    substr(path,1, {len(rel_path)}) = '{rel_path}' 
+                                where
+                                    substr(path,1, {len(rel_path)}) = '{rel_path}'
                                     and cast(volume_id as bigint)={volume_id}
                                 """
 
@@ -405,8 +402,8 @@ def _create_tbl_files(conn: Connection):
             modif_ts real,
             md5sum varchar,
             foreign key(volume_id) references volumes(id),
-            unique (volume_id, path)            
-        )        
+            unique (volume_id, path)
+        )
     """)
 
     conn.commit()
@@ -420,7 +417,7 @@ def _migrate_(conn: Connection):
     # %%
 
     conn.execute("""
-        insert into files select cast(volume_id as bigint) as volume_id, path, size_bytes, 
+        insert into files select cast(volume_id as bigint) as volume_id, path, size_bytes,
         modif_ts, md5sum  from files1
     """)
     # %%
@@ -429,7 +426,7 @@ def _migrate_(conn: Connection):
 
 
 def show_volumes(conn: Connection):
-    """print volumes to console"""
+    """Print volumes to console"""
     # %%
     volumes = pd.read_sql("select * from volumes", conn)
     print(volumes)
@@ -442,13 +439,13 @@ def _create_volumes(conn: Connection):
     conn.execute(
         """
         create table volumes (
-            id biginteger primary key, 
+            id biginteger primary key,
             name varchar,
             current_path varchar,
             hostname varchar,
             unique(name)
         )
-        """
+        """,
     )
     conn.execute("insert into volumes (id, name, current_path, hostname)"
                "values (0, 'Toshiba Monkey', '/media/teo/TOSHIBA EXT', null), "

@@ -1,17 +1,16 @@
 """Scrape pages from etymonline.com"""
-from typing import List
 import os
+import time
+from hashlib import sha256
 from pathlib import Path
 from pprint import pprint
-import time
+from typing import List
 
-from bs4 import BeautifulSoup
-from bs4.element import Tag, NavigableString
-from sqlalchemy import text, create_engine
-from sqlalchemy.engine import Engine
 import requests
-
-from hashlib import sha256
+from bs4 import BeautifulSoup
+from bs4.element import NavigableString, Tag
+from sqlalchemy import create_engine, text
+from sqlalchemy.engine import Engine
 
 BASE_DOMAIN = "https://www.etymonline.com"
 DATA_PATH = Path(os.getenv("HOME") + "/data/etymo_graph")
@@ -48,14 +47,14 @@ def insert_new(eng: Engine, url: Url):
     """Add a new url as uncrawled and unscraped, to db"""
     url_hash = _url_hash(url)
 
-    insert = text(f"""insert into urls 
+    insert = text("""insert into urls
                       (url_hash, url, crawled, scraped) values (:url_hash, :url, 0, 0)
                       on conflict(url_hash) do nothing""")
     eng.execute(insert, url_hash=url_hash, url=url)
 
 
 def mark_as_crawled(eng: Engine, url: Url, crawled=1):
-    """raise crawled flag for url on db"""
+    """Raise crawled flag for url on db"""
     url_hash = _url_hash(url)
     eng.execute(f"""update urls set crawled = {crawled} where url_hash = '{url_hash}'""")
     # %%

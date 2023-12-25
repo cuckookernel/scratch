@@ -1,11 +1,11 @@
 """Routines for generating info for colombia page"""
 
-from typing import Dict
 from importlib import reload
+from typing import Dict
 
-import pandas as pd
 import corona_viz.common as com
-from corona_viz.common import Date, DataCacheRec, PARQUET_PATH
+import pandas as pd
+from corona_viz.common import PARQUET_PATH, DataCacheRec, Date
 
 DF = pd.DataFrame
 
@@ -24,7 +24,8 @@ def get_htmls() -> Dict:
 
 def load_col_data() -> DataCacheRec:
     """Load data from local parquet that should have been created by independent process
-    running gen_parquet.py"""
+    running gen_parquet.py
+    """
     # %%
     reload( com )
     data_rec = com.get_data(DATA_CACHE,
@@ -48,7 +49,7 @@ def summarize_col_data( data_rec: DataCacheRec ) -> Dict:
         'confirmed': 'count',
         'death': 'sum',
         'recovered': 'sum',
-        'active': 'sum'
+        'active': 'sum',
     }
 
     by_city = ( df
@@ -82,7 +83,7 @@ def summarize_col_data( data_rec: DataCacheRec ) -> Dict:
             "by_city": by_city,
             "by_state": by_state,
             "by_sex_age": by_sex_age,
-            "last_mtime": data_rec.mtime
+            "last_mtime": data_rec.mtime,
             }
     # %%
     return data
@@ -104,7 +105,7 @@ def render_html( data: Dict ):
         'M': 'Hombres',
         'F': 'Mujeres',
         'active': 'Activos',
-        'city': 'Municipio'
+        'city': 'Municipio',
     }
 
     for key in ['by_city', 'by_state', 'by_sex_age']:

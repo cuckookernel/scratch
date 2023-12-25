@@ -1,19 +1,20 @@
 
-from typing import Callable, Any
-import os
-import time
-from pathlib import Path
 import json
+import os
 import random
+import time
+from collections.abc import Callable
+from pathlib import Path
+from typing import Any
 
 from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.chrome.webdriver import WebDriver
-from selenium.webdriver.support.wait import WebDriverWait
-from selenium.webdriver.support import expected_conditions as exp_cond
-from selenium.webdriver.remote.webelement import WebElement
 from selenium.common.exceptions import TimeoutException
+from selenium.webdriver.chrome.webdriver import WebDriver
+from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.remote.webelement import WebElement
+from selenium.webdriver.support import expected_conditions as exp_cond
+from selenium.webdriver.support.wait import WebDriverWait
 
 # TODO: apply filter by 1 / 2end
 
@@ -145,7 +146,7 @@ def _expand_contact_info( driver ):
         email = email_anchor.get_attribute('href')
 
         li_handle = driver.current_url.split("/")[4]
-        with open( CFG.contact_info_path / f'{li_handle}.json', 'wt') as f_out:
+        with open( CFG.contact_info_path / f'{li_handle}.json', "w") as f_out:
             json.dump( {"url": driver.current_url, "li_handle": li_handle, "email": email}, f_out )
     # %%
     driver.back()
@@ -333,10 +334,10 @@ def start_driver( download_path: Path, executable_path: Path ) -> WebDriver:
 
 
 def login( driver: WebDriver ):
-    """login to ahrefs assumes credentials are available as a json file under
+    """Login to ahrefs assumes credentials are available as a json file under
     $HOME/ahref_credentials.txt . example contents:
-    {"email": "mateo@me.com", "password": "asdasdsd"}  """
-
+    {"email": "mateo@me.com", "password": "asdasdsd"}
+    """
     # %%
     login_url: str = "https://www.linkedin.com/?_l=en_US"
     driver.get(login_url)
@@ -379,7 +380,8 @@ def wait_for_and_get(driver: WebDriver, xpath: str,
                      timeout: float = 10,
                      on_timeout_raise: bool = True):
     """Fait for an element to appear and return it
-    if more than one element found, order using the priority function and"""
+    if more than one element found, order using the priority function and
+    """
     try:
         WebDriverWait(driver, timeout).until(
             exp_cond.presence_of_element_located((By.XPATH, xpath)))

@@ -1,19 +1,19 @@
 """Routines for getting data from the outside world"""
 
-from typing import Dict
-import re
-import json
 import datetime as dt
+import json
+import re
+from typing import Dict
 
-import pandas as pd
-import numpy as np
-import requests
 import bs4
+import numpy as np
+import pandas as pd
+import requests
+from corona_viz.common import PARQUET_PATH, RAW_DATA_PATH, TRANSL
+
 # from scipy.stats import linregress
 from scipy.optimize import curve_fit
 from sklearn.linear_model import LinearRegression
-
-from corona_viz.common import TRANSL, RAW_DATA_PATH, PARQUET_PATH
 
 DF = pd.DataFrame
 Ser = pd.Series
@@ -79,7 +79,8 @@ def gen_projections( data1: DF, future_window: int ) -> DF:
 
 def load_data_typ( typ, date_fmt: str ):
     """Load time series data and reshape
-    typ can be one of {confirmed, deaths, recovered}"""
+    typ can be one of {confirmed, deaths, recovered}
+    """
     # %%
     df = pd.read_csv( RAW_DATA_PATH / f"time_series_covid19_{typ}_global.csv" )
     date_cols = [ col for col in df.columns if re.match("[0-9]+/[0-9]+/[0-9]+", col ) ]
@@ -130,7 +131,7 @@ def calc_projection(past: DF, ctry: str):
     # slope, intercept, r_value, p_value, _ =
     # print( ctry, slope, intercept )
     # %
-    proj_df = pd.DataFrame( {"country": ctry, "x": range(0, 10)})
+    proj_df = pd.DataFrame( {"country": ctry, "x": range(10)})
     proj_df['date'] = max_date + proj_df['x'].apply( lambda x: dt.timedelta(x) )
     proj_df['x2'] = proj_df['x'] * proj_df['x'] / 50
     log_est = lr.predict( proj_df[reg_cols] )
@@ -165,9 +166,9 @@ def calc_projection_logistic(past: DF, ctry: str, time_window: float, future_win
 
 
 def extrapolate( ctry: str, max_date, future_window: int, popt: Array ) -> DF:
-    """extrapolate to the near future using exponential or logistic growth model"""
+    """Extrapolate to the near future using exponential or logistic growth model"""
     # %%
-    proj_df = pd.DataFrame( {"country": ctry, "x": range(0, future_window)})
+    proj_df = pd.DataFrame( {"country": ctry, "x": range(future_window)})
     proj_df['date'] = max_date + proj_df['x'].apply( lambda x_: dt.timedelta(x_) )
     if len(popt) == 2:
         print( f"{ctry:20s} exp" )
@@ -218,7 +219,8 @@ def fit_to_curve( x: Ser, y: Ser ):
 
 def logistic(x: Ser, m: float, k: float, c: float):
     """log( logistic(x; m, k, c) ) where
-     logistic( x; m, k, c) = m / ( 1 + exp (- k * (x-c) ) """
+    logistic( x; m, k, c) = m / ( 1 + exp (- k * (x-c) )
+    """
     # noinspection PyTypeChecker
     return m - np.log( 1.0 + np.exp( -k * (x - c) ) )
 
@@ -237,7 +239,7 @@ def get_and_save_data_col_v2():
     # %%
     today = dt.date.today()
 
-    with open( PARQUET_PATH / f"colombia/corona_viz_col_{today.isoformat()}.json", "wt") as f_out:
+    with open( PARQUET_PATH / f"colombia/corona_viz_col_{today.isoformat()}.json", "w") as f_out:
         f_out.write( rp.text )
 
     # %%
@@ -330,7 +332,7 @@ def get_and_save_data_col_v1():
 
 
 def post_proc( df: DF ):
-    """some massaging of the colombia data"""
+    """Some massaging of the colombia data"""
     # %%
     df = df[ df['id'] != '' ]
     # df['confirmed_date'] = pd.to_datetime( df['confirmed_date'], format="%d/%m/%Y" )
@@ -379,7 +381,7 @@ def extract_json_tbl( resp_text: str ):
 
     if data is None:
         print("No window.infoGraphicData script element found" )
-        raise RuntimeError()
+        raise RuntimeError
     # %
     try:
         tbl = data['elements']['content']['content']['entities'][

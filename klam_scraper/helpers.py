@@ -1,20 +1,19 @@
 
 import sys
-from pathlib import Path
+from collections.abc import Callable
 from hashlib import sha256
+from pathlib import Path
+from typing import Any
 
 from selenium import webdriver
+from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as exp_cond
-from selenium.common.exceptions import TimeoutException
-
-from sqlalchemy.engine import create_engine
+from selenium.webdriver.support.wait import WebDriverWait
 from sqlalchemy import Column, Integer, String
+from sqlalchemy.engine import create_engine
 from sqlalchemy.ext.declarative import declarative_base
-
-from typing import Callable, Any
 
 URL = str
 # %%
@@ -42,7 +41,8 @@ def start_driver( executable_path: Path ) -> WebDriver:
 def wait_for_and_get(driver: WebDriver, xpath: str,
                      priority: Callable[ [Any], float] = None, timeout: float = 10):
     """Fait for an element to appear and return it
-    if more than one element found, order using the priority function and"""
+    if more than one element found, order using the priority function and
+    """
     try:
         WebDriverWait(driver, timeout).until(
             exp_cond.presence_of_element_located((By.XPATH, xpath)))
@@ -60,13 +60,14 @@ def wait_for_and_get(driver: WebDriver, xpath: str,
 
 
 def l_info(*args):
-    """just print stuff to the console"""
+    """Just print stuff to the console"""
     print(*args, file=sys.stderr)
 
 
 def runpyfile( path, **kwargs ):
     """A wrapper around pycharms own runfile function so that we can import it
-    from scripts and avoid 'undefined variable runfile' errors from code checkers"""
+    from scripts and avoid 'undefined variable runfile' errors from code checkers
+    """
     # noinspection PyUnresolvedReferences
     runfile( path, **kwargs )  # pylint: disable=undefined-variable
 
@@ -96,6 +97,7 @@ def create_schema( engine ):
 
 class DownloadedImage(Base):
     """Defines a record representing a downloaded image"""
+
     __tablename__ = 'downloaded_images'
     id = Column(Integer, primary_key=True)
     product_url = Column(String)

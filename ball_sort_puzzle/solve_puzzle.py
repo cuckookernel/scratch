@@ -1,8 +1,8 @@
 
-from ball_sort_puzzle.search import InstrumentedProblem, Node, memoize, PriorityQueue
-from typing import List, Dict
-from collections import defaultdict, Counter
-import ball_sort_puzzle.search as search
+from collections import Counter, defaultdict
+from typing import Dict, List
+
+from ball_sort_puzzle import search
 from ball_sort_puzzle.search import Problem
 
 # %%
@@ -40,7 +40,7 @@ class State:
                         yield (bin_i, bin_j)
 
     def apply(self, action):  # -> State
-        """produce a new state as a result of applying action to self"""
+        """Produce a new state as a result of applying action to self"""
         new_contents = bytearray( self.contents )
         new_heights = bytearray( self.heights )
         i, j = action
@@ -71,7 +71,7 @@ class State:
         return str(self)
 
     def print( self ):
-        """print state and auxiliary data to console"""
+        """Print state and auxiliary data to console"""
         print( self )
         print( self.heights )
         print( self.color2bins )
@@ -80,7 +80,7 @@ class State:
         return self.heights[bin_i] == 0
 
     def same_color( self, bin_i: int ) -> bool:
-        """are all spaces in bin_i occupied by the same color"""
+        """Are all spaces in bin_i occupied by the same color"""
         if self.heights[bin_i] != BIN_CAP:
             return False
 
@@ -88,7 +88,7 @@ class State:
                     for idx in range( bin_i * BIN_CAP, (bin_i + 1) * BIN_CAP - 1 ) )
 
     def goal_test( self ):
-        """is this state a solution"""
+        """Is this state a solution"""
         return all( (self._is_empty( bin_i )
                      or self.same_color( bin_i )) for bin_i in range( len(self.heights) ) )
 
@@ -103,7 +103,7 @@ class State:
 
 
 def make_state( bins: List[str] ) -> State:
-    """make a state from a list of strings. all should have length BIN_CAP"""
+    """Make a state from a list of strings. all should have length BIN_CAP"""
     n_bins = len(bins)
     for bin in bins:
         assert len(bin) == BIN_CAP, f'bin={bin} len={len(bin)}'
@@ -146,15 +146,15 @@ class BSPuzzle(Problem):
     """Ball sort puzzle"""
 
     def actions( self, state ):
-        "actions from state"
+        "Actions from state"
         yield from state.actions()
 
     def result( self, state, action ) -> State:
-        """result of applying action to state"""
+        """Result of applying action to state"""
         return state.apply(action)
 
     def goal_test( self, state ) -> bool:
-        """is state a goal"""
+        """Is state a goal"""
         return state.goal_test()
 
 
@@ -191,13 +191,13 @@ def _interactive_testing():
         'aabb',
         'bb  ',
         'aa  ',
-        '    '
+        '    ',
     ]
     # %%
     level2 = [
         'byby',
         'yby ',
-        'b   '
+        'b   ',
     ]
     # %%
     level11 = [
@@ -207,7 +207,7 @@ def _interactive_testing():
         'yrgy',
         'vgrv',
         '    ',
-        '    '
+        '    ',
     ]
     # %%
     level12 = [
@@ -219,7 +219,7 @@ def _interactive_testing():
         'oorB',
         'yorg',
         '    ',
-        '    '
+        '    ',
     ]
     # %%
     level13 = [
@@ -231,7 +231,7 @@ def _interactive_testing():
         'rggB',
         'bobv',
         '    ',
-        '    '
+        '    ',
     ]
     # %%
     level = [
@@ -248,7 +248,7 @@ def _interactive_testing():
         'vBBl',
         'ovbG',
         '    ',
-        '    '
+        '    ',
     ]
     # %%
     level = [
@@ -288,7 +288,7 @@ def _interactive_testing():
           'bbc ',
           '    ',
           'cca ',
-          'cc  ' ]
+          'cc  ' ],
     )
 
     state.print()
@@ -305,7 +305,7 @@ def _interactive_testing():
          'cccc',
          'cccc',
          '    ',
-         '    ']
+         '    '],
     )
 
     print( state.goal_test() )

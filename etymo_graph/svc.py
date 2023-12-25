@@ -1,11 +1,10 @@
 """Backend to graph visualizer"""
 from http import HTTPStatus
-from typing import Optional, Dict
-from fastapi import FastAPI, Response
+from typing import Dict, Optional
 
 from api_types import *
-from kb import KnowledgeBase, make_knowledge_base, Node, render_graph_to_html
-
+from fastapi import FastAPI, Response
+from kb import KnowledgeBase, Node, make_knowledge_base, render_graph_to_html
 
 app = FastAPI()
 

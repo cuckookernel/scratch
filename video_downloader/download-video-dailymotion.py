@@ -1,10 +1,12 @@
-"""
-Video downloader for daily motion videos
+"""Video downloader for daily motion videos
 """
 import os
-from pathlib import Path
 import time
+from pathlib import Path
+
 import requests
+
+# %%
 
 
 def main():
@@ -16,14 +18,15 @@ def main():
     #  4. Filter events through search box: m3u8
     #  5. Right-click on the one that has a short name and do copy URL
     # %%
-    m3u_playlist_url = "https://proxy-036.dc3.dailymotion.com/sec(saQeXx3qXZg3T3rkC8HACLCec7UpPv4E_cl1mitDf3Lld4gU8P1NOMp24D8tBY3MD4zYa6qYMmWF_8X2cFbyI0mt3-prZCoKX7-XAu_bJzk)/video/489/883/396388984_mp4_h264_aac_4.m3u8"
-    output_name = "da-ali-g-show.s03e02.mp4"
+    m3u_playlist_url = "https://proxy-033.dc3.dailymotion.com/sec(q7wHNBo9zV_qod5lIeRMXLeBXTDlObmQG_UoQ1BpYb7EXHxifBnkl5_2OsGruYi-ctsDWgW4IGfoZaV2f-bubY2q-4-kw2HqQum1NLz6P_o)/video/755/255/396552557_mp4_h264_aac_3.m3u8"
+    output_path = Path("/home/teo/Downloads/Da-Ali-G-Show-from-dailymotion/da-ali-g-show.s03e04.mp4")
     m3u_playlist = get_playlist(m3u_playlist_url)
     print(f"playlist has: {len(m3u_playlist)}")
+    # %%
     domain = get_domain(m3u_playlist_url)
     chunks = []
-    # %%
-    for i, item in enumerate(m3u_playlist[509:]):
+
+    for i, item in enumerate(m3u_playlist):
         url = domain + item
         print(item)
         resp = requests.get(url)
@@ -35,13 +38,11 @@ def main():
         bytes_chunk = resp.content
         print( "length: ", len(bytes_chunk) )
         chunks.append(bytes_chunk)
-        time.sleep(3)
-    # %%
+        time.sleep(1)
 
     all_bytes = b"".join(chunks)
     print(f"writing output ({len(all_bytes) / 1e6:.1f} MiB) to: {os.getcwd()}/{output_name}")
-    Path(output_name).write_bytes(all_bytes)
-
+    output_path.write_bytes(all_bytes)
     # %%
 
 
@@ -49,7 +50,6 @@ def get_domain(m3u_playlist: str):
     parts = m3u_playlist.split("/")
     print(parts)
     return "/".join(parts[:3])
-# %%
 
 
 def get_playlist(m3u_playlist_url: str):

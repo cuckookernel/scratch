@@ -1,13 +1,13 @@
 """Implements routes for visualization app"""
 import datetime as dt
-from flask import Flask, Blueprint, Response, request
-from redis import Redis
 
-from bokeh.resources import CDN
-from jinja2 import Template
-from corona_viz.common import tstamp_to_dt, COVID_DATA_BASE
 import corona_viz.colombia as col
-from corona_viz.plots import get_cmp_plot, get_plot_cntry, cntries_data, TRANSL_INV
+from bokeh.resources import CDN
+from corona_viz.common import COVID_DATA_BASE, tstamp_to_dt
+from corona_viz.plots import TRANSL_INV, cntries_data, get_cmp_plot, get_plot_cntry
+from flask import Blueprint, Flask, Response, request
+from jinja2 import Template
+from redis import Redis
 
 # html templates loaded in create_app
 TMPLS = { "world": Template(""),
@@ -23,26 +23,26 @@ red = Redis("localhost")
 
 @route_bp.route('/corona_viz.html')
 def corona_viz():
-    """main route page"""
+    """Main route page"""
     # return render_html_world('linear')
     return render_html_col()
 
 
 @route_bp.route('/corona_viz_log.html')
 def corona_viz_log():
-    """main route page"""
+    """Main route page"""
     return render_html_cmp('log')
 
 
 @route_bp.route('/corona_viz_lin.html')
 def corona_viz_lin():
-    """main route page"""
+    """Main route page"""
     return render_html_cmp('linear')
 
 
 @route_bp.route('/corona_viz_col.html')
 def corona_viz_col():
-    """main route page"""
+    """Main route page"""
     return render_html_col()
 
 
@@ -100,7 +100,7 @@ def render_html_col( ) -> str:
 
 @route_bp.route('/cvv_plot.json')
 def cvv_plot():
-    """main route"""
+    """Main route"""
     klass = request.args.get("k")
     scale = request.args.get("s")
     x_tools = request.args.get("xt")
@@ -120,8 +120,7 @@ def cvv_plot():
 
 @route_bp.route('/cntry_plot.json')
 def cntry_plot():
-    """main route"""
-
+    """Main route"""
     scale = request.args.get("s")
     x_tools = request.args.get("xt")
     x_tools = x_tools.split(",") if x_tools else None
@@ -135,8 +134,8 @@ def cntry_plot():
 def record_visit():
     """Record stats in redis"""
     ip = str(request.remote_addr)
-    red.hincrby( f"/count_by_ip", ip )
-    red.hincrby( f"/count_by_date", str(dt.date.today()) )
+    red.hincrby( "/count_by_ip", ip )
+    red.hincrby( "/count_by_date", str(dt.date.today()) )
     red.hset( "/user-agent", ip, str(request.headers.get('User-Agent')) )
     red.hset( "/headers", ip, str(request.headers))
 

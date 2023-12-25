@@ -1,15 +1,14 @@
 
-"""
-Search (Chapters 3-4)
+"""Search (Chapters 3-4)
 The way to use this code is to subclass Problem to create a class of problems,
 then create problem instances and solve them with calls to the various search
 functions.
 """
 
 import sys
+import time
 from collections import deque
 
-import time
 from ball_sort_puzzle.utils import *
 
 
@@ -17,12 +16,14 @@ class Problem:
     """The abstract class for a formal problem. You should subclass
     this and implement the methods actions and result, and possibly
     __init__, goal_test, and path_cost. Then you will create instances
-    of your subclass and solve them with the various search functions."""
+    of your subclass and solve them with the various search functions.
+    """
 
     def __init__( self, initial, goal=None ):
         """The constructor specifies the initial state, and possibly a goal
         state, if there is a unique goal. Your subclass's constructor can add
-        other arguments."""
+        other arguments.
+        """
         self.initial = initial
         self.goal = goal
 
@@ -30,20 +31,23 @@ class Problem:
         """Return the actions that can be executed in the given
         state. The result would typically be a list, but if there are
         many actions, consider yielding them one at a time in an
-        iterator, rather than building them all at once."""
+        iterator, rather than building them all at once.
+        """
         raise NotImplementedError
 
     def result( self, state, action ):
         """Return the state that results from executing the given
         action in the given state. The action must be one of
-        self.actions(state)."""
+        self.actions(state).
+        """
         raise NotImplementedError
 
     def goal_test( self, state ):
         """Return True if the state is a goal. The default method compares the
         state to self.goal or checks for state in self.goal if it is a
         list, as specified in the constructor. Override this method if
-        checking against a single self.goal is not enough."""
+        checking against a single self.goal is not enough.
+        """
         if isinstance( self.goal, list ):
             return is_in( state, self.goal )
         else:
@@ -54,12 +58,14 @@ class Problem:
         state1 via action, assuming cost c to get up to state1. If the problem
         is such that the path doesn't matter, this function will only look at
         state2. If the path does matter, it will consider c and maybe state1
-        and action. The default method costs 1 for every step in the path."""
+        and action. The default method costs 1 for every step in the path.
+        """
         return c + 1
 
     def value( self, state ):
         """For optimization problems, each state has a value. Hill Climbing
-        and related algorithms try to maximize this value."""
+        and related algorithms try to maximize this value.
+        """
         raise NotImplementedError
 
 
@@ -74,7 +80,8 @@ class Node:
     the total path_cost (also known as g) to reach the node. Other functions
     may add an f and h value; see best_first_graph_search and astar_search for
     an explanation of how the f and h values are handled. You will not need to
-    subclass this class."""
+    subclass this class.
+    """
 
     def __init__( self, state, parent=None, action=None, path_cost=0 ):
         """Create a search tree Node, derived from a parent by an action."""
@@ -87,7 +94,7 @@ class Node:
             self.depth = parent.depth + 1
 
     def __repr__( self ):
-        return "<Node {}>".format( self.state )
+        return f"<Node {self.state}>"
 
     def __lt__( self, node ):
         return self.state < node.state
@@ -136,21 +143,22 @@ class Node:
 
 
 class SimpleProblemSolvingAgentProgram:
-    """
-    [Figure 3.1]
+    """[Figure 3.1]
     Abstract framework for a problem-solving agent.
     """
 
     def __init__( self, initial_state=None ):
         """State is an abstract representation of the state
         of the world, and seq is the list of actions required
-        to get to a particular state from the initial state(root)."""
+        to get to a particular state from the initial state(root).
+        """
         self.state = initial_state
         self.seq = []
 
     def __call__( self, percept ):
         """[Figure 3.1] Formulate a goal and problem, then
-        search for a sequence of actions to solve it."""
+        search for a sequence of actions to solve it.
+        """
         self.state = self.update_state( self.state, percept )
         if not self.seq:
             goal = self.formulate_goal( self.state )
@@ -178,14 +186,12 @@ class SimpleProblemSolvingAgentProgram:
 
 
 def breadth_first_tree_search( problem ):
-    """
-    [Figure 3.7]
+    """[Figure 3.7]
     Search the shallowest nodes in the search tree first.
     Search through the successors of a problem to find a goal.
     The argument frontier should be an empty queue.
     Repeats infinitely in case of loops.
     """
-
     frontier = deque( [Node( problem.initial )] )  # FIFO queue
 
     while frontier:
@@ -197,14 +203,12 @@ def breadth_first_tree_search( problem ):
 
 
 def depth_first_tree_search( problem ):
-    """
-    [Figure 3.7]
+    """[Figure 3.7]
     Search the deepest nodes in the search tree first.
     Search through the successors of a problem to find a goal.
     The argument frontier should be an empty queue.
     Repeats infinitely in case of loops.
     """
-
     frontier = [Node( problem.initial )]  # Stack
 
     while frontier:
@@ -216,8 +220,7 @@ def depth_first_tree_search( problem ):
 
 
 def depth_first_graph_search( problem ):
-    """
-    [Figure 3.7]
+    """[Figure 3.7]
     Search the deepest nodes in the search tree first.
     Search through the successors of a problem to find a goal.
     The argument frontier should be an empty queue.
@@ -266,7 +269,8 @@ def best_first_graph_search( problem, f, display=False ):
     first search; if f is node.depth then we have breadth-first search.
     There is a subtlety: the line "f = memoize(f, 'f')" means that the f
     values will be cached on the nodes as they are computed. So after doing
-    a best first search you can examine the f values of the path returned."""
+    a best first search you can examine the f values of the path returned.
+    """
     # %%
     tm0 = time.perf_counter()
     f = memoize( f, 'f' )
@@ -384,7 +388,8 @@ def bidirectional_search( problem ):
 
     def find_key( pr_min, open_dir, g ):
         """Finds key in open_dir with value equal to pr_min
-        and minimum g value."""
+        and minimum g value.
+        """
         m = np.inf
         node = Node( -1 )
         for n in open_dir:
@@ -401,10 +406,10 @@ def bidirectional_search( problem ):
         pr_min_b, f_min_b, g_min_b = find_min( openB, gB )
         C = min( pr_min_f, pr_min_b )
 
-        if U <= max( C, f_min_f, f_min_b, g_min_f + g_min_b + e ):
+        if max( C, f_min_f, f_min_b, g_min_f + g_min_b + e ) >= U:
             return U
 
-        if C == pr_min_f:
+        if pr_min_f == C:
             # Extend forward
             U, openF, closedF, gF = extend( U, openF, openB, gF, gB, closedF )
         else:
@@ -427,7 +432,8 @@ greedy_best_first_graph_search = best_first_graph_search
 def astar_search( problem, h=None, display=False ):
     """A* search is best-first graph search with f(n) = g(n)+h(n).
     You need to specify the h function when you call astar_search, or
-    else in your Problem subclass."""
+    else in your Problem subclass.
+    """
     h = memoize( h or problem.h, 'h' )
     return best_first_graph_search( problem, lambda n: n.path_cost + h( n ), display )
 
@@ -436,24 +442,24 @@ def astar_search( problem, h=None, display=False ):
 # A* heuristics
 
 class EightPuzzle( Problem ):
-    """ The problem of sliding tiles numbered from 1 to 8 on a 3x3 board, where one of the
+    """The problem of sliding tiles numbered from 1 to 8 on a 3x3 board, where one of the
     squares is a blank. A state is represented as a tuple of length 9, where  element at
-    index i represents the tile number  at index i (0 if it's an empty square) """
+    index i represents the tile number  at index i (0 if it's an empty square)
+    """
 
     def __init__( self, initial, goal=(1, 2, 3, 4, 5, 6, 7, 8, 0) ):
-        """ Define goal state and initialize a problem """
+        """Define goal state and initialize a problem"""
         super().__init__( initial, goal )
 
     def find_blank_square( self, state ):
         """Return the index of the blank square in a given state"""
-
         return state.index( 0 )
 
     def actions( self, state ):
-        """ Return the actions that can be executed in the given state.
+        """Return the actions that can be executed in the given state.
         The result would be a list, since there are only four possible actions
-        in any given state of the environment """
-
+        in any given state of the environment
+        """
         possible_actions = ['UP', 'DOWN', 'LEFT', 'RIGHT']
         index_blank_square = self.find_blank_square( state )
 
@@ -469,9 +475,9 @@ class EightPuzzle( Problem ):
         return possible_actions
 
     def result( self, state, action ):
-        """ Given state and action, return a new state that is the result of the action.
-        Action is assumed to be a valid action in the state """
-
+        """Given state and action, return a new state that is the result of the action.
+        Action is assumed to be a valid action in the state
+        """
         # blank is the index of the blank square
         blank = self.find_blank_square( state )
         new_state = list( state )
@@ -483,13 +489,11 @@ class EightPuzzle( Problem ):
         return tuple( new_state )
 
     def goal_test( self, state ):
-        """ Given a state, return True if state is a goal state or False, otherwise """
-
+        """Given a state, return True if state is a goal state or False, otherwise"""
         return state == self.goal
 
     def check_solvability( self, state ):
-        """ Checks if the given state is solvable """
-
+        """Checks if the given state is solvable"""
         inversion = 0
         for i in range( len( state ) ):
             for j in range( i + 1, len( state ) ):
@@ -499,9 +503,9 @@ class EightPuzzle( Problem ):
         return inversion % 2 == 0
 
     def h( self, node ):
-        """ Return the heuristic value for a given state. Default heuristic function used is
-        h(n) = number of misplaced tiles """
-
+        """Return the heuristic value for a given state. Default heuristic function used is
+        h(n) = number of misplaced tiles
+        """
         return sum( s != g for (s, g) in zip( node.state, self.goal ) )
 
 
@@ -509,20 +513,20 @@ class EightPuzzle( Problem ):
 
 
 class PlanRoute( Problem ):
-    """ The problem of moving the Hybrid Wumpus Agent from one place to other """
+    """The problem of moving the Hybrid Wumpus Agent from one place to other"""
 
     def __init__( self, initial, goal, allowed, dimrow ):
-        """ Define goal state and initialize a problem """
+        """Define goal state and initialize a problem"""
         super().__init__( initial, goal )
         self.dimrow = dimrow
         self.goal = goal
         self.allowed = allowed
 
     def actions( self, state ):
-        """ Return the actions that can be executed in the given state.
+        """Return the actions that can be executed in the given state.
         The result would be a list, since there are only three possible actions
-        in any given state of the environment """
-
+        in any given state of the environment
+        """
         possible_actions = ['Forward', 'TurnLeft', 'TurnRight']
         x, y = state.get_location()
         orientation = state.get_orientation()
@@ -544,8 +548,9 @@ class PlanRoute( Problem ):
         return possible_actions
 
     def result( self, state, action ):
-        """ Given state and action, return a new state that is the result of the action.
-        Action is assumed to be a valid action in the state """
+        """Given state and action, return a new state that is the result of the action.
+        Action is assumed to be a valid action in the state
+        """
         x, y = state.get_location()
         proposed_loc = list()
 
@@ -594,13 +599,11 @@ class PlanRoute( Problem ):
         return state
 
     def goal_test( self, state ):
-        """ Given a state, return True if state is a goal state or False, otherwise """
-
+        """Given a state, return True if state is a goal state or False, otherwise"""
         return state.get_location() == tuple( self.goal )
 
     def h( self, node ):
-        """ Return the heuristic value for a given state."""
-
+        """Return the heuristic value for a given state."""
         # Manhattan Heuristic Function
         x1, y1 = node.state.get_location()
         x2, y2 = self.goal
@@ -645,8 +648,7 @@ def recursive_best_first_search( problem, h=None ):
 
 
 def hill_climbing( problem ):
-    """
-    [Figure 4.2]
+    """[Figure 4.2]
     From the initial node, keep choosing the neighbor with highest value,
     stopping when no neighbor is better.
     """
@@ -669,7 +671,8 @@ def exp_schedule( k=20, lam=0.005, limit=100 ):
 
 def simulated_annealing( problem, schedule=exp_schedule() ):
     """[Figure 4.5] CAUTION: This differs from the pseudocode as it
-    returns a state instead of a Node."""
+    returns a state instead of a Node.
+    """
     current = Node( problem.initial )
     for t in range( sys.maxsize ):
         T = schedule( t )
@@ -685,8 +688,9 @@ def simulated_annealing( problem, schedule=exp_schedule() ):
 
 
 def simulated_annealing_full( problem, schedule=exp_schedule() ):
-    """ This version returns all the states encountered in reaching
-    the goal state."""
+    """This version returns all the states encountered in reaching
+    the goal state.
+    """
     states = []
     current = Node( problem.initial )
     for t in range( sys.maxsize ):
@@ -711,18 +715,19 @@ def and_or_graph_search( problem ):
     The agent must be able to handle all possible states of the AND node (as it
     may end up in any of them).
     Returns a conditional plan to reach goal state,
-    or failure if the former is not possible."""
+    or failure if the former is not possible.
+    """
 
     # functions used by and_or_search
     def or_search( state, problem, path ):
-        """returns a plan as a list of actions"""
+        """Returns a plan as a list of actions"""
         if problem.goal_test( state ):
             return []
         if state in path:
             return None
         for action in problem.actions( state ):
             plan = and_search( problem.result( state, action ),
-                               problem, path + [state, ] )
+                               problem, path + [state ] )
             if plan is not None:
                 return [action, plan]
 
@@ -781,8 +786,7 @@ class PeakFindingProblem( Problem ):
 
 
 class OnlineDFSAgent:
-    """
-    [Figure 4.21]
+    """[Figure 4.21]
     The abstract class for an OnlineDFSAgent. Override
     update_state method to convert percept to state. While initializing
     the subclass a problem needs to be provided which is an instance of
@@ -825,7 +829,8 @@ class OnlineDFSAgent:
 
     def update_state( self, percept ):
         """To be overridden in most cases. The default case
-        assumes the percept to be of type state."""
+        assumes the percept to be of type state.
+        """
         return percept
 
 
@@ -833,10 +838,10 @@ class OnlineDFSAgent:
 
 
 class OnlineSearchProblem( Problem ):
-    """
-    A problem which is solved by an agent executing
+    """A problem which is solved by an agent executing
     actions, rather than by just computation.
-    Carried in a deterministic and a fully observable environment."""
+    Carried in a deterministic and a fully observable environment.
+    """
 
     def __init__( self, initial, goal, graph ):
         super().__init__( initial, goal )
@@ -866,7 +871,7 @@ class OnlineSearchProblem( Problem ):
 
 
 class LRTAStarAgent:
-    """ [Figure 4.24]
+    """[Figure 4.24]
     Abstract class for LRTA*-Agent. A problem needs to be
     provided which is an instance of a subclass of Problem Class.
     Takes a OnlineSearchProblem [Figure 4.23] as a problem.
@@ -904,7 +909,8 @@ class LRTAStarAgent:
 
     def LRTA_cost( self, s, a, s1, H ):
         """Returns cost to move from state 's' to state 's1' plus
-        estimated cost to get to goal from s1."""
+        estimated cost to get to goal from s1.
+        """
         print( s, a, s1 )
         if s1 is None:
             return self.problem.h( s )
@@ -924,8 +930,8 @@ class LRTAStarAgent:
 def genetic_search( problem, ngen=1000, pmut=0.1, n=20 ):
     """Call genetic_algorithm on the appropriate parts of a problem.
     This requires the problem to have states that can mate and mutate,
-    plus a value method that scores states."""
-
+    plus a value method that scores states.
+    """
     # NOTE: This is not tested and might not work.
     # TODO: Use this function to make Problems work with genetic_algorithm.
 
@@ -964,7 +970,8 @@ def init_population( pop_number, gene_pool, state_length ):
     """Initializes population for genetic algorithm
     pop_number  :  Number of individuals in population
     gene_pool   :  List of possible values for individuals
-    state_length:  The length of each individual"""
+    state_length:  The length of each individual
+    """
     g = len( gene_pool )
     population = []
     for i in range( pop_number ):
@@ -1029,7 +1036,8 @@ class Graph:
     inverse link is also added. You can use g.nodes() to get a list of nodes,
     g.get('A') to get a dict of links out of A, and g.get('A', 'B') to get the
     length of the link from A to B. 'Lengths' can actually be any object at
-    all, and nodes can be any hashable object."""
+    all, and nodes can be any hashable object.
+    """
 
     def __init__( self, graph_dict=None, directed=True ):
         self.graph_dict = graph_dict or {}
@@ -1045,7 +1053,8 @@ class Graph:
 
     def connect( self, A, B, distance=1 ):
         """Add a link from A and B of given distance, and also add the inverse
-        link if the graph is undirected."""
+        link if the graph is undirected.
+        """
         self.connect1( A, B, distance )
         if not self.directed:
             self.connect1( B, A, distance )
@@ -1057,7 +1066,8 @@ class Graph:
     def get( self, a, b=None ):
         """Return a link distance or a dict of {node: distance} entries.
         .get(a,b) returns the distance or None;
-        .get(a) returns a dict of {node: distance} entries, possibly {}."""
+        .get(a) returns a dict of {node: distance} entries, possibly {}.
+        """
         links = self.graph_dict.setdefault( a, {} )
         if b is None:
             return links
@@ -1084,7 +1094,8 @@ def RandomGraph( nodes=list( range( 10 ) ), min_links=2, width=400, height=300,
     Then each node is connected to the min_links nearest neighbors.
     Because inverse links are added, some nodes will have more connections.
     The distance between nodes is the hypotenuse times curvature(),
-    where curvature() defaults to a random number between 1.1 and 1.5."""
+    where curvature() defaults to a random number between 1.1 and 1.5.
+    """
     g = UndirectedGraph()
     g.locations = {}
     # Build the cities
@@ -1155,7 +1166,7 @@ vacuum_world = Graph( dict(
     State_5=dict( Suck=['State_5', 'State_1'], Right=['State_6'] ),
     State_6=dict( Suck=['State_8'], Left=['State_5'] ),
     State_7=dict( Suck=['State_7', 'State_3'], Right=['State_8'] ),
-    State_8=dict( Suck=['State_8', 'State_6'], Left=['State_7'] )
+    State_8=dict( Suck=['State_8', 'State_6'], Left=['State_7'] ),
 ) )
 
 """ [Figure 4.23]
@@ -1167,7 +1178,7 @@ one_dim_state_space = Graph( dict(
     State_3=dict( Right='State_4', Left='State_2' ),
     State_4=dict( Right='State_5', Left='State_3' ),
     State_5=dict( Right='State_6', Left='State_4' ),
-    State_6=dict( Left='State_5' )
+    State_6=dict( Left='State_5' ),
 ) )
 one_dim_state_space.least_costs = dict(
     State_1=8,
@@ -1218,7 +1229,7 @@ class GraphProblem( Problem ):
         return m
 
     def h( self, node ):
-        """h function is straight-line distance from a node's state to goal."""
+        """H function is straight-line distance from a node's state to goal."""
         locs = getattr( self.graph, 'locations', None )
         if locs:
             if type( node ) is str:
@@ -1230,8 +1241,7 @@ class GraphProblem( Problem ):
 
 
 class GraphProblemStochastic( GraphProblem ):
-    """
-    A version of GraphProblem where an action can lead to
+    """A version of GraphProblem where an action can lead to
     nondeterministic output i.e. multiple possible states.
     Define the graph as dict(A = dict(Action = [[<Result 1>, <Result 2>, ...], <cost>], ...), ...)
     A the dictionary format is different, make sure the graph is created as a directed graph.
@@ -1322,7 +1332,8 @@ cubes16 = ['FORIXB', 'MOQABJ', 'GURILW', 'SETUPL',
 
 def random_boggle( n=4 ):
     """Return a random Boggle board of size n x n.
-    We represent a board as a linear list of letters."""
+    We represent a board as a linear list of letters.
+    """
     cubes = [cubes16[i % 16] for i in range( n * n )]
     random.shuffle( cubes )
     return list( map( random.choice, cubes ) )
@@ -1352,7 +1363,8 @@ def print_boggle( board ):
 
 def boggle_neighbors( n2, cache={} ):
     """Return a list of lists, where the i-th element is the list of indexes
-    for the neighbors of square i."""
+    for the neighbors of square i.
+    """
     if cache.get( n2 ):
         return cache.get( n2 )
     n = exact_sqrt( n2 )
@@ -1396,7 +1408,8 @@ def exact_sqrt( n2 ):
 class Wordlist:
     """This class holds a list of words. You can use (word in wordlist)
     to check if a word is in the list, or wordlist.lookup(prefix)
-    to see if prefix starts any of the words in the list."""
+    to see if prefix starts any of the words in the list.
+    """
 
     def __init__( self, file, min_len=3 ):
         lines = file.read().upper().split()
@@ -1412,7 +1425,8 @@ class Wordlist:
         """See if prefix is in dictionary, as a full word or as a prefix.
         Return two values: the first is the lowest i such that
         words[i].startswith(prefix), or is None; the second is
-        True iff prefix itself is in the Wordlist."""
+        True iff prefix itself is in the Wordlist.
+        """
         words = self.words
         if hi is None:
             hi = len( words )
@@ -1459,7 +1473,8 @@ class BoggleFinder:
     def find( self, lo, hi, i, visited, prefix ):
         """Looking in square i, find the words that continue the prefix,
         considering the entries in self.wordlist.words[lo:hi], and not
-        revisiting the squares in visited."""
+        revisiting the squares in visited.
+        """
         if i in visited:
             return
         wordpos, is_word = self.wordlist.lookup( prefix, lo, hi )
@@ -1495,7 +1510,8 @@ class BoggleFinder:
 
 def boggle_hill_climbing( board=None, ntimes=100, verbose=True ):
     """Solve inverse Boggle by hill-climbing: find a high-scoring board by
-    starting with a random one and changing it."""
+    starting with a random one and changing it.
+    """
     finder = BoggleFinder()
     if board is None:
         board = random_boggle()
@@ -1560,8 +1576,7 @@ class InstrumentedProblem( Problem ):
         return getattr( self.problem, attr )
 
     def __repr__( self ):
-        return '<{:4d}/{:4d}/{:4d}/{}>'.format( self.succs, self.goal_tests,
-                                                self.states, str( self.found )[:4] )
+        return f'<{self.succs:4d}/{self.goal_tests:4d}/{self.states:4d}/{str( self.found )[:4]}>'
 
 
 def compare_searchers( problems, header,

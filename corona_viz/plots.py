@@ -1,21 +1,20 @@
 """Generate nice interactive visualization of coronavirus time series"""
 # %%
-from typing import List, Dict
-import pandas as pd
-import re
-import numpy as np
 import datetime as dt
 import json
-
-from bokeh.io import show
-from bokeh.palettes import Category10
-from bokeh.plotting import figure, Figure
-from bokeh.models.formatters import DatetimeTickFormatter, NumeralTickFormatter
-from bokeh.models import HoverTool, ColumnDataSource
-from bokeh.embed import json_item
+import re
+from typing import Dict, List
 
 import corona_viz.common as com
-from corona_viz.common import TRANSL, DataCacheRec, PARQUET_PATH
+import numpy as np
+import pandas as pd
+from bokeh.embed import json_item
+from bokeh.io import show
+from bokeh.models import ColumnDataSource, HoverTool
+from bokeh.models.formatters import DatetimeTickFormatter, NumeralTickFormatter
+from bokeh.palettes import Category10
+from bokeh.plotting import Figure, figure
+from corona_viz.common import PARQUET_PATH, TRANSL, DataCacheRec
 
 DF = pd.DataFrame
 Date = dt.date
@@ -57,8 +56,8 @@ def make_cmp_plot(data: DF, klass: str, scale: str = "linear",
               x_countries: List[str] = None ):
     """Make a bokeh plot of a certain type (confirmed/recovered/deaths/active)
     scale can be "linear" or "log"
-     for a bunch of countries"""
-
+    for a bunch of countries
+    """
     x_countries = x_countries or []
     countries = countries or COUNTRIES
     print( 'c1', countries )
@@ -107,10 +106,9 @@ def init_plot(scale: str, x_tools: List[str]):
 
 def data_source_ctry(  data: DF, country: str ) -> ColumnDataSource:
     """Draw line for one country and (possibly) the estimate"""
-
     df = data[data['country'] == country].copy()
     df['est_label'] = np.where( df['n_confirmed_est'].notnull(), " (estimado)", "")
-    n = df[f'n_confirmed']
+    n = df['n_confirmed']
     df['n_or_est'] = n.where( n.notnull(), np.round(df['n_confirmed_est']) )
 
     df['date_str'] = df['date'].astype(str).str[:10]
@@ -183,10 +181,10 @@ def set_hover_tool_ctry(p: Figure):
         # ("(xx,yy)", "(@x, @y)"),
         ("País", "@pais"),
         ("Fecha", "@date_str"),
-        (f"Total activos", "@n_active_str"),
-        (f"Total confirmados", "@n_or_est @est_label"),
-        (f"Total recuperados", "@n_recovered_str"),
-        (f"Total muertes", "@n_deaths_str"),
+        ("Total activos", "@n_active_str"),
+        ("Total confirmados", "@n_or_est @est_label"),
+        ("Total recuperados", "@n_recovered_str"),
+        ("Total muertes", "@n_deaths_str"),
     ])
 
 
@@ -194,8 +192,8 @@ def make_plot_cntry(data: DF, scale: str = "linear", country="Colombia",
                     x_tools: List[str] = None):
     """Make a bokeh plot of a certain type (confirmed/recovered/deaths/active)
     scale can be "linear" or "log"
-     for a bunch of countries"""
-
+    for a bunch of countries
+    """
     klasses = ["active",  "deaths", "recovered", "confirmed"]
 
     p = init_plot( scale, x_tools=x_tools )

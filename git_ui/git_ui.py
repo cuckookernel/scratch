@@ -1,18 +1,18 @@
 """A terminal ui for git"""
 
-from typing import List, Tuple, Dict
-from collections import defaultdict
 import curses
-from curses import wrapper
-
 import subprocess
+from collections import defaultdict
+from curses import wrapper
 from subprocess import Popen
+from typing import Dict, List, Tuple
 
 BOTTOM_OPTS_Y = 40
 
 
 class WindowPrinter:
     """Print succesively to window"""
+
     def __init__( self, win, start_y: int, x: int ):
         self.win = win
         self.y = start_y  # line offset
@@ -87,7 +87,7 @@ class App:
             branches_printer.print( out_line )
 
     def refresh_status_win( self ):
-        """issue git status command, parse output, print to view"""
+        """Issue git status command, parse output, print to view"""
         printer = WindowPrinter(self.stdscr, start_y=0, x=0)
 
         status_lines, _ = run_command_get_output( 'git status'.split() )
@@ -102,7 +102,7 @@ class App:
             printer.print('')
 
     def add_activity(self):
-        """add a file to commit queue"""
+        """Add a file to commit queue"""
         self.stdscr.clear()
         printer = WindowPrinter(self.stdscr, start_y=0, x=0)
 
@@ -133,7 +133,7 @@ class App:
                 printer.print(str(c))
 
     def commit_activity(self) -> str:
-        """ask for a commit message and commit files in commit queue"""
+        """Ask for a commit message and commit files in commit queue"""
         self.stdscr.clear()
         printer = WindowPrinter(self.stdscr, start_y=0, x=0)
 
@@ -171,8 +171,7 @@ class App:
 
 def parse_status_output( status_lines: List[str]) -> Dict[str, List[str]]:
     """Parse output from git status"""
-
-    ret = defaultdict( lambda: [])
+    ret = defaultdict( list)
     state = None
     for line in status_lines:
         line = line.strip()
@@ -201,7 +200,7 @@ def parse_status_output( status_lines: List[str]) -> Dict[str, List[str]]:
 
 
 def run_command_get_output( cmd:  List[str] ) -> Tuple[List[str], List[str]]:
-    """run command in shell and get list of line from stdout and stderr"""
+    """Run command in shell and get list of line from stdout and stderr"""
     popen = Popen( cmd, stdout=subprocess.PIPE,
                    stderr=subprocess.PIPE, env={'LANG': 'en'})
 

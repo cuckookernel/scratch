@@ -1,7 +1,7 @@
 
 from fastai import *
-from fastai.data import *
 from fastai.collab import *
+from fastai.data import *
 from fastai.data.external import *
 
 # %%

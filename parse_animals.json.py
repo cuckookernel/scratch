@@ -1,8 +1,8 @@
 
-from collections import Counter
 import json
+from collections import Counter
 
-with open("/home/teo/git/muid_miner/animals.json", "rt") as f_in:
+with open("/home/teo/git/muid_miner/animals.json") as f_in:
     obj = json.load( f_in )
 # %%
 len( obj )
@@ -19,7 +19,7 @@ for l in range(6, 16):
     if hash[:l] in keys:
         print( hash[:l])
 
-with open("/home/teo/git/muid_miner/animals.txt", "wt") as f_out:
+with open("/home/teo/git/muid_miner/animals.txt", "w") as f_out:
     for key in keys:
         print( key, file=f_out )
 # %%

@@ -340,7 +340,7 @@ def _make_target_path( fpath: Path ) -> Path:
 
 def _print_help( print_fun: Callable[[str], None] = print ):
     lines = """
-        [z]        : switch scroll mode from move to zoom 
+        [z]        : switch scroll mode from move to zoom
         [up]       : move frame up / zoom out if in scroll mode
         [down]     : move frame down / zoom in if in scroll mode
         [left]     : move frame left

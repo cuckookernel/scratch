@@ -1,25 +1,23 @@
 # %%
-"""
-process knowledge base contained in words.yaml
+"""process knowledge base contained in words.yaml
 
 https://cvc.cervantes.es/lengua/thesaurus/pdf/09/TH_09_123_007_0.pdf
 https://diccionario.reverso.net/espanol-frances/apretar
 https://context.reverso.net/traduccion/portugues-espanol/colo
 
 """
-from typing import Dict, List, Tuple, Any, Optional
-from collections import defaultdict
-from pprint import pprint, pformat
-from pathlib import Path
-from hashlib import sha256
 import base64
 import json
+from collections import defaultdict
+from hashlib import sha256
+from pathlib import Path
+from pprint import pformat
+from typing import Any, Dict, List, Optional
+
 import pandas as pd
-
 import yaml
+from jinja2 import Environment, FileSystemLoader
 from yaml import Loader
-from jinja2 import Environment, select_autoescape, FileSystemLoader
-
 
 Klass = str
 
@@ -43,12 +41,13 @@ COLOR_BY_LANG = {
     "spa": "#ffa",
     "fro": "#9f9",
     "eng": "#7cf",
-    ".": "#fff"
+    ".": "#fff",
 }
 
 
 class Node:
     """An node in the graph"""
+
     def __init__( self, uri: str, klass: Klass, text: str, lang: str, data: Dict[str, Any] ):
         self.uri: str = uri
 
@@ -86,6 +85,7 @@ class Node:
 
 class Edge:
     """Edge directed from a source to target node"""
+
     def __init__( self, source: Node, target: Node, data: Dict ):
         self.source = source
         self.target = target
@@ -99,13 +99,14 @@ class Edge:
 
 class KnowledgeBase:
     """contains the full knowledge base"""
+
     def __init__(self):
         self.nodes: Dict[str, Node] = {}  # nodes keyed by uri
         self.nodes_by_class = defaultdict(list)
         self.edges = []
 
     def populate(self, recs: List[Dict]):
-        """validate recs and push them into nodes and edges"""
+        """Validate recs and push them into nodes and edges"""
         for rec in recs:
             if 'rel' in rec:  # rel -> Edge
                 _check_rel_record( rec )

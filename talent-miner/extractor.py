@@ -1,17 +1,17 @@
-from typing import Dict, Any, List, Optional
-import yaml
+import datetime as dt
 import json
-from json import JSONEncoder
 import os
 import re
-import datetime as dt
-import pandas as pd
-
-from pprint import pprint
+from json import JSONEncoder
 from pathlib import Path
+from pprint import pprint
+from typing import Any, Dict, List, Optional
+
+import numpy as np
+import pandas as pd
+import yaml
 from bs4 import BeautifulSoup
 from bs4.element import Tag
-import numpy as np
 
 HOME = Path( os.getenv('HOME') )
 
@@ -44,8 +44,9 @@ CFG = _Config
 
 class DateTimeEncoder(JSONEncoder):
     """Override the default method"""
+
     def default(self, obj):
-        """default formating as string"""
+        """Default formating as string"""
         if isinstance(obj, (dt.date, dt.datetime)):
             return obj.isoformat()
 
@@ -244,7 +245,7 @@ def _is_abroad_school( school: Optional[str] ):
 
 
 def profile_text_stats( doc: BeautifulSoup ):
-    """some metrics on the whole profile text"""
+    """Some metrics on the whole profile text"""
     text = doc.find('main', {'class': 'core-rail'}).text.strip()
     words = text.split()
     eng_ratio = sum(1 for word in words if word in COMMON_ENGLISH) * 10/ (len(words) + 0.001)
@@ -312,8 +313,7 @@ def _parse_experiences(doc: BeautifulSoup) -> List[Dict]:
 
 
 def proc_employment_summary(summary: Tag) -> Dict:
-    """process one employment summary and extract info from it"""
-
+    """Process one employment summary and extract info from it"""
     xp_record = dict()
     xp_record['position'] = summary.find('h3').text.strip()
     company = summary.find_all('p', {'class': 'pv-entity__secondary-title'})[0]
@@ -321,7 +321,7 @@ def proc_employment_summary(summary: Tag) -> Dict:
                                         if line.strip() != ''] )
     # %%
     for xp_line in summary.find_all('h4'):
-        fld_name, value = [span.text.strip() for span in xp_line.find_all('span') ]
+        fld_name, value = (span.text.strip() for span in xp_line.find_all('span') )
         if fld_name == 'Fechas de empleo':
             xp_record['period_raw'] = value
             period = _extract_period( value )
@@ -476,10 +476,10 @@ def _classify_degree( degree: str ) -> str:
     elif re.search('^Tecn.log', degree):
         return 'Tecnología'
     elif re.search('^Mae?ste?r', degree):
-        return 'Master''s'
+        return 'Masters'
     elif re.search('^Dimplom', degree):
         return 'Diploma'
-    elif re.search('^(Esp\.|Especializ)', degree):
+    elif re.search(r'^(Esp\.|Especializ)', degree):
         return 'Specialization'
     elif re.search('^Phd', degree, re.IGNORECASE):
         return 'PhD'
@@ -488,7 +488,7 @@ def _classify_degree( degree: str ) -> str:
 
 
 DEGREE_LEVELS = {'Tecnología': 1, 'University': 2, 'Diploma': 3,
-                 'Specialization': 4, 'Master''s': 5, 'PhD': 5, 'Unknown': -1}
+                 'Specialization': 4, 'Masters': 5, 'PhD': 5, 'Unknown': -1}
 
 
 def _max_degree(edu_records: List[Dict[str, str]]) -> Optional[str] :

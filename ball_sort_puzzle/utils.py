@@ -13,7 +13,6 @@ from statistics import mean
 
 import numpy as np
 
-
 # ______________________________________________________________________________
 # Functions on Sequences and Iterables
 
@@ -129,7 +128,8 @@ def shuffled(iterable):
 def histogram(values, mode=0, bin_function=None):
     """Return a list of (value, count) pairs, summarizing the input values.
     Sorted by increasing value, or if mode=1, by decreasing count.
-    If bin_function is given, map it over values first."""
+    If bin_function is given, map it over values first.
+    """
     if bin_function:
         values = map(bin_function, values)
 
@@ -156,7 +156,6 @@ def element_wise_product(x, y):
 
 def matrix_multiplication(x, *y):
     """Return a matrix as a matrix-multiplication of x and arbitrary number of matrices *y."""
-
     result = x
     for _y in y:
         result = np.matmul(result, _y)
@@ -182,7 +181,8 @@ def probability(p):
 def weighted_sample_with_replacement(n, seq, weights):
     """Pick n samples from seq at random, with replacement, with the
     probability of each element in proportion to its corresponding
-    weight."""
+    weight.
+    """
     sample = weighted_sampler(seq, weights)
     return [sample() for _ in range(n)]
 
@@ -392,7 +392,8 @@ def distance_squared(a, b):
 
 class injection:
     """Dependency injection of temporary values for global functions/classes/etc.
-    E.g., `with injection(DataBase=MockDataBase): ...`"""
+    E.g., `with injection(DataBase=MockDataBase): ...`
+    """
 
     def __init__(self, **kwds):
         self.new = kwds
@@ -408,7 +409,8 @@ class injection:
 def memoize(fn, slot=None, maxsize=32):
     """Memoize fn: make it remember the computed value for any argument list.
     If slot is specified, store result in that slot of first argument.
-    If slot is false, use lru_cache for caching the values."""
+    If slot is false, use lru_cache for caching the values.
+    """
     if slot:
         def memoized_fn(obj, *args):
             if hasattr(obj, slot):
@@ -447,7 +449,8 @@ def print_table(table, header=None, sep='   ', numfmt='{}'):
     header, if specified, will be printed as the first row.
     numfmt is the format for all numbers; you might want e.g. '{:.2f}'.
     (If you want different formats in different columns,
-    don't use print_table.) sep is the separator between columns."""
+    don't use print_table.) sep is the separator between columns.
+    """
     justs = ['rjust' if isnumber(x) else 'ljust' for x in table[0]]
 
     if header:
@@ -474,7 +477,8 @@ def failure_test(algorithm, tests):
     Most algorithms have arbitrary output on correct execution, which is difficult
     to check for correctness. On the other hand, a lot of algorithms output something
     particular on fail (for example, False, or None).
-    tests is a list with each element in the form: (values, failure_output)."""
+    tests is a list with each element in the form: (values, failure_output).
+    """
     return mean(int(algorithm(x) != y) for x, y in tests)
 
 
@@ -488,7 +492,8 @@ class Expr:
     """A mathematical expression with an operator and 0 or more arguments.
     op is a str like '+' or 'sin'; args are Expressions.
     Expr('x') or Symbol('x') creates a symbol (a nullary Expr).
-    Expr('-', x) creates a unary; Expr('+', x, 1) creates a binary."""
+    Expr('-', x) creates a unary; Expr('+', x, 1) creates a binary.
+    """
 
     def __init__(self, op, *args):
         self.op = str(op)
@@ -599,7 +604,7 @@ class Expr:
 
     # Equality and repr
     def __eq__(self, other):
-        """x == y' evaluates to True or False; does not build an Expr."""
+        """X == y' evaluates to True or False; does not build an Expr."""
         return isinstance(other, Expr) and self.op == other.op and self.args == other.args
 
     def __lt__(self, other):
@@ -667,7 +672,7 @@ class PartialExpr:
         return Expr(self.op, self.lhs, rhs)
 
     def __repr__(self):
-        return "PartialExpr('{}', {})".format(self.op, self.lhs)
+        return f"PartialExpr('{self.op}', {self.lhs})"
 
 
 def expr(x):
@@ -707,7 +712,8 @@ class defaultkeydict(collections.defaultdict):
 
 class hashabledict(dict):
     """Allows hashing by representing a dictionary as tuple of key:value pairs.
-    May cause problems as the hash value may change during runtime."""
+    May cause problems as the hash value may change during runtime.
+    """
 
     def __hash__(self):
         return 1
@@ -724,7 +730,8 @@ class PriorityQueue:
     order) is returned first.
     If order is 'min', the item with minimum f(x) is
     returned first; if order is 'max', then it is the item with maximum f(x).
-    Also supports dict-like lookup."""
+    Also supports dict-like lookup.
+    """
 
     def __init__(self, order='min', f=lambda x: x):
         self.heap = []
@@ -746,7 +753,8 @@ class PriorityQueue:
 
     def pop(self):
         """Pop and return the item (with min or max f(x) value)
-        depending on the order."""
+        depending on the order.
+        """
         if self.heap:
             return heapq.heappop(self.heap)[1]
         else:
@@ -762,7 +770,8 @@ class PriorityQueue:
 
     def __getitem__(self, key):
         """Returns the first value associated with key in PriorityQueue.
-        Raises KeyError if key is not present."""
+        Raises KeyError if key is not present.
+        """
         for value, item in self.heap:
             if item == key:
                 return value
@@ -783,6 +792,7 @@ class PriorityQueue:
 
 class Bool(int):
     """Just like `bool`, except values display as 'T' and 'F' instead of 'True' and 'False'."""
+
     __str__ = __repr__ = lambda self: 'T' if self else 'F'
 
 

@@ -1,6 +1,8 @@
 
-from muid.mining import create
 import timeit
+
+from muid.mining import create
+
 # %%
 
 n = 100

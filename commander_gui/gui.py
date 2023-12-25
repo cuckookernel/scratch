@@ -1,20 +1,20 @@
 
 import edifice as ed
-from edifice import View, Label, ScrollView, Button, Table
-
+from edifice import Button, Table, View
 
 APP_STATE = ed.StateManager(
-    {"text": "this\nis a\ntest"}
+    {"text": "this\nis a\ntest"},
 )
 
 
 class App(ed.Component):
     """The commander app"""
+
     window_style = {"margin": 20, "width": 400, "height": 800,
                     "subcontrol-position": "top"}
 
     def render( self ):
-        """produce the main window"""
+        """Produce the main window"""
         text_lines = APP_STATE.subscribe(self, "text").value.split('\n')
 
         # line_labels = [Label(line, selectable=True, on_click=self._set_selected,
@@ -27,7 +27,7 @@ class App(ed.Component):
             View(layout="column",
                  style=App.window_style)(
                 lines,
-                Button( title='Ok', on_click=self._on_ok )
+                Button( title='Ok', on_click=self._on_ok ),
             ),
         )
 

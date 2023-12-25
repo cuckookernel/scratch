@@ -1,17 +1,20 @@
 """Shared routines and constants"""
 
-from typing import Optional, NamedTuple, Dict, Tuple
 import datetime as dt
-import os
 import glob
+import os
 from pathlib import Path
+from typing import Dict, NamedTuple, Optional
 
 import pandas as pd
 
 DF = pd.DataFrame
 DateTime = dt.datetime
 Date = dt.date
-DataCacheRec = NamedTuple('DataCacheRec', [('mtime', int), ('data', DF), ('fp', Path)])
+class DataCacheRec(NamedTuple):
+    mtime: int
+    data: DF
+    fp: Path
 
 
 COVID_DATA_BASE = os.getenv('COVID_DATA_BASE', "/home/teo/git/COVID-19")
@@ -33,7 +36,7 @@ TRANSL = {"World": "Mundo",
 
 
 def tstamp_to_dt( tstamp: float ) -> DateTime:
-    """unix timestamp to python datetime"""
+    """Unix timestamp to python datetime"""
     return dt.datetime.fromtimestamp( tstamp )
 
 
@@ -41,7 +44,6 @@ def get_data(cache: Dict[Date, DataCacheRec],
              glob_str: str,
              date: Optional[Date] = None,
              date_col: str = 'date') -> DataCacheRec:
-
     """Get DF for the given date or the most recent one if not provided"""
     if date is not None:
         tmpl = glob_str.replace('*', '{date}')

@@ -1,20 +1,21 @@
-from dadadada import double, Area, Price, Array, Matrix, Table
-from typing import Callable
-import numpy as np
-from numpy import zeros
+from collections.abc import Callable
+
+from dadadada import Area, Array, Matrix, Price, Table, double
 from scipy.optimize import minimize
 
 
 def estimate_price(x: Area) -> Price:
     """Calcula precio de un apto
-    (en $MM) dada su area en m2"""
+    (en $MM) dada su area en m2
+    """
     return 3 * x + 0.0
 
 
 def total_err( x: Array, y: Array, w: Array ) \
         -> double:
     """x, y son los datos reales
-    w los parámetros del modelo"""
+    w los parámetros del modelo
+    """
     n = len(x)
     y_hat = [ 0.0 ] * n
     err = [ 0.0 ] * n
@@ -29,7 +30,8 @@ def total_err( x: Array, y: Array, w: Array ) \
 def total_err_pd( w: Array, x: Matrix,
                   y: Array ) -> double:
     """x, y son los datos reales
-    w los parámetros del modelo"""
+    w los parámetros del modelo
+    """
     n, p = x.shape; y_hat = [0.0] * n
     err = [0.0] * n
 
@@ -42,11 +44,12 @@ def total_err_pd( w: Array, x: Matrix,
 
 from scipy.optimize import minimize
 
+
 def train( data: Table ) \
     -> Callable[[Array], double]:
     """Given training data return
-    the best (linear) estimator function"""
-
+    the best (linear) estimator function
+    """
     x = data[['x1', ...]]  # vars. predictoras
     y = data['y']  # variable objetivo
 
@@ -64,8 +67,7 @@ def train( data: Table ) \
 # noinspection PyArgumentList,PyMissingOrEmptyDocstring
 def minimize_error( x: Array, y: Array ) \
         -> Array:
-    from scipy.optimize \
-        import minimize
+    from scipy.optimize import minimize
 
     def tot_err( w: Array ) -> double:
         return total_err( x, y, w)
@@ -121,7 +123,8 @@ def main( data):
 # noinspection PyRedeclaration
 def estimate_price( w: Array, x: Array ) -> Price:
     """This is the 'model'
-       x ~ dim p,  w ~ dim p + 1"""
+    x ~ dim p,  w ~ dim p + 1
+    """
     return ( w.zip( x )
              .map( lambda par: par[0] * par[1] )
              .sum()

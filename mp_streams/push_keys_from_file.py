@@ -1,10 +1,10 @@
 """A small utility to push keys, previously save in plain files to the key server"""
 
-import sys
-import re
-import requests
 import json
-import http
+import re
+import sys
+
+import requests
 
 REGEX = re.compile("key= ?([a-z0-9A-Z]+)")
 SAVE_KEY_URL = "http://localhost:8000/keys/save"
@@ -14,7 +14,7 @@ def main():
     """Open text file, find lines matching regex, report each"""
     fname = sys.argv[1]
 
-    with open( fname, 'rt') as f_in:
+    with open( fname) as f_in:
         for i, line in enumerate(f_in):
             match = re.search( REGEX, line )
             if match:

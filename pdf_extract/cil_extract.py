@@ -1,5 +1,6 @@
 
 from pprint import pformat, pprint
+
 import fitz
 from fitz.fitz import Document, Page
 

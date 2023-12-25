@@ -1,17 +1,16 @@
 
 # import sqlite3 as sql
-from os.path import dirname, join
 
-import pandas as pd
-import numpy as np
 import os
 
+import numpy as np
+import pandas as pd
+from bokeh.embed import file_html
 from bokeh.io import curdoc
 from bokeh.layouts import column, row
-from bokeh.models import ColumnDataSource, Div, Select  # , Slider, TextInput
-from bokeh.plotting import figure, Figure
+from bokeh.models import ColumnDataSource, Div  # , Slider, TextInput
+from bokeh.plotting import Figure, figure
 from bokeh.resources import CDN
-from bokeh.embed import file_html
 
 DATA_PATH1 = 'nine_box/Resultados_de_performance.xlsx'
 DATA_PATH2 = 'nine_box/Resultados_de_performance_tech_leads.xlsx'
@@ -184,7 +183,7 @@ def _update( source: ColumnDataSource, one_dim: Figure, fig: Figure, devs_df: DF
         level=df['level'],
         color=df["color"],
         name=df["name"],
-        alpha=df['alpha']
+        alpha=df['alpha'],
     )
 
 
