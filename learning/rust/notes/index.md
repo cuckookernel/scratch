@@ -1,5 +1,7 @@
 ## Index of Topics
 
+- Option methods:
+
 
 - Shared global state:
     - Using with `static` keyword, `OnceLock`, and `Arc<Mutex<T>>`:
