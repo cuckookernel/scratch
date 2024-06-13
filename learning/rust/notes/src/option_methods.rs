@@ -4,7 +4,7 @@ pub fn demo_option_methods() {
     let none_int = None;
 
     let val1 = Some(2).unwrap();
-    println!("val1: {val1}");
+    println!("Some(2).unwrap() => val1: {val1}");
     // none.unwrap();  this will panic!
 
     let or_1: Option<i32> = Some(1).or(Some(2));
@@ -12,7 +12,6 @@ pub fn demo_option_methods() {
 
     let or_2: Option<i32> = None.or(Some(2));
     assert_eq!(or_2, Some(2));
-    println!("or_result2: {or_2:?}");
 
     let or_else_1: Option<i32> = Some(1).or_else(|| { Some(2) });
     assert_eq!(or_else_1, Some(1));
@@ -33,7 +32,7 @@ pub fn demo_option_methods() {
     assert_eq!(unwrap_or_else_2, 2);
 
     let unwrap_or_default_1: i32 = Some(1).unwrap_or_default();
-    assert_eq!(unwrap_or_default_1, 0);
+    assert_eq!(unwrap_or_default_1, 1);
 
     let unwrap_or_default_2: i32 = None.unwrap_or_default();
     assert_eq!(unwrap_or_default_2, 0);
@@ -41,9 +40,12 @@ pub fn demo_option_methods() {
     let and_then_1: Option<i32> = Some(1).and_then(|val| {assert_eq!(val, 1); Some(2)} );
     assert_eq!(and_then_1, Some(2));
 
+    let and_then_2: Option<i32> = none_int.and_then(|val| {assert_eq!(val, 1); Some(2)} );
+    assert_eq!(and_then_2, None);
+
     if let Some(val) = Some(1) {
         assert_eq!(val, 1);
-        println!("This branch runs!");
+        println!("if let Some -> This branch runs!");
     } else {
         assert!(false);
         println!("This branch won't run");
