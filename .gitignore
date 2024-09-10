@@ -2,7 +2,8 @@
 __pycache__/
 *.db
 *.deb
-*.rdb
+*.dep
+*.exe
 *.log
 *.out
 *.json
@@ -12,12 +13,16 @@ __pycache__/
 *.csv
 *.jpg
 *.pdf
+*.wav
 *.mp3
 *.avi
 *.txt
 *.zip
-*.exe
 *.zip
+*.rdb
+*.rkt~
+*.so
+*.zo
 Cvs*
 venv-*/
 .tmp*/
