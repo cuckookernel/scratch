@@ -1,9 +1,8 @@
 
+import shutil
 from collections import defaultdict
-from pathlib import Path
-from typing import TypeAlias
 from hashlib import md5
-
+from pathlib import Path
 
 # FileKey = (filename, size)
 FileKey = tuple[str, int]
@@ -12,9 +11,10 @@ FileKey = tuple[str, int]
 
 def main():
     """Index files in two directories and delete files under path_a that are found anywhere
-    under path_b"""
+    under path_b
+    """
     # %%
-    path_a = Path('/home/teo/gdrive_rclone/.trash')
+    path_a = Path('/home/teo/gdrive_clone.trash')
     index_a = index_path(path_a)
     size_a_mb = calc_total_size(index_a) / 1e6
     print(size_a_mb)
@@ -24,7 +24,8 @@ def main():
     for dir in empty_dirs:
         dir.rmdir()
     # %%
-    path_b = Path('/home/teo/gdrive_rclone')
+    # path_b = Path('/home/teo/gdrive_rclone')
+    path_b = Path('/media/teo/T7')
     index_b = index_path(path_b)
     size_b_mb = calc_total_size(index_b) / 1e6
     print(size_b_mb)
@@ -40,15 +41,30 @@ def main():
 def _interactive_testing(index_a, index_b):
     runfile("file_manage/gdrive_sync/simple_dup_detect_delete.py")
     delete_dups(index_a, index_b)
+    # %%
+    all_files = list(Path('/home/teo/gdrive_rclone.trash').glob('*'))
+    dst_dir = Path('/home/teo/Documents/_STAGED_FOR_UPLOAD_TO_DRIVE/HVs/linkedin-scraped')
+    assert dst_dir.is_dir() and dst_dir.exists()
+    # %%
+    for file in all_files:
+        if file.is_dir() or not file.exists() or file.suffix not in ['.txt', '.html']:
+            continue
+        txt_ver = dst_dir / (file.stem + '.txt')
+        html_ver = file.parent / (file.stem + '.html')
+        if txt_ver.exists() and html_ver.exists():
+            print(txt_ver)
+            print(html_ver)
+            shutil.move(html_ver, dst_dir)
+    # %%
 
 
 def delete_dups(index_a: dict[FileKey, set[Path]], index_b: dict[FileKey, set[Path]]):
+    # %%
     deleted_cnt = 0
     saved_space = 0
+    # %%
     for key_a, paths_a in index_a.items():
         size = key_a[1]
-        if size < 16e3:
-            continue
         if key_a in index_b:
             paths_a1 = [path_a for path_a in paths_a if path_a.exists() and not path_a.is_dir()]
             md5s_a = {path_a: md5(path_a.read_bytes()).hexdigest() for path_a in paths_a1}
@@ -59,35 +75,42 @@ def delete_dups(index_a: dict[FileKey, set[Path]], index_b: dict[FileKey, set[Pa
                     paths_b = md5s_b[md5a]
                     if paths_b == {path_a}:
                         continue
-                    deleted = maybe_delete_1(path_a, paths_b)
-                    deleted_cnt += int(deleted)
-                    saved_space += size
+                    to_delete = shall_delete(path_a, paths_b)
+                    if to_delete:
+                        deleted_cnt += 1
+                        saved_space += size
 
-    print(deleted_cnt, saved_space)
+    print(deleted_cnt, saved_space/1e6)
+    # %%
 
 
 AUTO_DEL_EXTS = {
-    '.pdf', '.ps', '.mobi', '.epub', '.doc',
-    '.txt', '.tex',
-    '.rtf', '.djvu', '.srt', '.djv',
-    '.ppt', '.pptx', '.xls', '.xlsx', '.docx', '.html',
+    '.pdf', '.ps', '.dvi', '.mobi', '.epub', '.doc',
+    '.txt', '.tex', '.log', '.tex~',
+    '.rtf', '.djvu', '.srt', '.djv', '.idx',
+    '.ppt', '.pptx', '.pdx', '.xls', '.xlsx', '.odt', '.docx', '.wps', '.html', '.xml', '.prc',
     '.png', '.bmp', '.jpg', '.jpeg', '.gif', '.svg',
     '.wma', '.wav',
-    '.json', '.csv', '.dat',  '.sas7bdat', '.bin',
+    '.ini', '.json', '.csv', '.dat',  '.sas7bdat', '.bin', '.nfo', '.egp',
     '.mp3', '.mp4',  '.flac', '.flv',
-    '.htm', '.chm', '.zip',  '.rar', '.jar', '.class',
-    '.index',
-    '.gz', '.tar', '.tgz', '.scala',
-    '.r', '.c', '.cpp', '.h', '.py', '.js', '.css'}
+    '.htm', '.chm', '.cab', '.zip',  '.rar', '.jar', '.class', '.classpath', '.save', '.backup',
+    '.index', '.prefs',
+    '.gz', '.tar', '.tgz', '.scala', '.sbt', '.sas', '.mak', '.mac', '.url',
+    '.r', '.rmd', '.sh', '.exe', '.c', '.cpp', '.h', '.py', '.js', '.vcproj',
+    '.css', '.shx', '.shp', '.sbn', '.dbf', '.prj', '.m', '.v', '.v#', '.ml', '.mli' }
 
 
-def maybe_delete_1(path_a: Path, paths_b: set[Path]) -> bool:
+def shall_delete(path_a: Path, paths_b: set[Path]) -> bool:
     #  if 'xxxxx' in { '.pdf', '.ps', '.mobi', '.epub', '.doc',
-    # if path_a.suffix.lower() in AUTO_DEL_EXTS:
-    #    print("auto deleting:", path_a, f"found in: {paths_b}")
-    #    path_a.unlink()
-    #    return True
-    # else:
+    if path_a.name.lower().endswith('thumbs.db'):
+        return False
+    if path_a.name.lower() == 'makefile':
+        return True
+
+    if path_a.suffix.lower() in AUTO_DEL_EXTS:
+        print("auto deleting:", path_a, f"found in: {paths_b}")
+        return True
+    else:
         print(f"path_a.suffix: {path_a.suffix}")
         paths_b1 = {path_b for path_b in paths_b if path_b != path_a}
         if len(paths_b1) == 0:
@@ -95,9 +118,9 @@ def maybe_delete_1(path_a: Path, paths_b: set[Path]) -> bool:
         resp = input(f"path_a: {path_a} has same md5 as path_b: {paths_b1}."
                      f" Delete?")
         if resp.strip() == 'y':
-            path_a.unlink()
             return True
-
+        else:
+            return False
 
 # %%
 
