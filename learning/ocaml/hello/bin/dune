@@ -1,0 +1,6 @@
+(executable
+ (public_name hello)
+ (modes byte)
+ (link_flags -custom)
+ (name main)
+ (libraries hello))
