@@ -21,3 +21,6 @@ https://github.com/PaddlePaddle/PaddleDetection?tab=readme-ov-file
 
 https://medium.com/@m.naufalrizqullah17/fine-tuning-faster-rcnn-object-detection-for-vehicles-9be5a3e8fe44
 https://huggingface.co/spaces/SkylarWhite/43999
+
+
+https://github.com/sovit-123/fastercnn-pytorch-training-pipeline.git
