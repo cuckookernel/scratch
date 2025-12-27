@@ -1,0 +1,19 @@
+# Images and labels directory should be relative to train.py
+TRAIN_DIR_IMAGES: ../scratch/contar_palmas/_data/20250519/train/images
+TRAIN_DIR_LABELS: ../scratch/contar_palmas/_data/20250519/train/labels # This can contain .xml or .txt files
+# VALID_DIR should be relative to train.py
+VALID_DIR_IMAGES: ../scratch/contar_palmas/_data/20250519/valid/images
+VALID_DIR_LABELS: ../scratch/contar_palmas/_data/20250519/valid/labels # This can contain .xml or .txt files
+
+# Class names.
+CLASSES: [
+    # '__background__',
+    'palma'
+]
+
+# Number of classes (object classes + 1 for background class in Faster RCNN).
+# NC: 2
+NC: 1
+
+# Whether to save the predictions of the validation set while training.
+SAVE_VALID_PREDICTION_IMAGES: True
