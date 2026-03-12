@@ -76,6 +76,8 @@ class App:
             return "add"
         elif c == ord('c'):
             return "commit"
+        else:
+            raise ValueError("Invalid char")
 
     def refresh_branches_win( self ):
         """Refresh branches"""
