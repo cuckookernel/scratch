@@ -1,5 +1,5 @@
 def main():
-    print("Hello from git-ui!")
+    print("Hello from font-single-stroker!")
 
 
 if __name__ == "__main__":
