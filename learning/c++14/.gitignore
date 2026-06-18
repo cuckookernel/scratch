@@ -1,0 +1,14 @@
+# Build directory
+build/
+bin/
+lib/
+
+# IDEs and Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS generated
+.DS_Store
+Thumbs.db
